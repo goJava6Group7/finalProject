@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.goJava6Group7.finalProject</groupId>
-    <artifactId>finalProject</artifactId>
+    <artifactId>FinalProject</artifactId>
     <packaging>jar</packaging>
     <version>0.1</version>
 
@@ -15,7 +15,7 @@
     </properties>
 
     <build>
-        <finalName>${groupId}-${version}</finalName>
+        <finalName>${artifactId}-${version}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
