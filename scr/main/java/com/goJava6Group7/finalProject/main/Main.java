@@ -10,12 +10,9 @@ public class Main {
     private static DataBaseManager dataBaseManager;
 
     public static void main(String[] args) {
-        try {
-            //1. Choose what DB we use and maybe some other settings
-            dataBaseManager = configDB();
-        } catch (Exception e) {
-            System.out.println("Catch configDB exception");
-        }
+
+        //1. Choose what DB we use and maybe some other settings
+        dataBaseManager = configDB();
 
         //2. On this step we already have right dataBaseManager and we can give it to controller
         ProjectController controller = new ProjectController(dataBaseManager);
