@@ -1,9 +1,11 @@
 package com.goJava6Group7.finalProject.main;
 
 import com.goJava6Group7.finalProject.controllers.ProjectController;
+import com.goJava6Group7.finalProject.entities.Hotel;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.NoSuchElementException;
 
 /**
  * Created by Igor on 13.04.2017.
@@ -55,9 +57,22 @@ public class Menu {
                 case 1:
                     ;
                     break;
+
                 case 2:
-                    ;
+                    boolean b = true;
+                    while (b)
+                    try {
+                        Hotel hotel = controller.findHotelByHotelName("Miraton");
+                        System.out.println(hotel);
+                        b = false;
+
+                        //выдать новый список
+                    } catch (NoSuchElementException e){
+                        System.out.println("There isn't such hotel in our base.");
+                    }
                     break;
+
+
                 case 3:
                     ;
                     break;

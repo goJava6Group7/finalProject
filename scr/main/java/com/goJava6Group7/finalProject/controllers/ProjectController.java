@@ -1,6 +1,5 @@
 package com.goJava6Group7.finalProject.controllers;
 
-import com.goJava6Group7.finalProject.data.dao.impl.DaoHotel;
 import com.goJava6Group7.finalProject.data.dataBase.DataBaseManager;
 import com.goJava6Group7.finalProject.entities.Hotel;
 import com.goJava6Group7.finalProject.entities.Reservation;
@@ -9,9 +8,7 @@ import com.goJava6Group7.finalProject.entities.User;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
-import java.util.StringJoiner;
-import java.util.stream.Collectors;
+import java.util.NoSuchElementException;
 
 /**
  * Created by Igor on 13.04.2017.
@@ -42,7 +39,7 @@ public class ProjectController {
                 .filter((User o) -> o.getName() == name || o.getLogin() == login)
                 .findFirst()
                 .isPresent())
-
+// TODO не доделано
 
         {
             dbManager.getDaoUser().create(user);
@@ -64,17 +61,15 @@ public class ProjectController {
 
     /**
      * TODO Игорю на проверку
-     * Kontar Maryna: there are two variants:
-     * first return Optional<Hotel>
-     * second return List<Hotel>  (Can be a network of hotels with the same name in different cities)
+     * Kontar Maryna:
+     * method can throw NoSuchElementException("No value present")
      * @param hotelName
      * @return
      */
-    public List<Hotel> findHotelByHotelName(String hotelName) {
+    public Hotel findHotelByHotelName(String hotelName) throws NoSuchElementException{
         return allHotels.stream()
-                .filter((Hotel hotel) -> hotel.getHotelName() == hotelName)
-//                 .findFirst();
-                .collect(Collectors.toList());
+                .filter((Hotel hotel) -> hotel.getHotelName().equals( hotelName))
+                 .findFirst().get();
     }
 
     public Hotel findHotelByCityName(String cityName) {
