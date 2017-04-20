@@ -62,11 +62,11 @@ public class Menu {
                     boolean b = true;
                     while (b)
                     try {
+                        //TODO функция ввода с клавиатуры (название отеля)
                         Hotel hotel = controller.findHotelByHotelName("Miraton");
-                        System.out.println(hotel);
+                        System.out.println(hotel);// информация об отеле со списком комнат (отдельное поле в классе Hotel)
                         b = false;
-
-                        //выдать новый список
+                        //TODO выдать новый список: вернуться назад, зарезервировать комнату
                     } catch (NoSuchElementException e){
                         System.out.println("There isn't such hotel in our base.");
                     }
