@@ -2,6 +2,10 @@ package com.goJava6Group7.finalProject.main;
 
 import com.goJava6Group7.finalProject.controllers.ProjectController;
 import com.goJava6Group7.finalProject.data.dataBase.DataBaseManager;
+import com.goJava6Group7.finalProject.exceptions.backend.BackendException;
+
+import static com.goJava6Group7.finalProject.data.dataBase.impl.DataBaseManagerFactory.DataBaseManagerType.XML;
+import static com.goJava6Group7.finalProject.data.dataBase.impl.DataBaseManagerFactory.getDataBaseManager;
 
 /**
  * Created by Igor on 13.04.2017.
@@ -10,11 +14,12 @@ public class Main {
     private static DataBaseManager dataBaseManager;
 
     public static void main(String[] args) {
+
+        //1. Choose what DB we use and maybe some other settings
         try {
-            //1. Choose what DB we use and maybe some other settings
             dataBaseManager = configDB();
-        } catch (Exception e) {
-            System.out.println("Catch configDB exception");
+        } catch (BackendException e) {
+            e.printStackTrace();
         }
 
         //2. On this step we already have right dataBaseManager and we can give it to controller
@@ -34,7 +39,9 @@ public class Main {
 
     //Start of our app. Have to be some console interaction with client
     //Use here DataBaseManagerFactory depend on client selection
-    private static DataBaseManager configDB() {
-        throw new UnsupportedOperationException();
+    //Kontar Maryna: First, we use the default database manager type - xml,
+    // then we can probably make a choice: hml or binary
+    private static DataBaseManager configDB() throws BackendException{
+       return getDataBaseManager(XML);
     }
 }
