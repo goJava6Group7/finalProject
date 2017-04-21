@@ -9,6 +9,7 @@ import com.goJava6Group7.finalProject.entities.User;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 /**
  * Created by Igor on 13.04.2017.
@@ -72,13 +73,18 @@ public class ProjectController {
                  .findFirst().get();
     }
 
-    public Hotel findHotelByCityName(String cityName) {
-        throw new UnsupportedOperationException();
+    public List <Hotel> findHotelByCityName(String cityName) throws NoSuchElementException {
+        // access database
+        //DaoHotel hotelDAO = new DaoHotel();
+        //List <Hotel> cityHotels = hotelDAO.getAll();
+        return allHotels.stream()
+                .filter((Hotel hotel) -> hotel.getHotelCity().equals(cityName))
+                .collect(Collectors.toList());
     }
 
-    public Room findRoomInHotel(Room room, Hotel hotel) {
-        throw new UnsupportedOperationException();
+    public List <Room> findRoomInHotel(Hotel hotel) {
+
+        return hotel.getHotelRooms();
+
     }
-
-
 }

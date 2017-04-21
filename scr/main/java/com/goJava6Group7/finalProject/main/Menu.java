@@ -2,10 +2,13 @@ package com.goJava6Group7.finalProject.main;
 
 import com.goJava6Group7.finalProject.controllers.ProjectController;
 import com.goJava6Group7.finalProject.entities.Hotel;
+import com.goJava6Group7.finalProject.entities.Room;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Scanner;
 
 /**
  * Created by Igor on 13.04.2017.
@@ -74,11 +77,35 @@ public class Menu {
 
 
                 case 3:
-                    ;
-                    break;
+                    Scanner scanner3 = new Scanner(System.in);
+
+                    while (true){
+                        try {
+                            System.out.println("Please enter the hotel name");
+                            String hotelName = scanner3.next();
+                            List<Hotel> cityHotels = controller.findHotelByCityName(hotelName);
+                            for(Hotel cityHotel : cityHotels) {
+                                System.out.println(cityHotel);
+                            }
+                            break;
+                        } catch (NoSuchElementException e){
+                            System.out.println("There isn't such hotel in our base.");
+                            continue;
+                        }
+                    }
+                    scanner3.close();
+
                 case 4:
-                    ;
-                    break;
+                    Scanner scanner4 = new Scanner(System.in);
+                    System.out.println("Please enter the hotel name");
+                    String hotelName = scanner4.next();
+                    Hotel hotelRoom = controller.findHotelByHotelName(hotelName);
+                    List<Room> rooms = controller.findRoomInHotel(hotelRoom);
+                    for(Room room : rooms) {
+                        System.out.println(room);
+                    }
+                    scanner4.close();
+
                 case 5:
                     ;
                     break;
