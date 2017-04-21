@@ -89,7 +89,7 @@ public class Menu {
                             }
                             break;
                         } catch (NoSuchElementException e){
-                            System.out.println("There isn't such hotel in our base.");
+                            System.out.println("There is no such hotel in our database");
                             continue;
                         }
                     }
