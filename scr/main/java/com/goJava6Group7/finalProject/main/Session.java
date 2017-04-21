@@ -10,7 +10,9 @@ public class Session {
     private boolean isGuest;
     private boolean isAdmin;
 
-    public Session(){}
+    public Session(){
+        isGuest = true;
+    }
 
     public Session(User user){}
 
