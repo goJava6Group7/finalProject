@@ -81,9 +81,9 @@ public class Menu {
 
                     while (true){
                         try {
-                            System.out.println("Please enter the hotel name");
-                            String hotelName = scanner3.next();
-                            List<Hotel> cityHotels = controller.findHotelByCityName(hotelName);
+                            System.out.println("Please enter the city name");
+                            String cityName = scanner3.next();
+                            List<Hotel> cityHotels = controller.findHotelByCityName(cityName);
                             for(Hotel cityHotel : cityHotels) {
                                 System.out.println(cityHotel);
                             }

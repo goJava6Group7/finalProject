@@ -16,6 +16,4 @@ public class Session {
 
     public Session(User user){}
 
-
-
 }
