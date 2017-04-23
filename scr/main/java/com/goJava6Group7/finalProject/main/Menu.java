@@ -100,7 +100,7 @@ public class Menu {
                     System.out.println("Please enter the hotel name");
                     String hotelName = scanner4.next();
                     Hotel hotelRoom = controller.findHotelByHotelName(hotelName);
-                    List<Room> rooms = controller.findRoomInHotel(hotelRoom);
+                    List<Room> rooms = controller.findRoomsInHotel(hotelRoom);
                     for(Room room : rooms) {
                         System.out.println(room);
                     }

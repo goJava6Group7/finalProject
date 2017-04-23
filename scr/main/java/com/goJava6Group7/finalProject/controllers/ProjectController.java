@@ -5,10 +5,10 @@ import com.goJava6Group7.finalProject.entities.Hotel;
 import com.goJava6Group7.finalProject.entities.Reservation;
 import com.goJava6Group7.finalProject.entities.Room;
 import com.goJava6Group7.finalProject.entities.User;
+import com.goJava6Group7.finalProject.exceptions.frontend.NoSuchRoomException;
+import com.goJava6Group7.finalProject.exceptions.frontend.RoomAlreadyExistsException;
 
-import java.util.Date;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -19,7 +19,7 @@ public class ProjectController {
     private DataBaseManager dbManager;
     private List<Hotel> allHotels = dbManager.getDaoHotel().getAll();
     private List<User> allUsers = dbManager.getDaoUser().getAll();
-
+    private List<Room> allRooms = dbManager.getDaoRoom().getAll();
 
     public ProjectController(DataBaseManager dbManager) {
         this.dbManager = dbManager;
@@ -82,9 +82,44 @@ public class ProjectController {
                 .collect(Collectors.toList());
     }
 
-    public List <Room> findRoomInHotel(Hotel hotel) {
+    public Room findRoomInHotel(String hotelName) {
+        Scanner scanner = new Scanner(System.in);
+        String roomName;
+
+        while (true){
+            try {
+                roomName = scanner.next();
+                // check if room exists
+                if (allRooms.stream()
+                        .filter(o -> o.getName().equals(roomName) && o.getHotel().equals(hotelName))
+                        .findFirst()
+                        .isPresent()){break;
+                } else{
+                    throw new NoSuchRoomException(hotelName);
+                }
+
+            } catch (NoSuchRoomException e) {
+                continue;
+            }
+        }
+
+        return allRooms.stream()
+                .filter(o -> o.getName().equals(roomName) && o.getHotel().equals(hotelName))
+                .findFirst()
+                .get();
+    }
+
+
+    public List <Room> findRoomsInHotel(Hotel hotel) {
 
         return hotel.getHotelRooms();
 
     }
+
+    /*
+    public List <Room> findRoomsInHotelByDate(String hotelName, Date checkin, Date checkout )
+    {
+        // To Do
+    }
+    */
 }

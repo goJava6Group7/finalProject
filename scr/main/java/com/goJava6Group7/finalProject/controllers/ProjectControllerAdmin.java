@@ -3,7 +3,7 @@ package com.goJava6Group7.finalProject.controllers;
 import com.goJava6Group7.finalProject.data.dataBase.DataBaseManager;
 import com.goJava6Group7.finalProject.entities.Hotel;
 import com.goJava6Group7.finalProject.entities.Room;
-import com.goJava6Group7.finalProject.exceptions.frontend.NoSuchRoomException;
+import com.goJava6Group7.finalProject.exceptions.frontend.RoomAlreadyExistsException;
 import com.goJava6Group7.finalProject.utils.IdUtil;
 
 
@@ -95,12 +95,12 @@ public class ProjectControllerAdmin {
                 System.out.println("Please enter the new room's name");
                 roomName = scanner.next();
 
-                // check if hotel exists and throw exception if hotel does not exist
+                // check if room exists and throw exception if room already exists in hotel
                 if (allRooms.stream()
                         .filter(o -> o.getName().equals(roomName) && o.getHotel().equals(hotelName))
                         .findFirst()
                         .isPresent()){
-                    throw new NoSuchRoomException(
+                    throw new RoomAlreadyExistsException(
                             allRooms.stream()
                                     .filter(o -> o.getName().equals(roomName) && o.getHotel().equals(hotelName))
                                     .findFirst()
@@ -108,7 +108,7 @@ public class ProjectControllerAdmin {
                     );
                 } else break;
 
-            } catch (NoSuchRoomException e) {
+            } catch (RoomAlreadyExistsException e) {
                 continue;
             }
         }
