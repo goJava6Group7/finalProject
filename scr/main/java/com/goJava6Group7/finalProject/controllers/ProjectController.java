@@ -1,12 +1,15 @@
 package com.goJava6Group7.finalProject.controllers;
 
+import com.goJava6Group7.finalProject.data.dao.impl.DaoHotel;
+import com.goJava6Group7.finalProject.data.dao.impl.DaoReservation;
+import com.goJava6Group7.finalProject.data.dao.impl.DaoRoom;
+import com.goJava6Group7.finalProject.data.dao.impl.DaoUser;
 import com.goJava6Group7.finalProject.data.dataBase.DataBaseManager;
 import com.goJava6Group7.finalProject.entities.Hotel;
 import com.goJava6Group7.finalProject.entities.Reservation;
 import com.goJava6Group7.finalProject.entities.Room;
 import com.goJava6Group7.finalProject.entities.User;
-import com.goJava6Group7.finalProject.exceptions.frontend.NoSuchRoomException;
-import com.goJava6Group7.finalProject.exceptions.frontend.RoomAlreadyExistsException;
+import com.goJava6Group7.finalProject.exceptions.frontend.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -16,44 +19,73 @@ import java.util.stream.Collectors;
  */
 public class ProjectController {
 
-    private DataBaseManager dbManager;
-    private List<Hotel> allHotels = dbManager.getDaoHotel().getAll();
-    private List<User> allUsers = dbManager.getDaoUser().getAll();
-    private List<Room> allRooms = dbManager.getDaoRoom().getAll();
+    private static DataBaseManager dbManager;
+
+    private final static DaoHotel DAOHotel = dbManager.getDaoHotel();
+    private final static DaoUser DAOUser = dbManager.getDaoUser();
+    private final static DaoRoom DAORoom = dbManager.getDaoRoom();
+    private final static DaoReservation DAOReservation = dbManager.getDaoReservation();
+
+    private final static List<Hotel> allHotels = DAOHotel.getAll();
+    private final static List<User> allUsers = DAOUser.getAll();
+    private final static List<Room> allRooms = DAORoom.getAll();
+    private final static List<Reservation> allReservation = DAOReservation.getAll();
 
     public ProjectController(DataBaseManager dbManager) {
-        this.dbManager = dbManager;
+        ProjectController.dbManager = dbManager;
     }
 
 
     /**
-     * Kontar Maryna: метод сделан пока без проверок на существование такого же аккаунта
+     * TODO Игорю на проверку
+     * Kontar Maryna:
+     * Method create account for user with name, login and password
+     * if there isn't account with this name and login.
+     * Returns the user if an account is created
+     *
      * @param name
      * @param login
      * @param password
      * @return
      */
-    public User createAccount(String name, String login, String password) {
-        User user = new User(name, login, password);
-        if(
-        allUsers.stream()
-                .filter((User o) -> o.getName() == name || o.getLogin() == login)
-                .findFirst()
-                .isPresent())
-// TODO не доделано
+    public User createAccount(String name, String login, String password) throws AccountAlreadyExistException {
 
-        {
-            dbManager.getDaoUser().create(user);
+        User user = new User(name, login, password);
+        if (allUsers.stream()
+                .anyMatch((User o) -> o.getName() == name || o.getLogin() == login)) {
+            throw new AccountAlreadyExistException("These name or login already exists.");
         }
+        DAOUser.create(user);
         return user;
     }
 
-    public Reservation reserveRoom(User user, Room room, Hotel hotel, Date dataOfArrival, Date dateOfDeparture) {
-        Reservation reservation = dbManager.getDaoReservation()
-                .create(new Reservation(user, room, hotel, dataOfArrival, dateOfDeparture));
+    /**
+     * Kontar Maryna:
+     *
+     * @param user
+     * @param room
+     * @param hotel
+     * @param dataOfArrival
+     * @param dateOfDeparture
+     * @return
+     */
+    public Reservation reserveRoom(User user, Room room, Hotel hotel, Date dataOfArrival, Date dateOfDeparture) throws FrontendException {
 
-        //TODO как сохранить теперь это в БД, и как добавить в список заказа user? Функция должна быть с входными параметрами
-        return reservation;
+        if (hotel.getHotelRooms().stream().noneMatch(roomAtHotel -> roomAtHotel.equals(room))) {
+            throw new NoSuchRoomException1("There are no such room: \n" + room + "\nin the hotel: \n" + hotel);
+        }
+
+        //TODO доделать проверку по датам
+        if (hotel.getHotelRooms().stream().noneMatch(roomAtHotel -> roomAtHotel.equals(room))) {
+            throw new RoomIsReservedForTheseDatesException1("The room is reserved for these dates: "
+                    + dataOfArrival + " - " + dateOfDeparture);
+        }
+
+        return DAOReservation.create(new Reservation(user, room, hotel, dataOfArrival, dateOfDeparture));
+
+        //TODO Функция должна быть с входными параметрами.
+        //TODO Метод create сохранит этот reservation в БД и добавит в список бронирований данного user?
+        // Спросила у ребят из backend. Жду, пока они дойдут до этого
     }
 
     public boolean cancelRoomReservation() {
@@ -62,18 +94,22 @@ public class ProjectController {
 
     /**
      * TODO Игорю на проверку
-     * Kontar Maryna:
      * method can throw NoSuchElementException("No value present")
+     * Может надо словить это исключение и кинуть вместо него исключение, к-ое extend от FrontendException?
+     * <p>
+     * Kontar Maryna:
+     * return hotel if it's exist and throw NoSuchElementException if isn't
+     *
      * @param hotelName
      * @return
      */
-    public Hotel findHotelByHotelName(String hotelName) throws NoSuchElementException{
+    public Hotel findHotelByHotelName(String hotelName) throws NoSuchElementException {
         return allHotels.stream()
-                .filter((Hotel hotel) -> hotel.getHotelName().equals( hotelName))
-                 .findFirst().get();
+                .filter((Hotel hotel) -> hotel.getHotelName().equals(hotelName))
+                .findFirst().get();
     }
 
-    public List <Hotel> findHotelByCityName(String cityName) throws NoSuchElementException {
+    public List<Hotel> findHotelByCityName(String cityName) throws NoSuchElementException {
         // access database
         //DaoHotel hotelDAO = new DaoHotel();
         //List <Hotel> cityHotels = hotelDAO.getAll();
@@ -86,15 +122,16 @@ public class ProjectController {
         Scanner scanner = new Scanner(System.in);
         String roomName;
 
-        while (true){
+        while (true) {
             try {
                 roomName = scanner.next();
                 // check if room exists
                 if (allRooms.stream()
                         .filter(o -> o.getName().equals(roomName) && o.getHotel().equals(hotelName))
                         .findFirst()
-                        .isPresent()){break;
-                } else{
+                        .isPresent()) {
+                    break;
+                } else {
                     throw new NoSuchRoomException(hotelName);
                 }
 
@@ -110,7 +147,7 @@ public class ProjectController {
     }
 
 
-    public List <Room> findRoomsInHotel(Hotel hotel) {
+    public List<Room> findRoomsInHotel(Hotel hotel) {
 
         return hotel.getHotelRooms();
 
