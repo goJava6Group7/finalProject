@@ -52,8 +52,8 @@ public class ProjectController {
 
         User user = new User(name, login, password);
         if (allUsers.stream()
-                .anyMatch((User o) -> o.getName() == name || o.getLogin() == login)) {
-            throw new AccountAlreadyExistException("These name or login already exists.");
+                .anyMatch((User o) -> o.getName().equals(name) || o.getLogin().equals(login))) {
+            throw new AccountAlreadyExistException("Account with these name or login already exists.");
         }
         DAOUser.create(user);
         return user;
@@ -69,7 +69,8 @@ public class ProjectController {
      * @param dateOfDeparture
      * @return
      */
-    public Reservation reserveRoom(User user, Room room, Hotel hotel, Date dataOfArrival, Date dateOfDeparture) throws FrontendException {
+    public Reservation reserveRoom(User user, Room room, Hotel hotel, Date dataOfArrival, Date dateOfDeparture)
+            throws FrontendException {
 
         if (hotel.getHotelRooms().stream().noneMatch(roomAtHotel -> roomAtHotel.equals(room))) {
             throw new NoSuchRoomException1("There are no such room: \n" + room + "\nin the hotel: \n" + hotel);
@@ -94,11 +95,11 @@ public class ProjectController {
 
     /**
      * TODO Игорю на проверку
-     * method can throw NoSuchElementException("No value present")
+     * Kontar Maryna:
+     * method can @throw NoSuchElementException("No value present")
      * Может надо словить это исключение и кинуть вместо него исключение, к-ое extend от FrontendException?
      * <p>
-     * Kontar Maryna:
-     * return hotel if it's exist and throw NoSuchElementException if isn't
+     * return hotel if it's exist and @throw NoSuchElementException if isn't
      *
      * @param hotelName
      * @return
@@ -120,11 +121,12 @@ public class ProjectController {
 
     public Room findRoomInHotel(String hotelName) {
         Scanner scanner = new Scanner(System.in);
-        String roomName;
+//        String roomName;
+        String roomName = scanner.next();
 
         while (true) {
             try {
-                roomName = scanner.next();
+
                 // check if room exists
                 if (allRooms.stream()
                         .filter(o -> o.getName().equals(roomName) && o.getHotel().equals(hotelName))
