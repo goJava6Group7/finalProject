@@ -68,6 +68,8 @@ public class ProjectController {
      * @param dataOfArrival
      * @param dateOfDeparture
      * @return
+     * @throws NoSuchRoomException1
+     * @throws RoomIsReservedForTheseDatesException
      */
     public Reservation reserveRoom(User user, Room room, Hotel hotel, Date dataOfArrival, Date dateOfDeparture)
             throws FrontendException {
@@ -77,8 +79,8 @@ public class ProjectController {
         }
 
         //TODO доделать проверку по датам
-        if (hotel.getHotelRooms().stream().noneMatch(roomAtHotel -> roomAtHotel.equals(room))) {
-            throw new RoomIsReservedForTheseDatesException1("The room is reserved for these dates: "
+        if (hotel.getHotelRooms().stream().noneMatch(roomAtHotel -> true)) {
+            throw new RoomIsReservedForTheseDatesException("The room is reserved for these dates: "
                     + dataOfArrival + " - " + dateOfDeparture);
         }
 
@@ -103,6 +105,7 @@ public class ProjectController {
      *
      * @param hotelName
      * @return
+     * @throws NoSuchElementException
      */
     public Hotel findHotelByHotelName(String hotelName) throws NoSuchElementException {
         return allHotels.stream()
@@ -161,4 +164,63 @@ public class ProjectController {
         // To Do
     }
     */
+
+
+    /**
+     * TODO Игорю на проверку
+     * Kontar Maryna:
+     *
+     * @param hotel
+     * @return
+     * @throws HotelAlreadyExistsException
+     */
+    public Hotel addHotel(Hotel hotel) throws HotelAlreadyExistsException {
+
+        if (allHotels.stream().anyMatch(hotelAtDatabase -> hotelAtDatabase.equals(hotel))) {
+            throw new HotelAlreadyExistsException("The " + hotel + "already exists in database "
+                    + dbManager.getClass().getSimpleName());
+        }
+        return DAOHotel.create(hotel);
+    }
+
+    /**
+     * TODO Игорю на проверку
+     * Kontar Maryna:
+     *
+     * @param hotel
+     * @return
+     */
+    public boolean deleteHotel(Hotel hotel) {
+
+        return DAOHotel.delete(hotel);
+    }
+
+//    public boolean deleteHotel(Hotel hotel) throws HotelIsNotInDatabaseException {
+//
+//        if(allHotels.stream().anyMatch(hotelAtDatabase -> hotelAtDatabase.equals(hotel))){
+//            throw new HotelIsNotInDatabaseException("The " + hotel + "is not in database "
+//                    + dbManager.getClass().getSimpleName());
+//        }
+//        return DAOHotel.delete(hotel);
+//    }
+
+    /**
+     * TODO Игорю на проверку НАВЕРНОЕ НАДО ПОМЕНЯТЬ СИГНАТУРУ МЕТОДА update на update(Hotel hotel, Hotel newHotel)
+     * (или на update(Hotel hotel, параметры отеля))
+     * Kontar Maryna:
+     *
+     * @param hotelAtDatabase
+     * @param toUpdateHotel
+     * @return
+     * @throws HotelIsNotInDatabaseException
+     */
+    public Hotel updateHotel(Hotel hotelAtDatabase, Hotel toUpdateHotel) throws HotelIsNotInDatabaseException {
+
+        if(allHotels.stream().anyMatch(hotel -> hotel.equals(hotelAtDatabase))){
+            throw new HotelIsNotInDatabaseException("The " + hotelAtDatabase + "is not in database "
+                    + dbManager.getClass().getSimpleName());
+        }
+        return DAOHotel.update(toUpdateHotel);
+    }
+
 }

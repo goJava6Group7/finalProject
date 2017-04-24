@@ -22,7 +22,8 @@ public class Menu {
     private BufferedReader br = null;
 
     public Menu(ProjectController controller, Session session) {
-
+        this.controller = controller;
+        this.session = session;
     }
 
     //Enter point to Menu
