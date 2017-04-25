@@ -11,10 +11,7 @@ import com.goJava6Group7.finalProject.entities.Room;
 import com.goJava6Group7.finalProject.entities.User;
 import com.goJava6Group7.finalProject.exceptions.frontend.*;
 
-import java.util.Date;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -112,7 +109,7 @@ public class ProjectController {
      * Kontar Maryna:
      * method can @throw NoSuchElementException("No value present")
      * Может надо словить это исключение и кинуть вместо него исключение, к-ое extend от FrontendException?
-     * <p>
+     * <p/>
      * return hotel if it's exist and @throw NoSuchElementException if isn't
      *
      * @param hotelName
@@ -134,9 +131,12 @@ public class ProjectController {
                 .collect(Collectors.toList());
     }
 
-    public Room findRoomInHotel(String hotelName) {
+    /*Поменял сигнатуру метода. Более логично принимать набор ключей-значений и в зависимости от них
+    * делать поиск*/
+    public List<Room> findRoom(Map<String, String> params) {
 //        TODO(Замечания) - работа с консолью должна происходить ТОЛЬКО В КЛАССЕ MENU
 
+/*
         Scanner scanner = new Scanner(System.in);
 //        String roomName;
         String roomName = scanner.next();
@@ -163,6 +163,8 @@ public class ProjectController {
                 .filter(o -> o.getName().equals(roomName) && o.getHotel().equals(hotelName))
                 .findFirst()
                 .get();
+*/
+        throw new UnsupportedOperationException();
     }
 
 
@@ -233,7 +235,7 @@ public class ProjectController {
     public Hotel updateHotel(Hotel hotel, Hotel newHotel) throws HotelIsNotInDatabaseException {
 
         //TODO(Замечания) - лишняя проверка. Если мы будем делать update, то к этому моменту уже будем знать, что отель существует
-        if(allHotels.stream().anyMatch(currentHotel -> hotel.equals(hotel))){
+        if (allHotels.stream().anyMatch(currentHotel -> hotel.equals(hotel))) {
             throw new HotelIsNotInDatabaseException("The " + hotel + "is not in database "
                     + dbManager.getClass().getSimpleName());
         }
