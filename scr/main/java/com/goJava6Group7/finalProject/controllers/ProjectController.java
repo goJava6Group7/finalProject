@@ -11,7 +11,10 @@ import com.goJava6Group7.finalProject.entities.Room;
 import com.goJava6Group7.finalProject.entities.User;
 import com.goJava6Group7.finalProject.exceptions.frontend.*;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 
 /**
@@ -20,6 +23,12 @@ import java.util.stream.Collectors;
 public class ProjectController {
 
     private static DataBaseManager dbManager;
+
+//    TODO(Answer3) - убрать все эти переменные. Все ссылки на списки сущностей в виде списков java будут хранится
+//    TODO(Answer3) в обьектах DataBaseManager(это наш внутренний кеш). Все обращения к этим спискам будут непосредственно
+//    TODO(Answer3) во внутренних методах нашего ProjectController
+
+//    TODO(Answer4) - nameSpace. static final переменные должны обьявляться в верхнем регистре с разделением слов через _
 
     private final static DaoHotel DAOHotel = dbManager.getDaoHotel();
     private final static DaoUser DAOUser = dbManager.getDaoUser();
@@ -49,6 +58,10 @@ public class ProjectController {
      * @return
      */
     public User createAccount(String name, String login, String password) throws AccountAlreadyExistException {
+//        TODO(Замечания) - работаем с отдельными ДАО внутри класса и НЕ показываем отдельную реализацию
+//        TODO(Замечания) поэтому обьявляем переменную типом интерфейса
+        /*Dao daoUser = dbManager.getDaoUser();
+        * */
 
         User user = new User(name, login, password);
         if (allUsers.stream()
@@ -62,29 +75,28 @@ public class ProjectController {
     /**
      * Kontar Maryna:
      *
-     * @param user
+     * @param reserveOnUser
      * @param room
-     * @param hotel
      * @param dataOfArrival
      * @param dateOfDeparture
      * @return
      * @throws NoSuchRoomException1
      * @throws RoomIsReservedForTheseDatesException
      */
-    public Reservation reserveRoom(User user, Room room, Hotel hotel, Date dataOfArrival, Date dateOfDeparture)
+    public Reservation reserveRoom(User reserveOnUser, Room room, Date dataOfArrival, Date dateOfDeparture)
             throws FrontendException {
-
-        if (hotel.getHotelRooms().stream().noneMatch(roomAtHotel -> roomAtHotel.equals(room))) {
+//        TODO(Замечания) - лишняя проверка. К выполнению этого метода мы придём только тогда, когда найдём комнату
+        /*if (room.getHotel().getHotelRooms().stream().noneMatch(roomAtHotel -> roomAtHotel.equals(room))) {
             throw new NoSuchRoomException1("There are no such room: \n" + room + "\nin the hotel: \n" + hotel);
         }
-
+*/
         //TODO доделать проверку по датам
-        if (hotel.getHotelRooms().stream().noneMatch(roomAtHotel -> true)) {
+        if (room.getHotel().getHotelRooms().stream().noneMatch(roomAtHotel -> true)) {
             throw new RoomIsReservedForTheseDatesException("The room is reserved for these dates: "
                     + dataOfArrival + " - " + dateOfDeparture);
         }
 
-        return DAOReservation.create(new Reservation(user, room, hotel, dataOfArrival, dateOfDeparture));
+        return DAOReservation.create(new Reservation(reserveOnUser, room, dataOfArrival, dateOfDeparture));
 
         //TODO Функция должна быть с входными параметрами.
         //TODO Метод create сохранит этот reservation в БД и добавит в список бронирований данного user?
@@ -123,6 +135,8 @@ public class ProjectController {
     }
 
     public Room findRoomInHotel(String hotelName) {
+//        TODO(Замечания) - работа с консолью должна происходить ТОЛЬКО В КЛАССЕ MENU
+
         Scanner scanner = new Scanner(System.in);
 //        String roomName;
         String roomName = scanner.next();
@@ -168,6 +182,7 @@ public class ProjectController {
 
     /**
      * TODO Игорю на проверку
+     * TODO(Замечания) - определится с тем, что будет считаться идентичным Отелем
      * Kontar Maryna:
      *
      * @param hotel
@@ -206,21 +221,23 @@ public class ProjectController {
 
     /**
      * TODO Игорю на проверку НАВЕРНОЕ НАДО ПОМЕНЯТЬ СИГНАТУРУ МЕТОДА update на update(Hotel hotel, Hotel newHotel)
+     * TODO(Замечания) - согласен
      * (или на update(Hotel hotel, параметры отеля))
      * Kontar Maryna:
      *
-     * @param hotelAtDatabase
-     * @param toUpdateHotel
+     * @param hotel
+     * @param newHotel
      * @return
      * @throws HotelIsNotInDatabaseException
      */
-    public Hotel updateHotel(Hotel hotelAtDatabase, Hotel toUpdateHotel) throws HotelIsNotInDatabaseException {
+    public Hotel updateHotel(Hotel hotel, Hotel newHotel) throws HotelIsNotInDatabaseException {
 
-        if(allHotels.stream().anyMatch(hotel -> hotel.equals(hotelAtDatabase))){
-            throw new HotelIsNotInDatabaseException("The " + hotelAtDatabase + "is not in database "
+        //TODO(Замечания) - лишняя проверка. Если мы будем делать update, то к этому моменту уже будем знать, что отель существует
+        if(allHotels.stream().anyMatch(currentHotel -> hotel.equals(hotel))){
+            throw new HotelIsNotInDatabaseException("The " + hotel + "is not in database "
                     + dbManager.getClass().getSimpleName());
         }
-        return DAOHotel.update(toUpdateHotel);
+        return DAOHotel.update(newHotel);
     }
 
 }

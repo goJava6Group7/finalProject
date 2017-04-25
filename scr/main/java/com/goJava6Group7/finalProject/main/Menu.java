@@ -3,12 +3,10 @@ package com.goJava6Group7.finalProject.main;
 import com.goJava6Group7.finalProject.controllers.ProjectController;
 import com.goJava6Group7.finalProject.entities.Hotel;
 import com.goJava6Group7.finalProject.entities.Room;
-import com.goJava6Group7.finalProject.entities.User;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
@@ -27,6 +25,7 @@ public class Menu {
     }
 
     //Enter point to Menu
+//    TODO(Answer1) Сделать switch с 7 case. Под каждый case сделать выполнение отдельного приватного метода
     public void mainMenu() {
 
         System.out.println("Hello! Welcome to our project! ");
@@ -170,7 +169,7 @@ public class Menu {
     }
 
 
-
+//    TODO(Answer2)Эти методы можно вынести в отдельный утильный класс ConsoleWorkerUtil
     private int readIntFromConsole() throws IOException {
 
         br = new BufferedReader(new InputStreamReader(System.in));

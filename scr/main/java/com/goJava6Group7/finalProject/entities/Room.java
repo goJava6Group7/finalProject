@@ -11,10 +11,10 @@ public class Room extends Entity {
     private String name;
     private int numberOfPersons;
     private int price;
-    private String hotel;
+    private Hotel hotel;
     private List<Reservation> bookings;
 
-    public Room(String id, String name, int numberOfPersons, int price, String hotel) {
+    public Room(String id, String name, int numberOfPersons, int price, Hotel hotel) {
         this.id = id;
         this.name = name;
         this.numberOfPersons = numberOfPersons;
@@ -74,11 +74,11 @@ public class Room extends Entity {
         this.price = price;
     }
 
-    public String getHotel() {
+    public Hotel getHotel() {
         return hotel;
     }
 
-    public void setHotel(String hotel) {
+    public void setHotel(Hotel hotel) {
         this.hotel = hotel;
     }
 

@@ -8,16 +8,15 @@ import java.util.Date;
 public class Reservation extends Entity {
 
     //TODO Kontar Maryna changes these for  ProjectController   reserveRoom
+    //TODO(Answer) поле Hotel лишнее(ссылка на Hotel должна быть в обьекте Room)
     private User user;
     private Room room;
-    private Hotel hotel;
     private Date dataOfArrival;
     private Date dateOfDeparture;
 
-    public Reservation(User user, Room room, Hotel hotel, Date dataOfArrival, Date dateOfDeparture) {
+    public Reservation(User user, Room room, Date dataOfArrival, Date dateOfDeparture) {
         this.user = user;
         this.room = room;
-        this.hotel = hotel;
         this.dataOfArrival = dataOfArrival;
         this.dateOfDeparture = dateOfDeparture;
     }
