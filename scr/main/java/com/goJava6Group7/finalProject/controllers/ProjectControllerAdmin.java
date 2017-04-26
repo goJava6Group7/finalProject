@@ -25,11 +25,9 @@ public class ProjectControllerAdmin {
         2) prompt the user to enter data about the room;
         3) create a room with constructor;
         4) save the room to the database using DAO.
-
       Delete room will:
         1) Look for the room in question using the search room function;
         2) Use DAO to delete this room.
-
        Update a room will:
        1) Look for the room in question using the search room function;
        2) Ask the user to re-enter the information about the room;
@@ -37,7 +35,7 @@ public class ProjectControllerAdmin {
      */
 
     // connect to database
-
+    //TODO(замечания) - в рабочей версии выносить отдельно переменные НЕ нужно
     private DataBaseManager dbManager;
     private List<Hotel> allHotels = dbManager.getDaoHotel().getAll();
     private List<Room> allRooms = dbManager.getDaoRoom().getAll();
@@ -48,7 +46,8 @@ public class ProjectControllerAdmin {
 
 
     // Add a room
-
+    //TODO(замечания) - зименить сигнатуру на public void AdminCreatesRoom (Room room, Hotel hotel)
+    //TODO(замечания) - убрать работу с консолью с метода контроллера
     public void AdminCreatesRoom (){
 
         // public Room(String id, String name, int numberOfPersons, int price, String hotel)
@@ -57,10 +56,8 @@ public class ProjectControllerAdmin {
         String roomId = IdUtil.IdGenerator();
 
         /* prompt user to enter different values:
-
         check if hotel exists
         check if room name already exists
-
         */
 
         // get hotel name

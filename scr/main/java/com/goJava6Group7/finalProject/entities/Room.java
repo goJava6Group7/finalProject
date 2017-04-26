@@ -14,6 +14,7 @@ public class Room extends Entity {
     private Hotel hotel;
     private List<Reservation> bookings;
 
+    //TODO(замечания) - id должно генерироваться, а НЕ присваиватся
     public Room(String id, String name, int numberOfPersons, int price, Hotel hotel) {
         this.id = id;
         this.name = name;

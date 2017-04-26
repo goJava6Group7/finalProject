@@ -27,4 +27,16 @@ public class User extends Entity {
     public String getPassword() {
         return password;
     }
+
+    //TODO Kontar Maryna: для тестирования методов, пока backend не написали DB.
+    ////TODO ОБЯЗАТЕЛЬНО ПОМЕНЯТЬ (УБРАТЬ ПАРОЛЬ)!!!!!!!!!!!!!
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("User{");
+        sb.append("name='").append(name).append('\'');
+        sb.append(", login='").append(login).append('\'');
+        sb.append(", password='").append(password).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }

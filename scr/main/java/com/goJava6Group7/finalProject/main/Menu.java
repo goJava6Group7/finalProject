@@ -3,13 +3,15 @@ package com.goJava6Group7.finalProject.main;
 import com.goJava6Group7.finalProject.controllers.ProjectController;
 import com.goJava6Group7.finalProject.entities.Hotel;
 import com.goJava6Group7.finalProject.entities.Room;
+import com.goJava6Group7.finalProject.exceptions.frontend.AccountAlreadyExistException;
 
 import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
+
+import static com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil.*;
+
 
 /**
  * Created by Igor on 13.04.2017.
@@ -17,7 +19,6 @@ import java.util.Scanner;
 public class Menu {
     private ProjectController controller;
     private Session session;
-    private BufferedReader br = null;
 
     public Menu(ProjectController controller, Session session) {
         this.controller = controller;
@@ -55,68 +56,8 @@ public class Menu {
                     ;
                     break;
 
-                case 2:  //TODO Kontar: СДЕЛАТЬ ЭТО ВСЕ ОТДЕЛЬНЫМ МЕТОДОМ
-
-                    boolean b = true;
-                    while (b) {
-                        try {
-                            System.out.println("Please enter the hotel name.");
-                            String hotelName = readStringFromConsole();
-                            Hotel hotel = controller.findHotelByHotelName(hotelName);
-                            System.out.println("There is this hotel in our database!\n" +  hotel);
-
-                            boolean c = true;
-                            while (c) {
-                                //TODO выдать новый список: зарезервировать комнату, вернуться к выбору гостиницы, вернуться в главное меню
-                                System.out.println(
-                                        "Choose what you want to do and write the appropriate number: \n" +
-                                                "1. Reserve room \n" +
-                                                "2. Back to the hotel search . \n" +
-                                                "3. Back to main menu. \n"
-                                );
-                                try {
-                                    input = readIntFromConsole();
-                                } catch (Exception e) {
-                                    printReadIntFromConsoleException(3);
-                                    continue;
-                                }
-
-
-                                switch (input) {
-                                    case 1:
-                                        if (true) { //session.isGuest()
-                                            //TODO login or create account
-                                            continue;
-                                        }
-                                        //TODO reserve room
-                                        break;
-
-                                    case 2:
-                                        //TODO вернуться к while (b). Как сделать это, не объявляя дополнительных переменных (с)?
-                                        c = false;
-                                        break;
-
-                                    case 3:
-                                        //TODO вернуться в главное меню while (true) Как сделать это, не объявляя дополнительных переменных (b,с)?
-                                        c = false;
-                                        b = false;
-                                        break;
-
-                                    default: {
-                                        System.out.println("You typed wrong number: " + input + ". " +
-                                                "And we want a number from 1 to 3. Please, type again.");
-                                        continue;
-                                    }
-                                }
-                            }
-
-                        } catch (Exception e) {
-                            //catch IOException from readStringFromConsole() and NoSuchElementException from findHotelByHotelName(hotelName)
-                            System.out.println("There is no such hotel in our database.");
-                            continue;
-                        }
-                    }
-                    break;
+                case 2:
+                    findHotelByHotelName(); //TODO Kontar:
 
 
                 case 3:
@@ -150,7 +91,6 @@ public class Menu {
                     scanner4.close();
 
                 case 5:
-                    ;
                     break;
                 case 6:
                     ;
@@ -169,24 +109,62 @@ public class Menu {
     }
 
 
+    private void findHotelByHotelName() {
+
+        System.out.println("Please enter the hotel name.");
+        try {
+            String hotelName = readStringFromConsole();
+            Hotel hotel = controller.findHotelByHotelName(hotelName);
+            System.out.println("There is this hotel in our database!\n" + hotel);
+            IDontKnowWhatToCallFunction();
+
+        } catch (Exception e) {
+            //catch IOException from readStringFromConsole() and NoSuchElementException from findHotelByHotelName(hotelName)
+            System.out.println("There is no such hotel in our database.");
+            findHotelByHotelName();
+        }
+    }
+
+
+    private void IDontKnowWhatToCallFunction() {
+
+        //TODO выдать новый список: зарезервировать комнату, вернуться к выбору гостиницы, вернуться в главное меню
+        System.out.println(
+                "Choose what you want to do and write the appropriate number: \n" +
+                        "1. Reserve room \n" +
+                        "2. Back to the hotel search . \n" +
+                        "3. Back to main menu. \n"
+        );
+
+        int input;
+        try {
+            input = readIntFromConsole();
+            switch (input) {
+                case 1:
+                    if (true) { //session.isGuest()
+                        //TODO login or create account
+                        IDontKnowWhatToCallFunction();
+                    }
+
+//                    reserveRoom();
+//                    System.out.println("You room: " + room + "is reserved");
+
+                case 2:
+                    findHotelByHotelName();
+                case 3:
+                    mainMenu();
+                default: {
+                    System.out.println("You typed wrong number: " + input + ". " +
+                            "And we want a number from 1 to 3. Please, type again.");
+                    IDontKnowWhatToCallFunction();
+                }
+            }
+        } catch (Exception e) {
+            printReadIntFromConsoleException(3);
+            IDontKnowWhatToCallFunction();
+        }
+    }
+
 //    TODO(Answer2)Эти методы можно вынести в отдельный утильный класс ConsoleWorkerUtil
-    private int readIntFromConsole() throws IOException {
-
-        br = new BufferedReader(new InputStreamReader(System.in));
-        String str = br.readLine(); //throw IOException
-        return Integer.parseInt(str);//throw NumberFormatException
-//        Scanner scanner = new Scanner(System.in);
-//        return scanner.nextInt();
-    }
-
-    private String readStringFromConsole() throws IOException {
-        br = new BufferedReader(new InputStreamReader(System.in));
-        return br.readLine(); //throw IOException
-    }
-
-    private void printReadIntFromConsoleException(int number) {
-        System.out.println("You typed something strange. " +
-                "And we want a number from 1 to " + number + ". Please, type again.");
-    }
 
 }

@@ -1,9 +1,7 @@
 package com.goJava6Group7.finalProject.controllers;
 
+import com.goJava6Group7.finalProject.data.dao.Dao;
 import com.goJava6Group7.finalProject.data.dao.impl.DaoHotel;
-import com.goJava6Group7.finalProject.data.dao.impl.DaoReservation;
-import com.goJava6Group7.finalProject.data.dao.impl.DaoRoom;
-import com.goJava6Group7.finalProject.data.dao.impl.DaoUser;
 import com.goJava6Group7.finalProject.data.dataBase.DataBaseManager;
 import com.goJava6Group7.finalProject.entities.Hotel;
 import com.goJava6Group7.finalProject.entities.Reservation;
@@ -19,7 +17,7 @@ import java.util.stream.Collectors;
  */
 public class ProjectController {
 
-    private static DataBaseManager dbManager;
+    public DataBaseManager dbManager;
 
 //    TODO(Answer3) - убрать все эти переменные. Все ссылки на списки сущностей в виде списков java будут хранится
 //    TODO(Answer3) в обьектах DataBaseManager(это наш внутренний кеш). Все обращения к этим спискам будут непосредственно
@@ -27,18 +25,18 @@ public class ProjectController {
 
 //    TODO(Answer4) - nameSpace. static final переменные должны обьявляться в верхнем регистре с разделением слов через _
 
-    private final static DaoHotel DAOHotel = dbManager.getDaoHotel();
-    private final static DaoUser DAOUser = dbManager.getDaoUser();
-    private final static DaoRoom DAORoom = dbManager.getDaoRoom();
-    private final static DaoReservation DAOReservation = dbManager.getDaoReservation();
-
-    private final static List<Hotel> allHotels = DAOHotel.getAll();
-    private final static List<User> allUsers = DAOUser.getAll();
-    private final static List<Room> allRooms = DAORoom.getAll();
-    private final static List<Reservation> allReservation = DAOReservation.getAll();
+//    private final static DaoHotel DAOHotel = dbManager.getDaoHotel();
+//    private final static DaoUser DAOUser = dbManager.getDaoUser();
+//    private final static DaoRoom DAORoom = dbManager.getDaoRoom();
+//    private final static DaoReservation DAOReservation = dbManager.getDaoReservation();
+//
+//    private final static List<Hotel> allHotels = DAOHotel.getAll();
+//    private final static List<User> allUsers = DAOUser.getAll();
+//    private final static List<Room> allRooms = DAORoom.getAll();
+//    private final static List<Reservation> allReservation = DAOReservation.getAll();
 
     public ProjectController(DataBaseManager dbManager) {
-        ProjectController.dbManager = dbManager;
+        this.dbManager = dbManager;
     }
 
 
@@ -52,21 +50,20 @@ public class ProjectController {
      * @param name
      * @param login
      * @param password
-     * @return
+     * @return User if an account is created
+     * @throws AccountAlreadyExistException
      */
     public User createAccount(String name, String login, String password) throws AccountAlreadyExistException {
 //        TODO(Замечания) - работаем с отдельными ДАО внутри класса и НЕ показываем отдельную реализацию
 //        TODO(Замечания) поэтому обьявляем переменную типом интерфейса
-        /*Dao daoUser = dbManager.getDaoUser();
-        * */
-
+        Dao<User> daoUser = dbManager.getDaoUser();
+        List<User> allUsers = daoUser.getAll();
         User user = new User(name, login, password);
         if (allUsers.stream()
                 .anyMatch((User o) -> o.getName().equals(name) || o.getLogin().equals(login))) {
             throw new AccountAlreadyExistException("Account with these name or login already exists.");
         }
-        DAOUser.create(user);
-        return user;
+        return daoUser.create(user);
     }
 
     /**
@@ -76,24 +73,19 @@ public class ProjectController {
      * @param room
      * @param dataOfArrival
      * @param dateOfDeparture
-     * @return
+     * @return Reservation
      * @throws NoSuchRoomException1
      * @throws RoomIsReservedForTheseDatesException
      */
     public Reservation reserveRoom(User reserveOnUser, Room room, Date dataOfArrival, Date dateOfDeparture)
             throws FrontendException {
-//        TODO(Замечания) - лишняя проверка. К выполнению этого метода мы придём только тогда, когда найдём комнату
-        /*if (room.getHotel().getHotelRooms().stream().noneMatch(roomAtHotel -> roomAtHotel.equals(room))) {
-            throw new NoSuchRoomException1("There are no such room: \n" + room + "\nin the hotel: \n" + hotel);
-        }
-*/
+        Dao<Reservation> daoReservation = dbManager.getDaoReservation();
         //TODO доделать проверку по датам
         if (room.getHotel().getHotelRooms().stream().noneMatch(roomAtHotel -> true)) {
             throw new RoomIsReservedForTheseDatesException("The room is reserved for these dates: "
                     + dataOfArrival + " - " + dateOfDeparture);
         }
-
-        return DAOReservation.create(new Reservation(reserveOnUser, room, dataOfArrival, dateOfDeparture));
+        return daoReservation.create(new Reservation(reserveOnUser, room, dataOfArrival, dateOfDeparture));
 
         //TODO Функция должна быть с входными параметрами.
         //TODO Метод create сохранит этот reservation в БД и добавит в список бронирований данного user?
@@ -117,15 +109,20 @@ public class ProjectController {
      * @throws NoSuchElementException
      */
     public Hotel findHotelByHotelName(String hotelName) throws NoSuchElementException {
+
+        Dao<Hotel> daoHotel = dbManager.getDaoHotel();
+        List<Hotel> allHotels = daoHotel.getAll();
+
         return allHotels.stream()
                 .filter((Hotel hotel) -> hotel.getHotelName().equals(hotelName))
                 .findFirst().get();
     }
 
     public List<Hotel> findHotelByCityName(String cityName) throws NoSuchElementException {
-        // access database
-        //DaoHotel hotelDAO = new DaoHotel();
-        //List <Hotel> cityHotels = hotelDAO.getAll();
+
+        DaoHotel daoHotel = dbManager.getDaoHotel();
+        List<Hotel> allHotels = daoHotel.getAll();
+
         return allHotels.stream()
                 .filter((Hotel hotel) -> hotel.getHotelCity().equals(cityName))
                 .collect(Collectors.toList());
@@ -193,11 +190,14 @@ public class ProjectController {
      */
     public Hotel addHotel(Hotel hotel) throws HotelAlreadyExistsException {
 
+        Dao<Hotel> daoHotel = dbManager.getDaoHotel();
+        List<Hotel> allHotels = daoHotel.getAll();
+
         if (allHotels.stream().anyMatch(hotelAtDatabase -> hotelAtDatabase.equals(hotel))) {
             throw new HotelAlreadyExistsException("The " + hotel + "already exists in database "
                     + dbManager.getClass().getSimpleName());
         }
-        return DAOHotel.create(hotel);
+        return daoHotel.create(hotel);
     }
 
     /**
@@ -209,7 +209,8 @@ public class ProjectController {
      */
     public boolean deleteHotel(Hotel hotel) {
 
-        return DAOHotel.delete(hotel);
+        Dao<Hotel> daoHotel = dbManager.getDaoHotel();
+        return daoHotel.delete(hotel);
     }
 
 //    public boolean deleteHotel(Hotel hotel) throws HotelIsNotInDatabaseException {
@@ -233,13 +234,14 @@ public class ProjectController {
      * @throws HotelIsNotInDatabaseException
      */
     public Hotel updateHotel(Hotel hotel, Hotel newHotel) throws HotelIsNotInDatabaseException {
+        Dao<Hotel> daoHotel = dbManager.getDaoHotel();
 
         //TODO(Замечания) - лишняя проверка. Если мы будем делать update, то к этому моменту уже будем знать, что отель существует
-        if (allHotels.stream().anyMatch(currentHotel -> hotel.equals(hotel))) {
-            throw new HotelIsNotInDatabaseException("The " + hotel + "is not in database "
-                    + dbManager.getClass().getSimpleName());
-        }
-        return DAOHotel.update(newHotel);
+//        if (allHotels.stream().anyMatch(currentHotel -> hotel.equals(hotel))) {
+//            throw new HotelIsNotInDatabaseException("The " + hotel + "is not in database "
+//                    + dbManager.getClass().getSimpleName());
+//        }
+        return daoHotel.update(newHotel);
     }
 
 }
