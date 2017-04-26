@@ -37,7 +37,7 @@ public class ProjectControllerAdmin {
      */
 
     // connect to database
-
+    //TODO(замечания) - в рабочей версии выносить отдельно переменные НЕ нужно
     private DataBaseManager dbManager;
     private List<Hotel> allHotels = dbManager.getDaoHotel().getAll();
     private List<Room> allRooms = dbManager.getDaoRoom().getAll();
@@ -48,7 +48,8 @@ public class ProjectControllerAdmin {
 
 
     // Add a room
-
+    //TODO(замечания) - зименить сигнатуру на public void AdminCreatesRoom (Room room, Hotel hotel)
+    //TODO(замечания) - убрать работу с консолью с метода контроллера
     public void AdminCreatesRoom (){
 
         // public Room(String id, String name, int numberOfPersons, int price, String hotel)
