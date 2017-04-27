@@ -1,7 +1,4 @@
-package com.goJava6Group7.finalProject.entities;
+package scr.main.java.com.goJava6Group7.finalProject.entities;
 
-/**
- * Created by Igor on 13.04.2017.
- */
 public abstract class Entity {
 }

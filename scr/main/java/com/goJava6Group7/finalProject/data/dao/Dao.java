@@ -1,4 +1,4 @@
-package com.goJava6Group7.finalProject.data.dao;
+package scr.main.java.com.goJava6Group7.finalProject.data.dao;
 
 import java.util.List;
 

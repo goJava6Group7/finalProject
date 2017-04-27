@@ -1,10 +1,10 @@
-package com.goJava6Group7.finalProject.controllers;
+package scr.main.java.com.goJava6Group7.finalProject.controllers;
 
-import com.goJava6Group7.finalProject.data.dataBase.DataBaseManager;
-import com.goJava6Group7.finalProject.entities.Hotel;
-import com.goJava6Group7.finalProject.entities.Reservation;
-import com.goJava6Group7.finalProject.entities.Room;
-import com.goJava6Group7.finalProject.entities.User;
+import scr.main.java.com.goJava6Group7.finalProject.data.dataBase.DataBaseManager;
+import scr.main.java.com.goJava6Group7.finalProject.entities.Hotel;
+import scr.main.java.com.goJava6Group7.finalProject.entities.Reservation;
+import scr.main.java.com.goJava6Group7.finalProject.entities.Room;
+import scr.main.java.com.goJava6Group7.finalProject.entities.User;
 
 /**
  * Created by Igor on 13.04.2017.

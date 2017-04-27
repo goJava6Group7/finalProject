@@ -1,6 +1,6 @@
-package com.goJava6Group7.finalProject.main;
+package scr.main.java.com.goJava6Group7.finalProject.main;
 
-import com.goJava6Group7.finalProject.controllers.ProjectController;
+import scr.main.java.com.goJava6Group7.finalProject.controllers.ProjectController;
 
 /**
  * Created by Igor on 13.04.2017.
