@@ -185,6 +185,8 @@ public class Menu {
         }
     }
 
+
+
     // ************** ADMIN MENU
 
     private void printAdminMainMenu() {
@@ -198,7 +200,7 @@ public class Menu {
         System.out.println("[7] Back to main menu");
     }
 
-    private void adminChooseDB() {
+    private void adminChooseDBMenu() {
         System.out.println("Please make a selection");
         System.out.println("[1] Choose XML database");
         System.out.println("[2] Choose binary database"); // tell them that if they change DB, system will restart
@@ -216,5 +218,5 @@ public class Menu {
         // do not update / delete admins: so in search, if it is admin, then return: "you cannot update or delete admins"
 
     }
-    
+
 }
