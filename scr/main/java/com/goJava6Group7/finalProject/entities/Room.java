@@ -23,6 +23,14 @@ public class Room extends Entity {
         this.hotel = hotel;
     }
 
+    // ToString
+
+    @Override
+    public String toString() {
+        return "id: " + id + "; " + "Hotel: " + hotel.getHotelName() + "; " + "Name: " + name + "; " + "Number of guests: " +
+                numberOfPersons + "; " + "Price per night: " + price + "; ";
+    }
+
     // equals and hashCode
 
     @Override

@@ -158,10 +158,10 @@ public class Menu {
     private void performActionUserHotelMenu(int choice) {
         switch (choice) {
             case 1:
-                searchHotelByName();
+                searchHotelByName(controller);
                 break;
             case 2:
-                searchHotelByCityDates();
+                searchHotelByCityDates(controller);
                 break;
             case 3:
                 break;

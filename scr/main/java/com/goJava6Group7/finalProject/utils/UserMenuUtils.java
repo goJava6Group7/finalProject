@@ -1,9 +1,14 @@
 package com.goJava6Group7.finalProject.utils;
 
+import com.goJava6Group7.finalProject.controllers.ProjectController;
 import com.goJava6Group7.finalProject.entities.User;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Scanner;
-import static com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil.readStringFromConsole;
+
+import com.goJava6Group7.finalProject.controllers.ProjectController.*;
+
+import static com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil.*;
 
 /**
  * Created by guillaume on 4/30/17.
@@ -80,7 +85,7 @@ public class UserMenuUtils {
 
     }
 
-    public static void searchHotelByName(){
+    public static void searchHotelByName(ProjectController controller){
 
         String hotelName = "";
 
@@ -94,29 +99,30 @@ public class UserMenuUtils {
             }
         }
 
-        // here call controller function to search for hotel with hotelName
-
         System.out.println("Here is a list of hotels matching your criteria: ");
+
+        System.out.println(controller.findHotelByHotelName(hotelName));
+
+        System.out.println("To book a room, please note the name of the hotel of your choice" +
+                "and choose the book a room option in the main menu");
 
     }
 
-    public static void searchHotelByCityDates(){
+    public static void searchHotelByCityDates(ProjectController controller){
         Scanner scan = new Scanner(System.in);
 
         System.out.println("Please enter the city name");
         String cityName = scan.nextLine();
-        System.out.println("Please enter your check-in date");
-        String checkin = scan.nextLine();
-        System.out.println("Please enter your check-out date");
-        String checkout = scan.nextLine();
-
-        // we need a logic to check the dates (format, and logic: checkin before checkout, and checkout not
-        // more than 30 days after checkin
-
-        // here call controller function to search for hotels in given cities and available at these dates
+        LocalDate checkin = getCheckinDate();
+        LocalDate checkout = getCheckoutDate(checkin);
 
         System.out.println("Here is a list of hotels with rooms available when you will be in " + cityName +
                 " from " + checkin + " to " + checkout);
+
+        System.out.println(controller.findHotelByCityDate(cityName, checkin, checkout));
+
+        System.out.println("To book a room, please note the name of the hotel of your choice" +
+                "and choose the book a room option in the main menu");
 
         // here it would be nice to have a function so that user can enter hotel number and book room.
         // it should be done easily with an array that would be passed to the hotelresultsmenu.

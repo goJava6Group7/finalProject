@@ -9,6 +9,7 @@ import com.goJava6Group7.finalProject.entities.Room;
 import com.goJava6Group7.finalProject.entities.User;
 import com.goJava6Group7.finalProject.exceptions.frontend.*;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -77,7 +78,7 @@ public class ProjectController {
      * @throws NoSuchRoomException1
      * @throws RoomIsReservedForTheseDatesException
      */
-    public Reservation reserveRoom(User reserveOnUser, Room room, Date dataOfArrival, Date dateOfDeparture)
+    public Reservation reserveRoom(User reserveOnUser, Room room, LocalDate dataOfArrival, LocalDate dateOfDeparture)
             throws FrontendException {
         Dao<Reservation> daoReservation = dbManager.getDaoReservation();
         //TODO доделать проверку по датам
@@ -108,24 +109,78 @@ public class ProjectController {
      * @return
      * @throws NoSuchElementException
      */
-    public Hotel findHotelByHotelName(String hotelName) throws NoSuchElementException {
+    public List <Hotel> findHotelByHotelName(String hotelName) throws NoSuchElementException {
 
         Dao<Hotel> daoHotel = dbManager.getDaoHotel();
         List<Hotel> allHotels = daoHotel.getAll();
 
         return allHotels.stream()
                 .filter((Hotel hotel) -> hotel.getHotelName().equals(hotelName))
-                .findFirst().get();
+                .collect(Collectors.toList());
     }
 
-    public List<Hotel> findHotelByCityName(String cityName) throws NoSuchElementException {
+    public List<Hotel> findHotelByCityDate(String cityName, LocalDate checkin, LocalDate checkout) throws NoSuchElementException {
 
-        DaoHotel daoHotel = dbManager.getDaoHotel();
+        List<Hotel> cityHotels;
+        List<Hotel> hotelsByCityByDate = new ArrayList<>();
+        List<Room> rooms = new ArrayList<>();
+
+        Dao<Hotel> daoHotel = dbManager.getDaoHotel();
         List<Hotel> allHotels = daoHotel.getAll();
 
-        return allHotels.stream()
+        cityHotels = allHotels.stream()
                 .filter((Hotel hotel) -> hotel.getHotelCity().equals(cityName))
                 .collect(Collectors.toList());
+
+        // create room array with all rooms in the city
+        for (Hotel hotel : cityHotels) {
+            rooms.addAll(hotel.getHotelRooms());
+        }
+
+        // delete room if it is booked during requested period
+        rooms.removeIf(room -> isBooked(room,checkin, checkout));
+
+        System.out.println("Here are the rooms after checking for dates:");
+        System.out.println(rooms);
+
+        // create array of hotels with available rooms from the room array
+        List<Hotel> hotelDuplicates = new ArrayList<>();
+        for (Room room : rooms) {
+            hotelDuplicates.add(room.getHotel());
+        }
+
+        // removing duplicates
+        Set<Hotel> hotelsNoD = new HashSet<Hotel>();
+        hotelsNoD.addAll(hotelDuplicates);
+
+        hotelsByCityByDate.addAll(hotelsNoD);
+
+        // issue: when printing results, it also prints rooms that are not available... maybe better to return a
+        // room map, with only available rooms, grouped by hotel?
+        return hotelsByCityByDate;
+    }
+
+    public static boolean isBooked (Room room, LocalDate checkin, LocalDate checkout){
+        boolean isBooked = false;
+        List<Reservation> bookings;
+
+        bookings = room.getBookings();
+        if (bookings == null) {isBooked = false;} else {
+            for (Reservation booking : bookings){
+                // if checkin or checkout dates are during an existing stay
+                if ((booking.getDateOfArrival().isBefore(checkin) &&
+                        (booking.getDateOfDeparture().isAfter(checkin)))
+                        || (booking.getDateOfArrival().isBefore(checkout) &&
+                        (booking.getDateOfDeparture().isAfter(checkout)))) isBooked = true;
+
+                // if checkin or checkout dates are the same as an existing stay
+                if ((booking.getDateOfArrival().isEqual(checkin))
+                        || (booking.getDateOfArrival().isEqual(checkout))) isBooked = true;
+
+            }
+        }
+
+        return isBooked;
     }
 
     /*Поменял сигнатуру метода. Более логично принимать набор ключей-значений и в зависимости от них
