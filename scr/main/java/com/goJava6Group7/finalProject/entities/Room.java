@@ -1,6 +1,7 @@
 package scr.main.java.com.goJava6Group7.finalProject.entities;
 
 import scr.main.java.com.goJava6Group7.finalProject.utils.IdUtil;
+import scr.main.java.com.goJava6Group7.finalProject.entities.RoomClass;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

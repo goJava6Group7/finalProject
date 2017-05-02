@@ -4,6 +4,7 @@ import org.junit.Test;
 import scr.main.java.com.goJava6Group7.finalProject.data.dataBase.DataBaseManager;
 import scr.main.java.com.goJava6Group7.finalProject.data.dataBase.impl.DataBaseManagerFactory;
 import scr.main.java.com.goJava6Group7.finalProject.data.dataBase.impl.DataBaseManagerXml;
+import scr.main.java.com.goJava6Group7.finalProject.data.dataBase.impl.DataBaseManagerBinary;
 import scr.main.java.com.goJava6Group7.finalProject.entities.Hotel;
 import scr.main.java.com.goJava6Group7.finalProject.entities.Room;
 import scr.main.java.com.goJava6Group7.finalProject.entities.RoomClass;
@@ -14,8 +15,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
@@ -36,11 +36,42 @@ public class DataTest {
         Room room = new Room(5,5, RoomClass.Business);
         Hotel hotel = new Hotel("Live Hostel","Kiev", 2);
         User user = new User("John","Handsome","pswd");
+        User user2 = new User("Jone","Handsome","pswd");
         switch (dataBaseManager.getClass().getSimpleName()){
             case "DataBaseManagerBinary" : {
-                System.out.println("NOT yet"); //////////////// !!!!!
+
+                System.out.println(dataBaseManager.getClass().getSimpleName());
+
+                try {
+
+                    dataBaseManager.getDaoRoom().create(room);
+                    dataBaseManager.getDaoHotel().create(hotel);
+                    dataBaseManager.getDaoUser().create(user);
+
+                    FileOutputStream fos = new FileOutputStream("Binary_Database");
+                    ObjectOutputStream oos = new ObjectOutputStream(fos);
+                    oos.writeObject(dataBaseManager);
+                    oos.flush();
+                    oos.close();
+                    dataBaseManager = null;
+
+                    FileInputStream fis = new FileInputStream("Binary_Database");
+                    ObjectInputStream ois = new ObjectInputStream(fis);
+                    dataBaseManager = (DataBaseManagerBinary) ois.readObject();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+
+                break;
+
             }
-            default:{
+            case "DataBaseManagerXml" :{
+
+                System.out.println(dataBaseManager.getClass().getSimpleName());
+
                 try {
                     Files.copy(FileSystems.getDefault().getPath("XML_Database")
                             , FileSystems.getDefault().getPath("XML_Database_Src"), StandardCopyOption.REPLACE_EXISTING);

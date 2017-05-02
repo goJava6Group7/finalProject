@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * Created by Igor on 14.04.2017.
  */
-public final class DataBaseManagerBinary implements DataBaseManager {
+public final class DataBaseManagerBinary implements DataBaseManager, Serializable {
 
     private List<Room> rooms = new ArrayList<>();
     private List<User> users = new ArrayList<>();
@@ -53,7 +53,6 @@ public final class DataBaseManagerBinary implements DataBaseManager {
     public DaoUser getDaoUser() {
         return new DaoUser(this.users);
     }
-
 
     @Override
     public boolean initDB() {

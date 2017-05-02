@@ -1,4 +1,6 @@
 package scr.main.java.com.goJava6Group7.finalProject.entities;
 
-public abstract class Entity {
+import java.io.Serializable;
+
+public abstract class Entity implements Serializable {
 }
