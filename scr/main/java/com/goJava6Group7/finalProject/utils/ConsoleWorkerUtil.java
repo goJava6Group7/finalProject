@@ -1,12 +1,14 @@
 package com.goJava6Group7.finalProject.utils;
 
 import com.goJava6Group7.finalProject.exceptions.frontend.CheckinDateException;
+import com.goJava6Group7.finalProject.exceptions.frontend.OutOfMenuRangeException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Scanner;
 
 /**
  * Created by Kontar Maryna on 26.04.2017.
@@ -33,6 +35,42 @@ public class ConsoleWorkerUtil {
     public static void printReadIntFromConsoleException(int number) {
         System.out.println("You typed something strange. " +
                 "And we want a number from 1 to " + number + ". Please, type again.");
+    }
+
+
+    public static int getMenuInput(int min, int max) {
+        int choice = 0;
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        while (choice < min || choice > max) {
+            try {
+                System.out.print("\nEnter your selection");
+                choice = Integer.parseInt(br.readLine());
+                if (choice < min || choice > max) throw new OutOfMenuRangeException();
+
+            } catch (NumberFormatException | OutOfMenuRangeException | IOException e) {
+                System.out.println("Invalid selection, please try again");
+            }
+        }
+        return choice;
+    }
+
+    public static String readNameFromConsole(String wordDef){
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String text = "";
+
+        System.out.println("Please enter the " + wordDef);
+
+        while(true) {
+            try{
+                text = br.readLine();
+                break;
+            }catch (IOException e) {
+                System.out.println("Incorrect input. Please enter the correct " + wordDef);
+                continue;
+            }
+        }
+       return text;
     }
 
     public static LocalDate readDateFromConsole(){

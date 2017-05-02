@@ -8,10 +8,18 @@ import com.goJava6Group7.finalProject.entities.Reservation;
 import com.goJava6Group7.finalProject.entities.Room;
 import com.goJava6Group7.finalProject.entities.User;
 import com.goJava6Group7.finalProject.exceptions.frontend.*;
+import com.goJava6Group7.finalProject.main.Menu;
+import com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.goJava6Group7.finalProject.main.Menu.printUserRoomResultsMenu;
+import static com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil.*;
+
+import com.goJava6Group7.finalProject.exceptions.frontend.OutOfMenuRangeException;
 
 /**
  * Created by Igor on 13.04.2017.
@@ -227,19 +235,33 @@ public class ProjectController {
 // ************************************* GUILLAUME ********************************************
 
 
-    public List <Hotel> findHotelByHotelName(String hotelName) throws NoSuchElementException {
+    public void findHotelByHotelName() {
 
         Dao<Hotel> daoHotel = dbManager.getDaoHotel();
         List<Hotel> allHotels = daoHotel.getAll();
 
-        return allHotels.stream()
+        String hotelName = ConsoleWorkerUtil.readNameFromConsole("hotel name");
+
+        System.out.println("Here is a list of hotels matching your criteria: ");
+
+         List<Hotel> myHotels = allHotels.stream()
                 .filter((Hotel hotel) -> hotel.getHotelName().equalsIgnoreCase(hotelName))
                 .collect(Collectors.toList());
+
+        System.out.println(myHotels);
+
+        System.out.println("To book a room, please note the name of the hotel of your choice" +
+                "and choose the book a room option in the main menu");
+
     }
 
-    public List<Hotel> findHotelByCityDate(String cityName, LocalDate checkin, LocalDate checkout) throws NoSuchElementException {
+    public void findHotelByCityDate() {
 
-        List<Room> rooms = findRoomByCityDate(cityName, checkin, checkout);
+        String cityName = ConsoleWorkerUtil.readNameFromConsole("city name");
+        LocalDate checkin = ConsoleWorkerUtil.getCheckinDate();
+        LocalDate checkout = ConsoleWorkerUtil.getCheckoutDate(checkin);
+
+        List<Room> rooms = searchRoomByCityDate(cityName, checkin, checkout);
 
         // create array of hotels with available rooms from the room array
         List<Hotel> hotelDuplicates = new ArrayList<>();
@@ -254,9 +276,14 @@ public class ProjectController {
         List<Hotel> hotelsByCityByDate = new ArrayList<>();
         hotelsByCityByDate.addAll(hotelsNoD);
 
-        // issue: when printing results, it also prints rooms that are not available... maybe better to return a
-        // room map, with only available rooms, grouped by hotel?
-        return hotelsByCityByDate;
+        System.out.println("Here is a list of hotels with rooms available when you will be in " + cityName +
+                " from " + checkin + " to " + checkout);
+        System.out.println(hotelsByCityByDate);
+
+        // why cant I put this here?
+        Menu.printUserHotelResultsMenu();
+        Menu.performActionUserHotelResultsMenu(rooms, checkin, checkout, getMenuInput(1,3));
+
     }
 
     public static boolean isBooked (Room room, LocalDate checkin, LocalDate checkout){
@@ -282,7 +309,25 @@ public class ProjectController {
         return isBooked;
     }
 
-    public List<Room> findRoomByCityDate(String cityName, LocalDate checkin, LocalDate checkout) throws NoSuchElementException {
+    public void findRoomByCityDate() {
+        List<Room> rooms;
+
+        String cityName = readNameFromConsole("city name");
+        LocalDate checkin = getCheckinDate();
+        LocalDate checkout = getCheckoutDate(checkin);
+
+        rooms = searchRoomByCityDate(cityName, checkin, checkout);
+
+        System.out.println("Here are the rooms available in " + cityName +
+                " from " + checkin + " to " + checkout);
+        System.out.println(rooms);
+
+        // Again, this does not work...
+        printUserRoomResultsMenu();
+        Menu.performActionUserRoomResultsMenu(rooms, checkin, checkout, getMenuInput(1,3));
+    }
+
+    public List<Room> searchRoomByCityDate(String cityName, LocalDate checkin, LocalDate checkout){
 
         Dao<Hotel> daoHotel = dbManager.getDaoHotel();
         List<Hotel> allHotels = daoHotel.getAll();
@@ -303,13 +348,18 @@ public class ProjectController {
         return rooms;
     }
 
-    public List<Room> findRoomByHotelDate(String hotelName, LocalDate checkin, LocalDate checkout) throws NoSuchElementException {
+
+    public void findRoomByHotelDate() {
 
         Dao<Hotel> daoHotel = dbManager.getDaoHotel();
         List<Hotel> allHotels = daoHotel.getAll();
+
         List<Hotel> myHotels;
         List<Room> rooms = new ArrayList<>();
 
+        String hotelName = readNameFromConsole("hotel name");
+        LocalDate checkin = getCheckinDate();
+        LocalDate checkout = getCheckoutDate(checkin);
 
         myHotels = allHotels.stream()
                 .filter((Hotel hotel) -> hotel.getHotelName().equalsIgnoreCase(hotelName))
@@ -323,12 +373,69 @@ public class ProjectController {
         // delete room if it is booked during requested period
         rooms.removeIf(room -> isBooked(room,checkin, checkout));
 
-        return rooms;
+        System.out.println("Here are the rooms available in the hotel " + hotelName +
+                " from " + checkin + " to " + checkout);
+
+        System.out.println(rooms);
+
+        // Again, same problem... why?
+        printUserRoomResultsMenu();
+        Menu.performActionUserRoomResultsMenu(rooms, checkin, checkout, getMenuInput(1,3));
+
+    }
+
+
+    public void bookRoom(List<Room> rooms, LocalDate checkin, LocalDate checkout){
+
+        System.out.println("Please enter the number of the room you would like to book" +
+                " from " + checkin + " to " + checkout);
+        System.out.println(rooms);
+
     }
 
     public List<Room> findRoomsInHotel(Hotel hotel) {
 
         return hotel.getHotelRooms();
+
+    }
+
+    public void createUser(){
+
+        User newUser;
+        String userName = "";
+        String email = "";
+        String password = "";
+        String yn;
+
+        boolean ok = false;
+
+        while (!ok){
+            userName = readNameFromConsole("user name");
+            email = readNameFromConsole("email");
+            password = readNameFromConsole("password");
+
+            System.out.println("\nHere is a summary of your data:");
+            System.out.println("Username: " + userName);
+            System.out.println("Email: " + email);
+
+            System.out.println("If this is correct, please enter Y, else press any key");
+
+            while(true){
+                try{
+                    yn = readStringFromConsole();
+                    break;
+                }catch (IOException e){
+                    System.out.println("You entered a wrong input, please try again");
+                    continue;
+                }
+            }
+            if (yn.equalsIgnoreCase("Y")) ok = true;
+        }
+
+        newUser = new User(email, userName, password);
+
+        System.out.println(newUser);
+        // here save this user to the database (and check if user already exists)
 
     }
 
