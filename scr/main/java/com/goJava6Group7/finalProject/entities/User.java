@@ -9,8 +9,14 @@ public class User extends Entity {
     private String name;
     private String login;
     private String password;
+    private Role role;
+
+    public enum Role{
+        ADMIN, USER, GUEST
+    }
 
     public User(String name, String login, String password) {
+        role = Role.GUEST;
         this.name = name;
         this.login = login;
         this.password = password;
@@ -20,12 +26,32 @@ public class User extends Entity {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getLogin() {
         return login;
     }
 
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     //TODO Kontar Maryna: для тестирования методов, пока backend не написали DB.
@@ -40,3 +66,4 @@ public class User extends Entity {
         return sb.toString();
     }
 }
+
