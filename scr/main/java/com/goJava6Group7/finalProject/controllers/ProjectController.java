@@ -233,7 +233,7 @@ public class ProjectController {
         List<Hotel> allHotels = daoHotel.getAll();
 
         return allHotels.stream()
-                .filter((Hotel hotel) -> hotel.getHotelName().equals(hotelName))
+                .filter((Hotel hotel) -> hotel.getHotelName().equalsIgnoreCase(hotelName))
                 .collect(Collectors.toList());
     }
 
@@ -289,7 +289,7 @@ public class ProjectController {
         List<Room> rooms = new ArrayList<>();
 
         List<Hotel> cityHotels = allHotels.stream()
-                .filter((Hotel hotel) -> hotel.getHotelCity().equals(cityName))
+                .filter((Hotel hotel) -> hotel.getHotelCity().equalsIgnoreCase(cityName))
                 .collect(Collectors.toList());
 
         // create room array with all rooms in the city
@@ -312,7 +312,7 @@ public class ProjectController {
 
 
         myHotels = allHotels.stream()
-                .filter((Hotel hotel) -> hotel.getHotelName().equals(hotelName))
+                .filter((Hotel hotel) -> hotel.getHotelName().equalsIgnoreCase(hotelName))
                 .collect(Collectors.toList());
 
         // create room array with all rooms in the city
