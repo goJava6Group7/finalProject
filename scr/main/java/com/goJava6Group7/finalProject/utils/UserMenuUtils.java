@@ -133,7 +133,7 @@ public class UserMenuUtils {
 
     }
 
-    public static List<Room> SearchRoomByCityDate(ProjectController controller) throws NoSuchElementException {
+    public static List<Room> searchRoomByCityDate(ProjectController controller) throws NoSuchElementException {
 
         Scanner scan = new Scanner(System.in);
 
@@ -146,6 +146,10 @@ public class UserMenuUtils {
 
         System.out.println("Here are the rooms available in " + cityName + " during your stay:");
         System.out.println(rooms);
+
+        System.out.println("Do you want to book a room?");
+
+        // here again, a function to book one room in the list using an array
 
         return rooms;
     }
@@ -165,47 +169,12 @@ public class UserMenuUtils {
                 " from " + checkin + " to " + checkout);
         System.out.println(rooms);
 
-        return rooms;
-    }
-
-    public static void searchRoomHotelDate(){
-        Scanner scan = new Scanner(System.in);
-
-        System.out.println("Please enter the hotel name");
-        String hotelName = scan.nextLine();
-        System.out.println("Please enter your check-in date");
-        String checkin = scan.nextLine();
-        System.out.println("Please enter your check-out date");
-        String checkout = scan.nextLine();
-
-        System.out.println("Here is a list of rooms that are available in " + hotelName +
-                " from " + checkin + " to " + checkout);
-
         System.out.println("Do you want to book a room?");
 
         // here again, a function to book one room in the list using an array
 
-    }
 
-    public static void searchRoomCityDate() {
-        Scanner scan = new Scanner(System.in);
-
-        System.out.println("Please enter the city name");
-        String cityName = scan.nextLine();
-        System.out.println("Please enter your check-in date");
-        String checkin = scan.nextLine();
-        System.out.println("Please enter your check-out date");
-        String checkout = scan.nextLine();
-
-        // we need a logic to check the dates (format, and logic: checkin before checkout, and checkout not
-        // more than 30 days after checkin
-        // here call controller function to search for hotels in given cities and available at these dates
-
-        System.out.println("Here is a list of rooms available when you will be in " + cityName + " from " + checkin
-                + " to " + checkout);
-
-        // here again, a function to book one room in the list using an array
-
+        return rooms;
     }
 
     public static void bookRoom(){

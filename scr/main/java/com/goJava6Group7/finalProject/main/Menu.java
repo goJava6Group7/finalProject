@@ -127,12 +127,12 @@ public class Menu {
     private void performActionUserRoomMenu(int choice) {
         switch (choice) {
             case 1:
-                searchRoomHotelDate();
+                searchRoomByHotelDate(controller);
                 printUserRoomResultsMenu();
                 performActionUserRoomResultsMenu(getMenuInput(1,3));
                 break;
             case 2:
-                searchRoomCityDate();
+                searchRoomByCityDate(controller);
                 printUserRoomResultsMenu();
                 performActionUserRoomResultsMenu(getMenuInput(1,3));
                 break;

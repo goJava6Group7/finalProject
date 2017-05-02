@@ -323,9 +323,6 @@ public class ProjectController {
         // delete room if it is booked during requested period
         rooms.removeIf(room -> isBooked(room,checkin, checkout));
 
-        System.out.println("Here are the rooms available during your stay:");
-        System.out.println(rooms);
-
         return rooms;
     }
 
