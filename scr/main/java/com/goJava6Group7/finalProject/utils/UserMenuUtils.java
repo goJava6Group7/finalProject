@@ -4,6 +4,7 @@ import com.goJava6Group7.finalProject.controllers.ProjectController;
 import com.goJava6Group7.finalProject.entities.Hotel;
 import com.goJava6Group7.finalProject.entities.Room;
 import com.goJava6Group7.finalProject.entities.User;
+import com.goJava6Group7.finalProject.main.Menu;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
@@ -92,6 +93,7 @@ public class UserMenuUtils {
     public static void searchHotelByName(ProjectController controller){
 
         String hotelName = "";
+        List<Room> rooms;
 
         System.out.println("Please enter the hotel name");
         while(true){
@@ -112,7 +114,8 @@ public class UserMenuUtils {
 
     }
 
-    public static void searchHotelByCityDates(ProjectController controller){
+    public static List<Room> searchHotelByCityDates(ProjectController controller){
+        List<Room> rooms;
         Scanner scan = new Scanner(System.in);
 
         System.out.println("Please enter the city name");
@@ -124,13 +127,12 @@ public class UserMenuUtils {
                 " from " + checkin + " to " + checkout);
 
         System.out.println(controller.findHotelByCityDate(cityName, checkin, checkout));
+        rooms = controller.findRoomByCityDate(cityName, checkin, checkout);
 
         System.out.println("To book a room, please note the name of the hotel of your choice" +
                 "and choose the book a room option in the main menu");
 
-        // here it would be nice to have a function so that user can enter hotel number and book room.
-        // it should be done easily with an array that would be passed to the hotelresultsmenu.
-
+        return rooms;
     }
 
     public static List<Room> searchRoomByCityDate(ProjectController controller) throws NoSuchElementException {
@@ -144,12 +146,10 @@ public class UserMenuUtils {
 
         List<Room> rooms = controller.findRoomByCityDate(cityName,checkin, checkout);
 
-        System.out.println("Here are the rooms available in " + cityName + " during your stay:");
+        System.out.println("Here are the rooms available in " + cityName +
+                " from " + checkin + " to " + checkout);
+
         System.out.println(rooms);
-
-        System.out.println("Do you want to book a room?");
-
-        // here again, a function to book one room in the list using an array
 
         return rooms;
     }
@@ -167,20 +167,18 @@ public class UserMenuUtils {
 
         System.out.println("Here are the rooms available in the hotel " + hotelName +
                 " from " + checkin + " to " + checkout);
+
         System.out.println(rooms);
 
-        System.out.println("Do you want to book a room?");
-
-        // here again, a function to book one room in the list using an array
-
-
         return rooms;
+
     }
 
-    public static void bookRoom(){
+    public static void bookRoom(List<Room> rooms){
 
-        System.out.println("Please enter the number of the room you would like to book");
-
+        System.out.println("Please enter the number of the room you would like to book" +
+        "from  to ");
+        System.out.println(rooms);
 
     }
 
