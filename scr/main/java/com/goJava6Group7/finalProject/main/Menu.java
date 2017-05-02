@@ -2,11 +2,12 @@ package com.goJava6Group7.finalProject.main;
 
 import com.goJava6Group7.finalProject.controllers.ProjectController;
 import com.goJava6Group7.finalProject.entities.Room;
-
-import static com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil.getMenuInput;
+import com.goJava6Group7.finalProject.exceptions.frontend.OutOfMenuRangeException;
+import static com.goJava6Group7.finalProject.utils.UserMenuUtils.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * Created by Igor on 13.04.2017.
@@ -58,7 +59,7 @@ public class Menu {
         System.out.println("[3] Go back to main menu");
     }
 
-    public static void printUserRoomResultsMenu() {
+    public void printUserRoomResultsMenu() {
         System.out.println("\nPlease make a selection");
         System.out.println("[1] Book a room"); // for admin / users
         System.out.println("[2] Go back to room search");
@@ -72,7 +73,7 @@ public class Menu {
         System.out.println("[3] Go back to main menu");
     }
 
-    public static void printUserHotelResultsMenu() {
+    public void printUserHotelResultsMenu() {
         System.out.println("\nPlease make a selection");
         System.out.println("[1] Book a room"); // for admin / users
         System.out.println("[2] Go back to hotel search");
@@ -81,10 +82,27 @@ public class Menu {
 
 
 
+    private int getMenuInput(int min, int max) {
+        int choice = 0;
+        Scanner scan = new Scanner(System.in);
+
+        while (choice < min || choice > max) {
+            try {
+                System.out.print("\nEnter your selection");
+                choice = Integer.parseInt(scan.nextLine());
+                if (choice < min || choice > max) throw new OutOfMenuRangeException();
+
+            } catch (NumberFormatException | OutOfMenuRangeException e) {
+                System.out.println("Invalid selection, please try again");
+            }
+        }
+        return choice;
+    }
+
     private void performActionUserMainMenu(int choice) {
         switch (choice) {
             case 1:
-                controller.createUser();
+                createUser();
                 break;
             case 2:
                 //login
@@ -110,22 +128,27 @@ public class Menu {
     }
 
     private void performActionUserRoomMenu(int choice) {
+        List<Room> rooms;
         switch (choice) {
             case 1:
-                controller.findRoomByHotelDate();
+                rooms = searchRoomByHotelDate(controller);
+                printUserRoomResultsMenu();
+                performActionUserRoomResultsMenu(rooms, getMenuInput(1,3));
                 break;
             case 2:
-                controller.findRoomByCityDate();
+                rooms = searchRoomByCityDate(controller);
+                printUserRoomResultsMenu();
+                performActionUserRoomResultsMenu(rooms, getMenuInput(1,3));
                 break;
             case 3:
                 break;
         }
     }
 
-    public void performActionUserRoomResultsMenu(List<Room> rooms, LocalDate checkin, LocalDate checkout, int choice) {
+    public void performActionUserRoomResultsMenu(List<Room> rooms, int choice) {
         switch (choice) {
             case 1:
-                controller.bookRoom(rooms, checkin, checkout);
+                bookRoom(rooms);
                 break;
             case 2:
                 printUserRoomMenu();
@@ -137,23 +160,28 @@ public class Menu {
     }
 
     private void performActionUserHotelMenu(int choice) {
+        List<Room> rooms;
         switch (choice) {
             case 1:
-                controller.findHotelByHotelName();
+                searchHotelByName(controller);
                 break;
             case 2:
-                controller.findHotelByCityDate();
+                rooms = searchHotelByCityDates(controller);
+                printUserHotelResultsMenu();
+                performActionUserHotelResultsMenu(rooms, getMenuInput(1,3));
                 break;
             case 3:
                 break;
+            // default:
+            //     System.out.println("An unknown error has occurred");
         }
 
     }
 
-    public void performActionUserHotelResultsMenu(List<Room> rooms, LocalDate checkin, LocalDate checkout, int choice) {
+    public void performActionUserHotelResultsMenu(List<Room> rooms, int choice) {
         switch (choice) {
             case 1:
-                controller.bookRoom(rooms, checkin, checkout);
+                bookRoom(rooms);
                 break;
             case 2:
                 printUserHotelMenu();
