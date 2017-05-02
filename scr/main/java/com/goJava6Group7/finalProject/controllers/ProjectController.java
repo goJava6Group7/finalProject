@@ -36,6 +36,10 @@ public class ProjectController {
 //    private final static List<Room> allRooms = DAORoom.getAll();
 //    private final static List<Reservation> allReservation = DAOReservation.getAll();
 
+
+    // ************************* MARINA ********************************************************
+
+
     public ProjectController(DataBaseManager dbManager) {
         this.dbManager = dbManager;
     }
@@ -97,7 +101,7 @@ public class ProjectController {
         throw new UnsupportedOperationException();
     }
 
-    /**
+    /*
      * TODO Игорю на проверку
      * Kontar Maryna:
      * method can @throw NoSuchElementException("No value present")
@@ -109,82 +113,10 @@ public class ProjectController {
      * @return
      * @throws NoSuchElementException
      */
-    public List <Hotel> findHotelByHotelName(String hotelName) throws NoSuchElementException {
-
-        Dao<Hotel> daoHotel = dbManager.getDaoHotel();
-        List<Hotel> allHotels = daoHotel.getAll();
-
-        return allHotels.stream()
-                .filter((Hotel hotel) -> hotel.getHotelName().equals(hotelName))
-                .collect(Collectors.toList());
-    }
-
-    public List<Hotel> findHotelByCityDate(String cityName, LocalDate checkin, LocalDate checkout) throws NoSuchElementException {
-
-        List<Hotel> cityHotels;
-        List<Hotel> hotelsByCityByDate = new ArrayList<>();
-        List<Room> rooms = new ArrayList<>();
-
-        Dao<Hotel> daoHotel = dbManager.getDaoHotel();
-        List<Hotel> allHotels = daoHotel.getAll();
-
-        cityHotels = allHotels.stream()
-                .filter((Hotel hotel) -> hotel.getHotelCity().equals(cityName))
-                .collect(Collectors.toList());
-
-        // create room array with all rooms in the city
-        for (Hotel hotel : cityHotels) {
-            rooms.addAll(hotel.getHotelRooms());
-        }
-
-        // delete room if it is booked during requested period
-        rooms.removeIf(room -> isBooked(room,checkin, checkout));
-
-        System.out.println("Here are the rooms after checking for dates:");
-        System.out.println(rooms);
-
-        // create array of hotels with available rooms from the room array
-        List<Hotel> hotelDuplicates = new ArrayList<>();
-        for (Room room : rooms) {
-            hotelDuplicates.add(room.getHotel());
-        }
-
-        // removing duplicates
-        Set<Hotel> hotelsNoD = new HashSet<Hotel>();
-        hotelsNoD.addAll(hotelDuplicates);
-
-        hotelsByCityByDate.addAll(hotelsNoD);
-
-        // issue: when printing results, it also prints rooms that are not available... maybe better to return a
-        // room map, with only available rooms, grouped by hotel?
-        return hotelsByCityByDate;
-    }
-
-    public static boolean isBooked (Room room, LocalDate checkin, LocalDate checkout){
-        boolean isBooked = false;
-        List<Reservation> bookings;
-
-        bookings = room.getBookings();
-        if (bookings == null) {isBooked = false;} else {
-            for (Reservation booking : bookings){
-                // if checkin or checkout dates are during an existing stay
-                if ((booking.getDateOfArrival().isBefore(checkin) &&
-                        (booking.getDateOfDeparture().isAfter(checkin)))
-                        || (booking.getDateOfArrival().isBefore(checkout) &&
-                        (booking.getDateOfDeparture().isAfter(checkout)))) isBooked = true;
-
-                // if checkin or checkout dates are the same as an existing stay
-                if ((booking.getDateOfArrival().isEqual(checkin))
-                        || (booking.getDateOfArrival().isEqual(checkout))) isBooked = true;
-
-            }
-        }
-
-        return isBooked;
-    }
 
     /*Поменял сигнатуру метода. Более логично принимать набор ключей-значений и в зависимости от них
     * делать поиск*/
+
     public List<Room> findRoom(Map<String, String> params) {
 //        TODO(Замечания) - работа с консолью должна происходить ТОЛЬКО В КЛАССЕ MENU
 
@@ -217,13 +149,6 @@ public class ProjectController {
                 .get();
 */
         throw new UnsupportedOperationException();
-    }
-
-
-    public List<Room> findRoomsInHotel(Hotel hotel) {
-
-        return hotel.getHotelRooms();
-
     }
 
     /*
@@ -298,5 +223,117 @@ public class ProjectController {
 //        }
         return daoHotel.update(newHotel);
     }
+
+// ************************************* GUILLAUME ********************************************
+
+
+    public List <Hotel> findHotelByHotelName(String hotelName) throws NoSuchElementException {
+
+        Dao<Hotel> daoHotel = dbManager.getDaoHotel();
+        List<Hotel> allHotels = daoHotel.getAll();
+
+        return allHotels.stream()
+                .filter((Hotel hotel) -> hotel.getHotelName().equals(hotelName))
+                .collect(Collectors.toList());
+    }
+
+    public List<Hotel> findHotelByCityDate(String cityName, LocalDate checkin, LocalDate checkout) throws NoSuchElementException {
+
+        List<Room> rooms = findRoomByCityDate(cityName, checkin, checkout);
+
+        // create array of hotels with available rooms from the room array
+        List<Hotel> hotelDuplicates = new ArrayList<>();
+        for (Room room : rooms) {
+            hotelDuplicates.add(room.getHotel());
+        }
+
+        // removing duplicates
+        Set<Hotel> hotelsNoD = new HashSet<Hotel>();
+        hotelsNoD.addAll(hotelDuplicates);
+
+        List<Hotel> hotelsByCityByDate = new ArrayList<>();
+        hotelsByCityByDate.addAll(hotelsNoD);
+
+        // issue: when printing results, it also prints rooms that are not available... maybe better to return a
+        // room map, with only available rooms, grouped by hotel?
+        return hotelsByCityByDate;
+    }
+
+    public static boolean isBooked (Room room, LocalDate checkin, LocalDate checkout){
+        boolean isBooked = false;
+        List<Reservation> bookings;
+
+        bookings = room.getBookings();
+        if (bookings == null) {isBooked = false;} else {
+            for (Reservation booking : bookings){
+                // if checkin or checkout dates are during an existing stay
+                if ((booking.getDateOfArrival().isBefore(checkin) &&
+                        (booking.getDateOfDeparture().isAfter(checkin)))
+                        || (booking.getDateOfArrival().isBefore(checkout) &&
+                        (booking.getDateOfDeparture().isAfter(checkout)))) isBooked = true;
+
+                // if checkin or checkout dates are the same as an existing stay
+                if ((booking.getDateOfArrival().isEqual(checkin))
+                        || (booking.getDateOfArrival().isEqual(checkout))) isBooked = true;
+
+            }
+        }
+
+        return isBooked;
+    }
+
+    public List<Room> findRoomByCityDate(String cityName, LocalDate checkin, LocalDate checkout) throws NoSuchElementException {
+
+        Dao<Hotel> daoHotel = dbManager.getDaoHotel();
+        List<Hotel> allHotels = daoHotel.getAll();
+        List<Room> rooms = new ArrayList<>();
+
+        List<Hotel> cityHotels = allHotels.stream()
+                .filter((Hotel hotel) -> hotel.getHotelCity().equals(cityName))
+                .collect(Collectors.toList());
+
+        // create room array with all rooms in the city
+        for (Hotel hotel : cityHotels) {
+            rooms.addAll(hotel.getHotelRooms());
+        }
+
+        // delete room if it is booked during requested period
+        rooms.removeIf(room -> isBooked(room,checkin, checkout));
+
+        return rooms;
+    }
+
+    public List<Room> findRoomByHotelDate(String hotelName, LocalDate checkin, LocalDate checkout) throws NoSuchElementException {
+
+        Dao<Hotel> daoHotel = dbManager.getDaoHotel();
+        List<Hotel> allHotels = daoHotel.getAll();
+        List<Hotel> myHotels;
+        List<Room> rooms = new ArrayList<>();
+
+
+        myHotels = allHotels.stream()
+                .filter((Hotel hotel) -> hotel.getHotelName().equals(hotelName))
+                .collect(Collectors.toList());
+
+        // create room array with all rooms in the city
+        for (Hotel hotel : myHotels) {
+            rooms.addAll(hotel.getHotelRooms());
+        }
+
+        // delete room if it is booked during requested period
+        rooms.removeIf(room -> isBooked(room,checkin, checkout));
+
+        System.out.println("Here are the rooms available during your stay:");
+        System.out.println(rooms);
+
+        return rooms;
+    }
+
+    public List<Room> findRoomsInHotel(Hotel hotel) {
+
+        return hotel.getHotelRooms();
+
+    }
+
 
 }

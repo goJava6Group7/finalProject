@@ -1,13 +1,17 @@
 package com.goJava6Group7.finalProject.utils;
 
 import com.goJava6Group7.finalProject.controllers.ProjectController;
+import com.goJava6Group7.finalProject.entities.Hotel;
+import com.goJava6Group7.finalProject.entities.Room;
 import com.goJava6Group7.finalProject.entities.User;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import com.goJava6Group7.finalProject.controllers.ProjectController.*;
 
+import static com.goJava6Group7.finalProject.controllers.ProjectController.isBooked;
 import static com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil.*;
 
 /**
@@ -127,6 +131,41 @@ public class UserMenuUtils {
         // here it would be nice to have a function so that user can enter hotel number and book room.
         // it should be done easily with an array that would be passed to the hotelresultsmenu.
 
+    }
+
+    public static List<Room> SearchRoomByCityDate(ProjectController controller) throws NoSuchElementException {
+
+        Scanner scan = new Scanner(System.in);
+
+        System.out.println("Please enter the city name");
+        String cityName = scan.nextLine();
+        LocalDate checkin = getCheckinDate();
+        LocalDate checkout = getCheckoutDate(checkin);
+
+        List<Room> rooms = controller.findRoomByCityDate(cityName,checkin, checkout);
+
+        System.out.println("Here are the rooms available in " + cityName + " during your stay:");
+        System.out.println(rooms);
+
+        return rooms;
+    }
+
+    public static List<Room> searchRoomByHotelDate(ProjectController controller) throws NoSuchElementException {
+
+        Scanner scan = new Scanner(System.in);
+
+        System.out.println("Please enter the hotel name");
+        String hotelName = scan.nextLine();
+        LocalDate checkin = getCheckinDate();
+        LocalDate checkout = getCheckoutDate(checkin);
+
+        List<Room> rooms = controller.findRoomByHotelDate(hotelName,checkin, checkout);
+
+        System.out.println("Here are the rooms available in the hotel " + hotelName +
+                " from " + checkin + " to " + checkout);
+        System.out.println(rooms);
+
+        return rooms;
     }
 
     public static void searchRoomHotelDate(){
