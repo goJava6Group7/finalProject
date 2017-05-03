@@ -4,6 +4,7 @@ import com.goJava6Group7.finalProject.data.dao.Dao;
 import com.goJava6Group7.finalProject.data.dataBase.DataBaseManager;
 import com.goJava6Group7.finalProject.entities.*;
 import com.goJava6Group7.finalProject.exceptions.frontend.*;
+import com.goJava6Group7.finalProject.main.Session;
 import com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil;
 
 import java.io.IOException;
@@ -11,6 +12,7 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.goJava6Group7.finalProject.entities.User.Role.ADMIN;
 import static com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil.*;
 
 
@@ -439,7 +441,43 @@ public class ProjectController {
 
     }
 
-    public void createUser() {
+    public Session login (Session session){
+        String userName;
+        String pass;
+        User user;
+
+        if (!session.isGuest()) System.out.println("You already logged in as " + session.getUser().getLogin());
+
+        if (session.isGuest()){
+            // get login credentials from user
+            userName = readNameFromConsole("your username");
+            pass = readNameFromConsole("your password");
+
+            // try to login
+            user = loginAndPasswordVerification(userName, pass);
+            if (user == null) System.out.println("Wrong login credentials: please either register or try again");
+            else{
+                // update session info
+                session.setUser(user);
+                session.setGuest(false);
+
+                if (user.getRole()==ADMIN) session.setAdmin(true);
+            }
+        }
+
+        return session;
+    }
+
+
+    public Session logout(Session session){
+        session.setUser(null);
+        session.setGuest(true);
+        session.setAdmin(false);
+
+        return session;
+    }
+
+    public User createUser() {
 
         User newUser;
         String userName = "";
@@ -477,6 +515,30 @@ public class ProjectController {
         System.out.println(newUser);
         // here save this user to the database (and check if user already exists)
 
+        return newUser;
+
+    }
+
+    public User updateUser(User user){
+        String userName;
+        String pass;
+        String name;
+
+        // get new data from user
+        System.out.println("Please enter your updated information.");
+        name = readNameFromConsole("name");
+        userName = name = readNameFromConsole("new username");
+        pass = readNameFromConsole("new password");
+
+        user.setName(name);
+        user.setLogin(userName);
+        user.setPassword(pass);
+
+        // procedure to save user to DB
+
+        System.out.println("Your data has been successfully saved");
+
+        return user;
     }
 
 
