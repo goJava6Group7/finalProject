@@ -3,10 +3,7 @@ package com.goJava6Group7.finalProject.controllers;
 import com.goJava6Group7.finalProject.data.dao.Dao;
 import com.goJava6Group7.finalProject.data.dao.impl.DaoHotel;
 import com.goJava6Group7.finalProject.data.dataBase.DataBaseManager;
-import com.goJava6Group7.finalProject.entities.Hotel;
-import com.goJava6Group7.finalProject.entities.Reservation;
-import com.goJava6Group7.finalProject.entities.Room;
-import com.goJava6Group7.finalProject.entities.User;
+import com.goJava6Group7.finalProject.entities.*;
 import com.goJava6Group7.finalProject.exceptions.frontend.*;
 import com.goJava6Group7.finalProject.main.Menu;
 import com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil;
@@ -250,12 +247,12 @@ public class ProjectController {
 
         System.out.println(myHotels);
 
-        System.out.println("To book a room, please note the name of the hotel of your choice" +
-                "and choose the book a room option in the main menu");
+        System.out.println("To book a room, please choose the 'book a room' or 'search hotel by" +
+                "city and dates' options in the main menu");
 
     }
 
-    public void findHotelByCityDate() {
+    public SearchResults findHotelByCityDate() {
 
         String cityName = ConsoleWorkerUtil.readNameFromConsole("city name");
         LocalDate checkin = ConsoleWorkerUtil.getCheckinDate();
@@ -276,13 +273,14 @@ public class ProjectController {
         List<Hotel> hotelsByCityByDate = new ArrayList<>();
         hotelsByCityByDate.addAll(hotelsNoD);
 
+        // here it would be good to print the hotels without the rooms, do this later
         System.out.println("Here is a list of hotels with rooms available when you will be in " + cityName +
                 " from " + checkin + " to " + checkout);
         System.out.println(hotelsByCityByDate);
 
-        // why cant I put this here?
-        Menu.printUserHotelResultsMenu();
-        Menu.performActionUserHotelResultsMenu(rooms, checkin, checkout, getMenuInput(1,3));
+        SearchResults results = new SearchResults(checkin, checkout, rooms);
+
+        return results;
 
     }
 
@@ -312,7 +310,7 @@ public class ProjectController {
         return isBooked;
     }
 
-    public void findRoomByCityDate() {
+    public SearchResults findRoomByCityDate() {
         List<Room> rooms;
 
         String cityName = readNameFromConsole("city name");
@@ -325,9 +323,9 @@ public class ProjectController {
                 " from " + checkin + " to " + checkout);
         System.out.println(rooms);
 
-        // Again, this does not work...
-        printUserRoomResultsMenu();
-        Menu.performActionUserRoomResultsMenu(rooms, checkin, checkout, getMenuInput(1,3));
+        SearchResults results = new SearchResults(checkin, checkout, rooms);
+
+        return results;
     }
 
     public List<Room> searchRoomByCityDate(String cityName, LocalDate checkin, LocalDate checkout){
@@ -352,7 +350,7 @@ public class ProjectController {
     }
 
 
-    public void findRoomByHotelDate() {
+    public SearchResults findRoomByHotelDate() {
 
         Dao<Hotel> daoHotel = dbManager.getDaoHotel();
         List<Hotel> allHotels = daoHotel.getAll();
@@ -381,14 +379,18 @@ public class ProjectController {
 
         System.out.println(rooms);
 
-        // Again, same problem... why?
-        printUserRoomResultsMenu();
-        Menu.performActionUserRoomResultsMenu(rooms, checkin, checkout, getMenuInput(1,3));
+        SearchResults results = new SearchResults(checkin, checkout, rooms);
+
+        return results;
 
     }
 
 
-    public void bookRoom(List<Room> rooms, LocalDate checkin, LocalDate checkout){
+    public void bookRoom(SearchResults results){
+
+        LocalDate checkin = results.getCheckin();
+        LocalDate checkout = results.getCheckout();
+        List<Room> rooms = results.getRooms();
 
         System.out.println("Please enter the number of the room you would like to book" +
                 " from " + checkin + " to " + checkout);

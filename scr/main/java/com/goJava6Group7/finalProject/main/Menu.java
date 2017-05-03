@@ -2,6 +2,7 @@ package com.goJava6Group7.finalProject.main;
 
 import com.goJava6Group7.finalProject.controllers.ProjectController;
 import com.goJava6Group7.finalProject.entities.Room;
+import com.goJava6Group7.finalProject.entities.SearchResults;
 
 import static com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil.getMenuInput;
 
@@ -58,7 +59,7 @@ public class Menu {
         System.out.println("[3] Go back to main menu");
     }
 
-    public static void printUserRoomResultsMenu() {
+    private void printUserRoomResultsMenu() {
         System.out.println("\nPlease make a selection");
         System.out.println("[1] Book a room"); // for admin / users
         System.out.println("[2] Go back to room search");
@@ -72,7 +73,7 @@ public class Menu {
         System.out.println("[3] Go back to main menu");
     }
 
-    public static void printUserHotelResultsMenu() {
+    private void printUserHotelResultsMenu() {
         System.out.println("\nPlease make a selection");
         System.out.println("[1] Book a room"); // for admin / users
         System.out.println("[2] Go back to hotel search");
@@ -110,22 +111,27 @@ public class Menu {
     }
 
     private void performActionUserRoomMenu(int choice) {
+        SearchResults results;
         switch (choice) {
             case 1:
-                controller.findRoomByHotelDate();
+                results = controller.findRoomByHotelDate();
+                printUserRoomResultsMenu();
+                performActionUserRoomResultsMenu(results, getMenuInput(1,3));
                 break;
             case 2:
-                controller.findRoomByCityDate();
+                results = controller.findRoomByCityDate();
+                printUserRoomResultsMenu();
+                performActionUserRoomResultsMenu(results, getMenuInput(1,3));
                 break;
             case 3:
                 break;
         }
     }
 
-    public void performActionUserRoomResultsMenu(List<Room> rooms, LocalDate checkin, LocalDate checkout, int choice) {
+    private void performActionUserRoomResultsMenu(SearchResults results, int choice) {
         switch (choice) {
             case 1:
-                controller.bookRoom(rooms, checkin, checkout);
+                controller.bookRoom(results);
                 break;
             case 2:
                 printUserRoomMenu();
@@ -137,12 +143,15 @@ public class Menu {
     }
 
     private void performActionUserHotelMenu(int choice) {
+        SearchResults results;
         switch (choice) {
             case 1:
                 controller.findHotelByHotelName();
                 break;
             case 2:
-                controller.findHotelByCityDate();
+                results = controller.findHotelByCityDate();
+                printUserHotelResultsMenu();
+                performActionUserHotelResultsMenu(results, getMenuInput(1,3));
                 break;
             case 3:
                 break;
@@ -150,10 +159,10 @@ public class Menu {
 
     }
 
-    public void performActionUserHotelResultsMenu(List<Room> rooms, LocalDate checkin, LocalDate checkout, int choice) {
+    private void performActionUserHotelResultsMenu(SearchResults results, int choice) {
         switch (choice) {
             case 1:
-                controller.bookRoom(rooms, checkin, checkout);
+                controller.bookRoom(results);
                 break;
             case 2:
                 printUserHotelMenu();
