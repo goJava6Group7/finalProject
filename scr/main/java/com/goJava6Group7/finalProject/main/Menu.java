@@ -3,7 +3,10 @@ package com.goJava6Group7.finalProject.main;
 import com.goJava6Group7.finalProject.controllers.ProjectController;
 import com.goJava6Group7.finalProject.entities.SearchResults;
 import com.goJava6Group7.finalProject.entities.User;
+import com.goJava6Group7.finalProject.exceptions.backend.BackendException;
 
+import static com.goJava6Group7.finalProject.data.dataBase.impl.DataBaseManagerFactory.*;
+import static com.goJava6Group7.finalProject.data.dataBase.impl.DataBaseManagerFactory.DataBaseManagerType.*;
 import static com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil.*;
 
 import java.io.IOException;
@@ -238,7 +241,7 @@ public class Menu {
 
 
     /**
-     * TODO Какой-то "кривой" код. Переделать.
+     * TODO Какой-то "кривой" код. Переделать. Возможно взять login(Session) Гийома, но его метод возвращает Session
      * Kontar Maryna:
      * The method ask for login and password and return true if they belong to admin
      *
@@ -303,7 +306,9 @@ public class Menu {
     }
 
     private void performActionAdminMainMenu() {
+
         int choice = 0;
+
         try {
             choice = readIntFromConsole();
         } catch (Exception e) {
@@ -311,11 +316,13 @@ public class Menu {
             printAdminMainMenu();
             performActionAdminMainMenu();
         }
+
         switch (choice) {
             case 1:
                 chooseTheDatabase();
-            case 2: //TODO
-            case 3:
+            case 2:
+                addHotel();
+            case 3: //TODO
             case 4:
             case 5:
             case 6:
@@ -326,29 +333,77 @@ public class Menu {
     }
 
 
+    //TODO Упростить
     private void chooseTheDatabase() {
+
         adminChooseDBMenu();
+
+        int choice;
         int choiceDB = 0;
+
         try {
-            choiceDB = readIntFromConsole();
+            choice = readIntFromConsole();
+            System.out.println("Are you sure you want to change database? " +
+                    "If you do, we will restart the system");
+            if (confirm()) {choiceDB = choice;}
+            else adminMenu();
         } catch (Exception e) {
             printReadIntFromConsoleException(2);
             chooseTheDatabase();
         }
+
         switch (choiceDB) {
             case 1:
-                //TODO;
+                try {
+                    getDataBaseManager(XML).initDB();
+                } catch (BackendException e) {
+                    e.printStackTrace();
+                }
+            case 2:
+                try {
+                    getDataBaseManager(BINARY).initDB();
+                } catch (BackendException e) {
+                    e.printStackTrace();
+                }
         }
 
     }
 
-
-
-
     public void adminChooseDBMenu() {
-        System.out.println("Please make a selection");
-        System.out.println("[1] Choose XML database");
-        System.out.println("[2] Choose binary database"); // tell them that if they change DB, system will restart
+        System.out.println("Please choose the database you want to work with");
+        System.out.println("[1] XML database");
+        System.out.println("[2] Binary database"); // tell them that if they change DB, system will restart
+    }
+
+    /**
+     * TODO Слишком запутано написала. Подумать над рефакторингом
+     * Kontar Maryna:
+     *
+     * The method confirm something
+     * @return true if 1 and false otherwise
+     */
+    private boolean confirm() {
+        printConfirmMenu();
+        try {
+            if (readIntFromConsole() == 1)
+                return true;
+            else if (readIntFromConsole() == 2)
+                return false;
+        } catch (Exception e) {
+            printReadIntFromConsoleException(2);
+            confirm();
+        }
+    return false;
+    }
+
+    private void printConfirmMenu() {
+        System.out.println("[1] Yes");
+        System.out.println("[2] No");
+    }
+
+
+    //TODO Не сделано!!!
+    private void addHotel() {
     }
 
     public void addRoom() {

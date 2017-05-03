@@ -29,7 +29,9 @@ public class ConsoleWorkerUtil {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String str = br.readLine(); //throw IOException
+        br.close();
         return Integer.parseInt(str);//throw NumberFormatException
+
 //        Scanner scanner = new Scanner(System.in);
 //        return scanner.nextInt();
     }
@@ -43,7 +45,9 @@ public class ConsoleWorkerUtil {
      */
     public static String readStringFromConsole() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        return br.readLine(); //throw IOException
+        String str = br.readLine(); //throw IOException
+        br.close();
+        return str;
     }
 
     /**
