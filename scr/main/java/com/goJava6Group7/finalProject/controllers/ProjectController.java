@@ -481,20 +481,20 @@ public class ProjectController {
 
         User newUser;
         String userName = "";
-        String email = "";
+        String name = "";
         String password = "";
         String yn;
 
         boolean ok = false;
 
         while (!ok) {
-            userName = readNameFromConsole("user name");
-            email = readNameFromConsole("email");
-            password = readNameFromConsole("password");
+            name = readNameFromConsole("your name");
+            userName = readNameFromConsole("your username");
+            password = readNameFromConsole("your password");
 
             System.out.println("\nHere is a summary of your data:");
+            System.out.println("Name: " + name);
             System.out.println("Username: " + userName);
-            System.out.println("Email: " + email);
 
             System.out.println("If this is correct, please enter Y, else press any key");
 
@@ -510,16 +510,27 @@ public class ProjectController {
             if (yn.equalsIgnoreCase("Y")) ok = true;
         }
 
-        newUser = new User(email, userName, password);
+        newUser = new User(name, userName, password);
 
-        System.out.println(newUser);
-        // here save this user to the database (and check if user already exists)
+        // procedure to save user to DB
+        Dao<User> daoUser = dbManager.getDaoUser();
+
+        // check if user exists, if not create new user in DAO
+        List<User> allUsers = dbManager.getDaoUser().getAll();
+        String finalName = name;
+        String finalUserName = userName;
+        if (allUsers.stream()
+                .anyMatch((User o) -> o.getName().equalsIgnoreCase(finalName) || o.getLogin().equals(finalUserName)))
+            System.out.println("An account with this name and / or login already exists. Please try again");
+
+        else daoUser.create(newUser);
 
         return newUser;
 
     }
 
     public User updateUser(User user){
+
         String userName;
         String pass;
         String name;
@@ -527,7 +538,7 @@ public class ProjectController {
         // get new data from user
         System.out.println("Please enter your updated information.");
         name = readNameFromConsole("name");
-        userName = name = readNameFromConsole("new username");
+        userName = readNameFromConsole("new username");
         pass = readNameFromConsole("new password");
 
         user.setName(name);
@@ -535,6 +546,8 @@ public class ProjectController {
         user.setPassword(pass);
 
         // procedure to save user to DB
+        Dao<User> daoUser = dbManager.getDaoUser();
+        daoUser.update(user);
 
         System.out.println("Your data has been successfully saved");
 
