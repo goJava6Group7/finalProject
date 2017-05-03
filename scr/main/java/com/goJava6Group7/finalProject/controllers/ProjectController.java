@@ -49,10 +49,11 @@ public class ProjectController {
 
     /**
      * TODO Игорю на проверку
+     * TODO Эта функция написана мной, п.ч. изначально так поделили задания с Гийомом,
+     * TODO но потом мне надо было реализовывать админ меню, а функции остались
      * Kontar Maryna:
      * Method create account for user with name, login and password
      * if there isn't account with this name and login.
-     * Returns the user if an account is created
      *
      * @param name
      * @param login
@@ -73,21 +74,26 @@ public class ProjectController {
     }
 
     /**
+     * TODO Эта функция написана мной, п.ч. изначально так поделили задания с Гийомом,
+     * TODO но потом мне надо было реализовывать админ меню, а функции остались
+     * TODO Возможно надо написать функцию isFreeRoom(){return !isBooked}.
+     * TODO потому что отрицанию воспринимаются мозгом намного медленнее
      * Kontar Maryna:
      *
      * @param reserveOnUser
      * @param room
      * @param dataOfArrival
      * @param dateOfDeparture
-     * @return Reservation
-     * @throws NoSuchRoomException1
+     * @return Reservation if reservation is created
      * @throws RoomIsReservedForTheseDatesException
      */
     public Reservation reserveRoom(User reserveOnUser, Room room, LocalDate dataOfArrival, LocalDate dateOfDeparture)
-            throws FrontendException {
+            throws RoomIsReservedForTheseDatesException {
         Dao<Reservation> daoReservation = dbManager.getDaoReservation();
-        //TODO доделать проверку по датам
-        if (room.getHotel().getHotelRooms().stream().noneMatch(roomAtHotel -> true)) {
+        if (room.getHotel()
+                .getHotelRooms()
+                .stream()
+                .noneMatch(roomAtHotel -> !isBooked(roomAtHotel, dataOfArrival, dateOfDeparture))) {
             throw new RoomIsReservedForTheseDatesException("The room is reserved for these dates: "
                     + dataOfArrival + " - " + dateOfDeparture);
         }
@@ -98,8 +104,20 @@ public class ProjectController {
         // Спросила у ребят из backend. Жду, пока они дойдут до этого
     }
 
-    public boolean cancelRoomReservation() {
-        throw new UnsupportedOperationException();
+    /**
+     * TODO Эта функция написана мной, п.ч. изначально так поделили задания с Гийомом,
+     * TODO но потом мне надо было реализовывать админ меню, а функции остались
+     * Kontar Maryna:
+     * The method delete room reservation
+     *
+     * @param reservation
+     * @return true if the deletion was successful and false otherwise
+     */
+    public boolean cancelRoomReservation(Reservation reservation) {
+
+        //TODO Проверять на наличие в БД НЕ НАДО (это сделано backend в функции delete(Reservation reservation) в DaoReservation)
+        Dao<Reservation> daoReservation = dbManager.getDaoReservation();
+        return daoReservation.delete(reservation);
     }
 
 
@@ -107,9 +125,10 @@ public class ProjectController {
      * TODO Игорю на проверку
      * TODO(Замечания) - определится с тем, что будет считаться идентичным Отелем
      * Kontar Maryna:
+     * The method adds the hotel to the database, if the hotel is not in the database
      *
      * @param hotel
-     * @return
+     * @return the added hotel
      * @throws HotelAlreadyExistsException
      */
     public Hotel addHotel(Hotel hotel) throws HotelAlreadyExistsException {
@@ -117,6 +136,7 @@ public class ProjectController {
         Dao<Hotel> daoHotel = dbManager.getDaoHotel();
         List<Hotel> allHotels = daoHotel.getAll();
 
+        //TODO Надо проверять на наличие в БД, т.к. create(hotel) в DaoHotel не проверяет
         if (allHotels.stream().anyMatch(hotelAtDatabase -> hotelAtDatabase.equals(hotel))) {
             throw new HotelAlreadyExistsException("The " + hotel + "already exists in database "
                     + dbManager.getClass().getSimpleName());
@@ -127,12 +147,13 @@ public class ProjectController {
     /**
      * TODO Игорю на проверку
      * Kontar Maryna:
-     * The method delete hotel and return true if the delete succeeded
+     * The method delete hotel and return true if the deletion was successful
+     *
      * @param hotel
-     * @return true if the delete succeeded and false otherwise
+     * @return true if the deletion was successful and false otherwise
      */
     public boolean deleteHotel(Hotel hotel) {
-
+        //TODO Проверять на наличие в БД НЕ НАДО (это сделано backend в функции delete(Hotel hotel) в DaoHotel)
         Dao<Hotel> daoHotel = dbManager.getDaoHotel();
         return daoHotel.delete(hotel);
     }
@@ -170,11 +191,15 @@ public class ProjectController {
     }
 
     /**
-     * TODO дописать javaDoc
+     * TODO Игорю на проверку. У backend в Room нет поля Hotel.
+     * TODO Поэтому сначала создаю абстрактную комнату(createRoom)а потом добавляю ее к отелю (addRoomToHotel).
+     * TODO Видимо придется переделывать эти две функции в одну и не проверять есть ли комната в отеле,
+     * TODO т.к. могут быть одинаковые комнаты. Или проверять только по id
      * Kontar Maryna:
+     * The method create room if room isn't in database
      *
      * @param room
-     * @return
+     * @return created room
      * @throws RoomAlreadyExistsException
      */
     public Room createRoom(Room room) throws RoomAlreadyExistsException {
@@ -190,17 +215,54 @@ public class ProjectController {
     }
 
     /**
-     *  TODO Решить, что будет возвращать метод (boolean, Room), подумать над проверкой на существование комнаты в БД и дописать javaDoc
+     * TODO Решить, что будет возвращать метод (boolean, Room). Надо ли проверять существует ли комната в БД и дописать javaDoc
      * Kontar Maryna:
+     * The method add room to the hotel
      *
      * @param room
      * @param hotel
      */
-    public void addRoomToHotel(Room room, Hotel hotel){
+    public void addRoomToHotel(Room room, Hotel hotel) {
 
         hotel.getHotelRooms().add(room);
     }
 
+    /**
+     * TODO Игорю на проверку
+     * Kontar Maryna:
+     * The method delete room from hotel and return true if the deletion was successful
+     *
+     * @param room
+     * @return true if the deletion of room was successful and false otherwise
+     */
+    public boolean deleteRoom(Room room) {
+        //TODO Проверять на наличие в БД НЕ НАДО (это сделано backend в функции delete(Room room) в DaoRoom)
+        Dao<Room> daoRoom = dbManager.getDaoRoom();
+        return daoRoom.delete(room);
+    }
+
+    //TODO Не готово. Надо обсудить и подумать
+        public Room updateRoom(Room oldRoom, HashMap<String, String> newParametersOfRoom) {
+//        newParametersOfRoom.keySet().stream().map(parameterName ->);
+
+        oldRoom.setPrice(Integer.parseInt(newParametersOfRoom.get("Price")));
+        oldRoom.setName(newParametersOfRoom.get("Name"));
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * TODO Игорю на проверку
+     * Kontar Maryna:
+     * The method delete User
+     * @param user
+     * @return true if the deletion was successful and false otherwise
+     */
+    public boolean deleteUser(User user){
+        Dao<User> daoUser = dbManager.getDaoUser();
+        return daoUser.delete(user);
+    }
+
+    
 // ************************************* GUILLAUME ********************************************
 
     public void findHotelByHotelName() {
@@ -212,7 +274,7 @@ public class ProjectController {
 
         System.out.println("Here is a list of hotels matching your criteria: ");
 
-         List<Hotel> myHotels = allHotels.stream()
+        List<Hotel> myHotels = allHotels.stream()
                 .filter((Hotel hotel) -> hotel.getHotelName().equalsIgnoreCase(hotelName))
                 .collect(Collectors.toList());
 
@@ -255,13 +317,15 @@ public class ProjectController {
 
     }
 
-    public static boolean isBooked (Room room, LocalDate checkin, LocalDate checkout){
+    public static boolean isBooked(Room room, LocalDate checkin, LocalDate checkout) {
         boolean isBooked = false;
         List<Reservation> bookings;
 
         bookings = room.getBookings();
-        if (bookings == null) {isBooked = false;} else {
-            for (Reservation booking : bookings){
+        if (bookings == null) {
+            isBooked = false;
+        } else {
+            for (Reservation booking : bookings) {
                 // if checkin or checkout dates are during an existing stay
                 if ((booking.getDateOfArrival().isBefore(checkin) &&
                         (booking.getDateOfDeparture().isAfter(checkin)))
@@ -299,7 +363,7 @@ public class ProjectController {
         return results;
     }
 
-    public List<Room> searchRoomByCityDate(String cityName, LocalDate checkin, LocalDate checkout){
+    public List<Room> searchRoomByCityDate(String cityName, LocalDate checkin, LocalDate checkout) {
 
         Dao<Hotel> daoHotel = dbManager.getDaoHotel();
         List<Hotel> allHotels = daoHotel.getAll();
@@ -315,7 +379,7 @@ public class ProjectController {
         }
 
         // delete room if it is booked during requested period
-        rooms.removeIf(room -> isBooked(room,checkin, checkout));
+        rooms.removeIf(room -> isBooked(room, checkin, checkout));
 
         return rooms;
     }
@@ -343,7 +407,7 @@ public class ProjectController {
         }
 
         // delete room if it is booked during requested period
-        rooms.removeIf(room -> isBooked(room,checkin, checkout));
+        rooms.removeIf(room -> isBooked(room, checkin, checkout));
 
         System.out.println("Here are the rooms available in the hotel " + hotelName +
                 " from " + checkin + " to " + checkout);
@@ -357,7 +421,7 @@ public class ProjectController {
     }
 
 
-    public void bookRoom(SearchResults results){
+    public void bookRoom(SearchResults results) {
 
         LocalDate checkin = results.getCheckin();
         LocalDate checkout = results.getCheckout();
@@ -375,7 +439,7 @@ public class ProjectController {
 
     }
 
-    public void createUser(){
+    public void createUser() {
 
         User newUser;
         String userName = "";
@@ -385,7 +449,7 @@ public class ProjectController {
 
         boolean ok = false;
 
-        while (!ok){
+        while (!ok) {
             userName = readNameFromConsole("user name");
             email = readNameFromConsole("email");
             password = readNameFromConsole("password");
@@ -396,11 +460,11 @@ public class ProjectController {
 
             System.out.println("If this is correct, please enter Y, else press any key");
 
-            while(true){
-                try{
+            while (true) {
+                try {
                     yn = readStringFromConsole();
                     break;
-                }catch (IOException e){
+                } catch (IOException e) {
                     System.out.println("You entered a wrong input, please try again");
                     continue;
                 }
