@@ -5,7 +5,6 @@ import com.goJava6Group7.finalProject.data.dao.impl.DaoHotel;
 import com.goJava6Group7.finalProject.data.dataBase.DataBaseManager;
 import com.goJava6Group7.finalProject.entities.*;
 import com.goJava6Group7.finalProject.exceptions.frontend.*;
-import com.goJava6Group7.finalProject.main.Menu;
 import com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil;
 
 import java.io.IOException;
@@ -13,7 +12,6 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.goJava6Group7.finalProject.main.Menu.printUserRoomResultsMenu;
 import static com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil.*;
 
 import com.goJava6Group7.finalProject.exceptions.frontend.OutOfMenuRangeException;
