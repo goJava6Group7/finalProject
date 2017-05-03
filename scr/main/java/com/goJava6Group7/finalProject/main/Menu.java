@@ -3,9 +3,11 @@ package com.goJava6Group7.finalProject.main;
 import com.goJava6Group7.finalProject.controllers.ProjectController;
 import com.goJava6Group7.finalProject.entities.Room;
 import com.goJava6Group7.finalProject.entities.SearchResults;
+import com.goJava6Group7.finalProject.entities.User;
 
-import static com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil.getMenuInput;
+import static com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil.*;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -175,9 +177,74 @@ public class Menu {
 
 
 
-    // ************** ADMIN MENU
+// ************** ADMIN MENU
 
-    private void printAdminMainMenu() {
+    public void adminMenu() {
+        if (ifAdminLogin()) {
+            printAdminMainMenu();
+            performActionAdminMainMenu();
+        } else {
+            System.out.println("You do not have administrator rights.");
+            runMenu();
+        }
+    }
+
+
+    /**
+     * TODO Какой-то "кривой" код. Переделать.
+     * Kontar Maryna:
+     * The method ask for login and password and return true if they belong to admin
+     *
+     * @return true if it's admin want to login and false otherwise
+     */
+    private boolean ifAdminLogin() {
+        try {
+            return adminLoginAndPasswordVerification(askLogin(), askPassword());
+        } catch (IOException e) {
+            System.out.println("These login or password are wrong. Try again.");
+            ifAdminLogin();
+        }
+        return false;
+    }
+
+
+
+    /**
+     * TODO Уточнить по проверке на админа!!! И о том, что должна возвращать функция loginAndPasswordVerification
+     * TODO Использую для проверки роли user. Если user - администратор, то устанавливаю для него новую сессию
+     * Kontar Maryna:
+     * The method checks if login and password belongs to the admin
+     *
+     * @param login
+     * @param password
+     * @return true if login and password belongs to the admin
+     * and false if user with the appropriate login and password doesn't exist or user isn't admin
+     */
+    private boolean adminLoginAndPasswordVerification(String login, String password) {
+        User user = controller.loginAndPasswordVerification(login, password);
+        //TODO ПРОВЕРКА НА АДМИНА ПРАВИЛЬНАЯ??? ИЛИ session.isAdmin()?
+        if (user != null && user.getRole().equals(User.Role.ADMIN)) {
+            assignmentSessionForAdmin(user);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * TODO Игорю на проверку. Использую для того, чтобы установить сессию для админа,
+     * TODO если при проверке логина, пароля и роли это оказался администратор
+     * Kontar Maryna:
+     * <p>
+     * The method assign session for admin
+     *
+     * @param admin
+     */
+    private void assignmentSessionForAdmin(User admin) {
+        session = new Session(admin);
+        session.setAdmin(true);
+    }
+
+    public void printAdminMainMenu() {
         System.out.println("Please make a selection");
         System.out.println("[1] Choose database");
         System.out.println("[2] Add a hotel"); // constructor with all fields: name, city,
@@ -188,13 +255,56 @@ public class Menu {
         System.out.println("[7] Back to main menu");
     }
 
-    private void adminChooseDBMenu() {
+    private void performActionAdminMainMenu() {
+        int choice = 0;
+        try {
+            choice = readIntFromConsole();
+        } catch (Exception e) {
+            printReadIntFromConsoleException(7);
+            printAdminMainMenu();
+            performActionAdminMainMenu();
+        }
+        switch (choice) {
+            case 1:
+                chooseTheDatabase();
+            case 2: //TODO
+            case 3:
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+            default:
+        }
+
+    }
+
+
+    private void chooseTheDatabase() {
+        adminChooseDBMenu();
+        int choiceDB = 0;
+        try {
+            choiceDB = readIntFromConsole();
+        } catch (Exception e) {
+            printReadIntFromConsoleException(2);
+            chooseTheDatabase();
+        }
+        switch (choiceDB) {
+            case 1:
+                //TODO;
+        }
+
+    }
+
+
+
+
+    public void adminChooseDBMenu() {
         System.out.println("Please make a selection");
         System.out.println("[1] Choose XML database");
         System.out.println("[2] Choose binary database"); // tell them that if they change DB, system will restart
     }
 
-    private void addRoom() {
+    public void addRoom() {
         System.out.println("Please enter the hotel in which you want to add a room");
         //search hotel method; not void but Hotel. User search not void, but string; and admin search is Hotel.
     }
@@ -206,5 +316,6 @@ public class Menu {
         // do not update / delete admins: so in search, if it is admin, then return: "you cannot update or delete admins"
 
     }
+
 
 }

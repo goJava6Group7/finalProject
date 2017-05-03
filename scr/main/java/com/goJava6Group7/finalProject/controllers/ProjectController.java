@@ -1,7 +1,6 @@
 package com.goJava6Group7.finalProject.controllers;
 
 import com.goJava6Group7.finalProject.data.dao.Dao;
-import com.goJava6Group7.finalProject.data.dao.impl.DaoHotel;
 import com.goJava6Group7.finalProject.data.dataBase.DataBaseManager;
 import com.goJava6Group7.finalProject.entities.*;
 import com.goJava6Group7.finalProject.exceptions.frontend.*;
@@ -14,7 +13,6 @@ import java.util.stream.Collectors;
 
 import static com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil.*;
 
-import com.goJava6Group7.finalProject.exceptions.frontend.OutOfMenuRangeException;
 
 /**
  * Created by Igor on 13.04.2017.
@@ -23,28 +21,29 @@ public class ProjectController {
 
     public DataBaseManager dbManager;
 
-//    TODO(Answer3) - убрать все эти переменные. Все ссылки на списки сущностей в виде списков java будут хранится
-//    TODO(Answer3) в обьектах DataBaseManager(это наш внутренний кеш). Все обращения к этим спискам будут непосредственно
-//    TODO(Answer3) во внутренних методах нашего ProjectController
-
-//    TODO(Answer4) - nameSpace. static final переменные должны обьявляться в верхнем регистре с разделением слов через _
-
-//    private final static DaoHotel DAOHotel = dbManager.getDaoHotel();
-//    private final static DaoUser DAOUser = dbManager.getDaoUser();
-//    private final static DaoRoom DAORoom = dbManager.getDaoRoom();
-//    private final static DaoReservation DAOReservation = dbManager.getDaoReservation();
-//
-//    private final static List<Hotel> allHotels = DAOHotel.getAll();
-//    private final static List<User> allUsers = DAOUser.getAll();
-//    private final static List<Room> allRooms = DAORoom.getAll();
-//    private final static List<Reservation> allReservation = DAOReservation.getAll();
-
+    public ProjectController(DataBaseManager dbManager) {
+        this.dbManager = dbManager;
+    }
 
     // ************************* MARINA ********************************************************
 
-
-    public ProjectController(DataBaseManager dbManager) {
-        this.dbManager = dbManager;
+    /**
+     * TODO что должна возвращать функция loginAndPasswordVerification???
+     * TODO Мне нужен User, чтобы использовать в функции adminLoginAndPasswordVerification(String login, String password)
+     * Kontar Maryna:
+     * The method checks the presence of the user with the appropriate login and password
+     *
+     * @param login
+     * @param password
+     * @return User if user with the appropriate login and password exist
+     * and null otherwise
+     */
+    public User loginAndPasswordVerification(String login, String password) {
+        List<User> allUsers = dbManager.getDaoUser().getAll();
+        Optional<User> optional = allUsers.stream()
+                .filter(o -> o.getName().equals(login) && o.getLogin().equals(password))
+                .findFirst();
+        return optional.orElse(null);
     }
 
 
@@ -62,8 +61,7 @@ public class ProjectController {
      * @throws AccountAlreadyExistException
      */
     public User createAccount(String name, String login, String password) throws AccountAlreadyExistException {
-//        TODO(Замечания) - работаем с отдельными ДАО внутри класса и НЕ показываем отдельную реализацию
-//        TODO(Замечания) поэтому обьявляем переменную типом интерфейса
+
         Dao<User> daoUser = dbManager.getDaoUser();
         List<User> allUsers = daoUser.getAll();
         User user = new User(name, login, password);
@@ -104,63 +102,6 @@ public class ProjectController {
         throw new UnsupportedOperationException();
     }
 
-    /*
-     * TODO Игорю на проверку
-     * Kontar Maryna:
-     * method can @throw NoSuchElementException("No value present")
-     * Может надо словить это исключение и кинуть вместо него исключение, к-ое extend от FrontendException?
-     * <p/>
-     * return hotel if it's exist and @throw NoSuchElementException if isn't
-     *
-     * @param hotelName
-     * @return
-     * @throws NoSuchElementException
-     */
-
-    /*Поменял сигнатуру метода. Более логично принимать набор ключей-значений и в зависимости от них
-    * делать поиск*/
-
-    public List<Room> findRoom(Map<String, String> params) {
-//        TODO(Замечания) - работа с консолью должна происходить ТОЛЬКО В КЛАССЕ MENU
-
-/*
-        Scanner scanner = new Scanner(System.in);
-//        String roomName;
-        String roomName = scanner.next();
-
-        while (true) {
-            try {
-
-                // check if room exists
-                if (allRooms.stream()
-                        .filter(o -> o.getName().equals(roomName) && o.getHotel().equals(hotelName))
-                        .findFirst()
-                        .isPresent()) {
-                    break;
-                } else {
-                    throw new NoSuchRoomException(hotelName);
-                }
-
-            } catch (NoSuchRoomException e) {
-                continue;
-            }
-        }
-
-        return allRooms.stream()
-                .filter(o -> o.getName().equals(roomName) && o.getHotel().equals(hotelName))
-                .findFirst()
-                .get();
-*/
-        throw new UnsupportedOperationException();
-    }
-
-    /*
-    public List <Room> findRoomsInHotelByDate(String hotelName, Date checkin, Date checkout )
-    {
-        // To Do
-    }
-    */
-
 
     /**
      * TODO Игорю на проверку
@@ -186,9 +127,9 @@ public class ProjectController {
     /**
      * TODO Игорю на проверку
      * Kontar Maryna:
-     *
+     * The method delete hotel and return true if the delete succeeded
      * @param hotel
-     * @return
+     * @return true if the delete succeeded and false otherwise
      */
     public boolean deleteHotel(Hotel hotel) {
 
@@ -206,8 +147,10 @@ public class ProjectController {
 //    }
 
     /**
-     * TODO Игорю на проверку НАВЕРНОЕ НАДО ПОМЕНЯТЬ СИГНАТУРУ МЕТОДА update на update(Hotel hotel, Hotel newHotel)
-     * TODO(Замечания) - согласен
+     * TODO СТАРОЕ Игорю на проверку НАВЕРНОЕ НАДО ПОМЕНЯТЬ СИГНАТУРУ МЕТОДА update на update(Hotel hotel, Hotel newHotel)
+     * TODO СТАРОЕ (Замечания) - согласен
+     * TODO у backend метод update заменяет отель, если "hotels.stream().filter(i -> i.equals(hotel))".
+     * TODO А equals у них по всем 4-ом параметрам. НАДО ОБСУДИТЬ!!!!
      * (или на update(Hotel hotel, параметры отеля))
      * Kontar Maryna:
      *
@@ -217,18 +160,48 @@ public class ProjectController {
      * @throws HotelIsNotInDatabaseException
      */
     public Hotel updateHotel(Hotel hotel, Hotel newHotel) throws HotelIsNotInDatabaseException {
-        Dao<Hotel> daoHotel = dbManager.getDaoHotel();
-
+//        Dao<Hotel> daoHotel = dbManager.getDaoHotel();
         //TODO(Замечания) - лишняя проверка. Если мы будем делать update, то к этому моменту уже будем знать, что отель существует
 //        if (allHotels.stream().anyMatch(currentHotel -> hotel.equals(hotel))) {
 //            throw new HotelIsNotInDatabaseException("The " + hotel + "is not in database "
 //                    + dbManager.getClass().getSimpleName());
 //        }
-        return daoHotel.update(newHotel);
+        return dbManager.getDaoHotel().update(newHotel);
+    }
+
+    /**
+     * TODO дописать javaDoc
+     * Kontar Maryna:
+     *
+     * @param room
+     * @return
+     * @throws RoomAlreadyExistsException
+     */
+    public Room createRoom(Room room) throws RoomAlreadyExistsException {
+
+        Dao<Room> daoRoom = dbManager.getDaoRoom();
+        List<Room> allRooms = daoRoom.getAll();
+
+        if (allRooms.stream().anyMatch(roomAtDatabase -> roomAtDatabase.equals(room))) {
+            throw new RoomAlreadyExistsException("The " + room + "already exists in database "
+                    + dbManager.getClass().getSimpleName());
+        }
+        return daoRoom.create(room);
+    }
+
+    /**
+     *  TODO Решить, что будет возвращать метод (boolean, Room), подумать над проверкой на существование комнаты в БД и дописать javaDoc
+     * Kontar Maryna:
+     *
+     * @param room
+     * @param hotel
+     */
+    public void addRoomToHotel(Room room, Hotel hotel){
+
+        hotel.getHotelRooms().add(room);
     }
 
 // ************************************* GUILLAUME ********************************************
-
 
     public void findHotelByHotelName() {
 
