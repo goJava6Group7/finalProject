@@ -303,6 +303,9 @@ public class ProjectController {
                 if ((booking.getDateOfArrival().isEqual(checkin))
                         || (booking.getDateOfArrival().isEqual(checkout))) isBooked = true;
 
+                // if checkin before and checkout after checkin and checkout of existing stay
+                if ((checkin.isBefore(booking.getDateOfArrival()))
+                        && (checkout.isAfter(booking.getDateOfArrival()))) isBooked = true;
             }
         }
 
