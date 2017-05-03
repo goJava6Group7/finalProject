@@ -66,4 +66,3 @@ public class User extends Entity {
         return sb.toString();
     }
 }
-

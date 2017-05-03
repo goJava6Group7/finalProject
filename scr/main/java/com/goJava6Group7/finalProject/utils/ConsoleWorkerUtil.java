@@ -15,9 +15,16 @@ import java.util.Scanner;
  */
 public class ConsoleWorkerUtil {
 
-   private ConsoleWorkerUtil() {
+    private ConsoleWorkerUtil() {
     }
 
+    /**
+     * TODO убрать лишнии комментарии перед сдачей проекта
+     * Kontar Maryna:
+     * Method read integer from console
+     * @return int entered from the console
+     * @throws IOException
+     */
     public static int readIntFromConsole() throws IOException {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -27,16 +34,50 @@ public class ConsoleWorkerUtil {
 //        return scanner.nextInt();
     }
 
+    /**
+     * TODO убрать лишнии комментарии перед сдачей проекта
+     * Kontar Maryna:
+     * Method read String from console
+     * @return String entered from the console
+     * @throws IOException
+     */
     public static String readStringFromConsole() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         return br.readLine(); //throw IOException
     }
 
+    /**
+     * TODO убрать лишнии комментарии перед сдачей проекта
+     * Kontar Maryna:
+     * Method print exception message typing wrong int from console
+     * @param number
+     */
     public static void printReadIntFromConsoleException(int number) {
         System.out.println("You typed something strange. " +
                 "And we want a number from 1 to " + number + ". Please, type again.");
     }
 
+    /**
+     * Kontar Maryna:
+     *
+     * @return
+     * @throws IOException
+     */
+    public static String askPassword() throws IOException {
+        System.out.println("Please enter your password: ");
+        return readStringFromConsole();
+    }
+
+    /**
+     * Kontar Maryna:
+     *
+     * @return
+     * @throws IOException
+     */
+    public static String askLogin() throws IOException {
+        System.out.println("Please enter your login: ");
+        return readStringFromConsole();
+    }
 
 
 
