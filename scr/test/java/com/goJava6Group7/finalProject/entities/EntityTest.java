@@ -1,14 +1,8 @@
 package com.goJava6Group7.finalProject.entities;
 
-import org.junit.Test;
-import scr.main.java.com.goJava6Group7.finalProject.entities.Hotel;
-import scr.main.java.com.goJava6Group7.finalProject.data.dataBase.DataBaseManager;
-import scr.main.java.com.goJava6Group7.finalProject.data.dataBase.impl.DataBaseManagerFactory;
-import scr.main.java.com.goJava6Group7.finalProject.utils.IdUtil;
-import scr.main.java.com.goJava6Group7.finalProject.entities.Room;
-import scr.main.java.com.goJava6Group7.finalProject.entities.RoomClass;
-import scr.main.java.com.goJava6Group7.finalProject.entities.User;
-import scr.main.java.com.goJava6Group7.finalProject.entities.Reservation;
+import com.goJava6Group7.finalProject.data.dataBase.DataBaseManager;
+import com.goJava6Group7.finalProject.data.dataBase.impl.DataBaseManagerFactory;
+import com.goJava6Group7.finalProject.utils.IdUtil;
 /**
  * Created by Igor on 13.04.2017.
  */

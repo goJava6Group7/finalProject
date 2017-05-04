@@ -1,15 +1,8 @@
-package scr.main.java.com.goJava6Group7.finalProject.data.dataBase.impl;
+package com.goJava6Group7.finalProject.data.dataBase.impl;
 
-import scr.main.java.com.goJava6Group7.finalProject.data.dataBase.DataBaseManager;
-import scr.main.java.com.goJava6Group7.finalProject.data.dataBase.impl.DataBaseManagerBinary;
-import scr.main.java.com.goJava6Group7.finalProject.data.dataBase.impl.DataBaseManagerXml;
-import scr.main.java.com.goJava6Group7.finalProject.exceptions.backend.BackendException;
+import com.goJava6Group7.finalProject.data.dataBase.DataBaseManager;
 
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.util.Properties;

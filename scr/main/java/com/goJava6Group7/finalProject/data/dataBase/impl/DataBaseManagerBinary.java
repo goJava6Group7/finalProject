@@ -1,15 +1,15 @@
-package scr.main.java.com.goJava6Group7.finalProject.data.dataBase.impl;
+package com.goJava6Group7.finalProject.data.dataBase.impl;
 
-import scr.main.java.com.goJava6Group7.finalProject.data.dao.impl.DaoHotel;
-import scr.main.java.com.goJava6Group7.finalProject.data.dao.impl.DaoReservation;
-import scr.main.java.com.goJava6Group7.finalProject.data.dao.impl.DaoRoom;
-import scr.main.java.com.goJava6Group7.finalProject.data.dao.impl.DaoUser;
-import scr.main.java.com.goJava6Group7.finalProject.data.dataBase.DataBaseManager;
-import scr.main.java.com.goJava6Group7.finalProject.entities.Hotel;
-import scr.main.java.com.goJava6Group7.finalProject.entities.Reservation;
-import scr.main.java.com.goJava6Group7.finalProject.entities.Room;
-import scr.main.java.com.goJava6Group7.finalProject.entities.User;
-import scr.main.java.com.goJava6Group7.finalProject.utils.IdUtil;
+import com.goJava6Group7.finalProject.data.dao.impl.DaoHotel;
+import com.goJava6Group7.finalProject.data.dao.impl.DaoReservation;
+import com.goJava6Group7.finalProject.data.dao.impl.DaoRoom;
+import com.goJava6Group7.finalProject.data.dao.impl.DaoUser;
+import com.goJava6Group7.finalProject.data.dataBase.DataBaseManager;
+import com.goJava6Group7.finalProject.entities.Hotel;
+import com.goJava6Group7.finalProject.entities.Reservation;
+import com.goJava6Group7.finalProject.entities.Room;
+import com.goJava6Group7.finalProject.entities.User;
+import com.goJava6Group7.finalProject.utils.IdUtil;
 
 import java.io.*;
 import java.util.ArrayList;

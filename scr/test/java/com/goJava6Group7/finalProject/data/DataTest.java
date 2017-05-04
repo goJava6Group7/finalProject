@@ -1,15 +1,15 @@
 package com.goJava6Group7.finalProject.data;
 
 import org.junit.Test;
-import scr.main.java.com.goJava6Group7.finalProject.data.dataBase.DataBaseManager;
-import scr.main.java.com.goJava6Group7.finalProject.data.dataBase.impl.DataBaseManagerFactory;
-import scr.main.java.com.goJava6Group7.finalProject.data.dataBase.impl.DataBaseManagerXml;
-import scr.main.java.com.goJava6Group7.finalProject.data.dataBase.impl.DataBaseManagerBinary;
-import scr.main.java.com.goJava6Group7.finalProject.entities.Hotel;
-import scr.main.java.com.goJava6Group7.finalProject.entities.Room;
-import scr.main.java.com.goJava6Group7.finalProject.entities.RoomClass;
-import scr.main.java.com.goJava6Group7.finalProject.entities.User;
-import scr.main.java.com.goJava6Group7.finalProject.utils.IdUtil;
+import com.goJava6Group7.finalProject.data.dataBase.DataBaseManager;
+import com.goJava6Group7.finalProject.data.dataBase.impl.DataBaseManagerFactory;
+import com.goJava6Group7.finalProject.data.dataBase.impl.DataBaseManagerXml;
+import com.goJava6Group7.finalProject.data.dataBase.impl.DataBaseManagerBinary;
+import com.goJava6Group7.finalProject.entities.Hotel;
+import com.goJava6Group7.finalProject.entities.Room;
+import com.goJava6Group7.finalProject.entities.RoomClass;
+import com.goJava6Group7.finalProject.entities.User;
+import com.goJava6Group7.finalProject.utils.IdUtil;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;

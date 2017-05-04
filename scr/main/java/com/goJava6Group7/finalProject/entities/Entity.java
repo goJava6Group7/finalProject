@@ -1,4 +1,4 @@
-package scr.main.java.com.goJava6Group7.finalProject.entities;
+package com.goJava6Group7.finalProject.entities;
 
 import java.io.Serializable;
 

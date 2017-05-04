@@ -1,11 +1,11 @@
-package scr.main.java.com.goJava6Group7.finalProject.utils;
+package com.goJava6Group7.finalProject.utils;
 
-import scr.main.java.com.goJava6Group7.finalProject.data.dataBase.DataBaseManager;
-import scr.main.java.com.goJava6Group7.finalProject.entities.Hotel;
-import scr.main.java.com.goJava6Group7.finalProject.entities.Reservation;
-import scr.main.java.com.goJava6Group7.finalProject.entities.Room;
-import scr.main.java.com.goJava6Group7.finalProject.entities.User;
-import scr.main.java.com.goJava6Group7.finalProject.exceptions.backend.BackendException;
+import com.goJava6Group7.finalProject.data.dataBase.DataBaseManager;
+import com.goJava6Group7.finalProject.entities.Hotel;
+import com.goJava6Group7.finalProject.entities.Reservation;
+import com.goJava6Group7.finalProject.entities.Room;
+import com.goJava6Group7.finalProject.entities.User;
+import com.goJava6Group7.finalProject.exceptions.backend.BackendException;
 
 import java.util.Comparator;
 

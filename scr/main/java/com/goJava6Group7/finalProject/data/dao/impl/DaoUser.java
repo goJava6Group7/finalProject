@@ -1,9 +1,9 @@
-package scr.main.java.com.goJava6Group7.finalProject.data.dao.impl;
+package com.goJava6Group7.finalProject.data.dao.impl;
 
-import scr.main.java.com.goJava6Group7.finalProject.data.dao.Dao;
-import scr.main.java.com.goJava6Group7.finalProject.data.dataBase.impl.DataBaseManagerFactory;
-import scr.main.java.com.goJava6Group7.finalProject.entities.Room;
-import scr.main.java.com.goJava6Group7.finalProject.entities.User;
+import com.goJava6Group7.finalProject.data.dao.Dao;
+import com.goJava6Group7.finalProject.data.dataBase.impl.DataBaseManagerFactory;
+import com.goJava6Group7.finalProject.entities.Room;
+import com.goJava6Group7.finalProject.entities.User;
 
 import java.util.List;
 import java.util.Optional;

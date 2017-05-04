@@ -2,6 +2,7 @@ package com.goJava6Group7.finalProject.main;
 
 import com.goJava6Group7.finalProject.controllers.ProjectController;
 import com.goJava6Group7.finalProject.data.dataBase.DataBaseManager;
+import com.goJava6Group7.finalProject.data.dataBase.impl.DataBaseManagerFactory;
 
 /**
  * Created by Igor on 13.04.2017.
