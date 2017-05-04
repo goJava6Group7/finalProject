@@ -37,6 +37,24 @@ public class Hotel extends Entity {
     }
 
     @Override
+    public String getOutput(){
+
+        String output = String.format("%-4d \t %-20s \t %-20s \t %-4d", this.getId(), this.getName(), this.getCity(), this.getRating());
+
+        return output;
+
+    }
+
+//    @Override
+    public static String getOutputHeader() {
+
+        String header = String.format("%-4s \t %-20s \t %-20s \t %-4s \t", "id", "name", "city", "rating");
+
+        return header;
+
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || !(o instanceof Hotel)) return false;
@@ -86,6 +104,7 @@ public class Hotel extends Entity {
     public void setRooms(List<Room> rooms) {
         this.rooms = rooms;
     }
+
 
     @Override
     public String toString() {

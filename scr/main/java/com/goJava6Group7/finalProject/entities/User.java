@@ -34,6 +34,24 @@ public class User extends Entity {
     }
 
     @Override
+    public String getOutput(){
+
+        String output = String.format("%-4d \t %-20s \t %-20s \t %-20s \t %n", this.getId(), this.getLogin(), this.getPassword(), this.getName());
+
+        return output;
+
+    }
+
+//    @Override
+    public static String getOutputHeader() {
+
+        String header = String.format("%-4s \t %-20s \t %-20s \t %-20s \t", "id", "login", "password", "name");
+
+        return header;
+
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || !(o instanceof User)) return false;

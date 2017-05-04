@@ -34,6 +34,24 @@ public class Reservation extends Entity {
     }
 
     @Override
+    public String getOutput(){
+
+        String output = String.format("%-4d \t %ty:%tm:%td \t %ty:%tm:%td %n", this.getId(), this.getCheckIn(), this.getCheckOut());
+
+        return output;
+
+    }
+
+//    @Override
+    public static String getOutputHeader() {
+
+        String header = String.format("%-4s \t %-10s \t %-10s \t ", "id", "check in", "check out");
+
+        return header;
+
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || !(o instanceof Reservation)) return false;

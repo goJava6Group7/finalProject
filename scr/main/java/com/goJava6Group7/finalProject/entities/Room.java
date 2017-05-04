@@ -32,6 +32,24 @@ public class Room extends Entity {
     }
 
     @Override
+    public String getOutput(){
+
+        String output = String.format("%-4d \t %-6d \t %-4d \t %-20s %n", this.getId(), this.getCapacity(), this.getPrice(), this.getRoomClass());
+
+        return output;
+
+    }
+
+//    @Override
+    public static String getOutputHeader() {
+
+        String header = String.format("%-4s \t %-4s \t %-4s \t %-4s \t", "id", "capacity", "price", "room class");
+
+        return header;
+
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || !(o instanceof Room)) return false;
