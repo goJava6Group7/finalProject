@@ -295,7 +295,7 @@ public class ProjectController {
 
         List<Room> rooms = searchRoomByCityDate(cityName, checkin, checkout);
 
-        printRoomResults(rooms, checkin, checkout, cityName);
+        printRoomResults(rooms, checkin, checkout);
 
         SearchResults results = new SearchResults(checkin, checkout, rooms);
 
@@ -340,7 +340,7 @@ public class ProjectController {
 
         rooms = searchRoomByCityDate(cityName, checkin, checkout);
 
-        printRoomResults(rooms, checkin, checkout, cityName);
+        printRoomResults(rooms, checkin, checkout);
 
         SearchResults results = new SearchResults(checkin, checkout, rooms);
 
@@ -393,7 +393,7 @@ public class ProjectController {
         // delete room if it is booked during requested period
         rooms.removeIf(room -> isBooked(room, checkin, checkout));
 
-        printRoomResults(rooms, checkin, checkout, hotelName);
+        printRoomResults(rooms, checkin, checkout);
 
         SearchResults results = new SearchResults(checkin, checkout, rooms);
 

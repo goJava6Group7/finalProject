@@ -179,7 +179,7 @@ public class ConsoleWorkerUtil {
         return checkout;
     }
 
-    public static void printRoomResults(List<Room> rooms, LocalDate checkin, LocalDate checkout, String cityName){
+    public static void printRoomResults(List<Room> rooms, LocalDate checkin, LocalDate checkout){
 
         // create array of hotels with available rooms from the room array
         List<Hotel> hotelDuplicates = new ArrayList<>();
@@ -195,8 +195,8 @@ public class ConsoleWorkerUtil {
         hotelsByCityByDate.addAll(hotelsNoD);
 
         // here it would be good to print the hotels without the rooms, do this later
-        System.out.println("\nHere is a list of hotels with rooms available when you will be in " + cityName +
-                " from " + checkin + " to " + checkout + ":");
+        System.out.println("\nHere is a list of hotels with rooms available from "
+                + checkin + " to " + checkout + ":");
 
 
         // printing results in a clean way, showing only available rooms
