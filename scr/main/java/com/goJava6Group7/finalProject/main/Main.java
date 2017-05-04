@@ -11,8 +11,10 @@ public class Main {
 
     public static void main(String[] args) {
 
-        //1. Choose what DB we use and maybe some other settings
-        dataBaseManager = configDB();
+        // according to application.properties file we init DatabaseManager
+        dataBaseManager = DataBaseManagerFactory.getInstance();
+        // read file (in our case "XML_Database") and load to memory, after that we can work with DatabaseManager like with real database
+        dataBaseManager.initDB();
 
         //2. On this step we already have right dataBaseManager and we can give it to controller
         ProjectController controller = new ProjectController(dataBaseManager);
@@ -29,9 +31,4 @@ public class Main {
     }
 
 
-    //Start of our app. Have to be some console interaction with client
-    //Use here DataBaseManagerFactory depend on client selection
-    private static DataBaseManager configDB() {
-        throw new UnsupportedOperationException();
-    }
 }
