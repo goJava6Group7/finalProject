@@ -6,6 +6,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.List;
 import java.util.Objects;
 
 @XmlRootElement
@@ -91,6 +92,22 @@ public class Room extends Entity {
 
     public void setRoomClass(RoomClass roomClass) {
         this.roomClass = roomClass;
+    }
+
+    public Hotel getHotel() {
+        return hotel;
+    }
+
+    public void setHotel(Hotel hotel) {
+        this.hotel = hotel;
+    }
+
+    public List<Reservation> getBookings() {
+        return bookings;
+    }
+
+    public void setBookings(List<Reservation> bookings) {
+        this.bookings = bookings;
     }
 
     @Override

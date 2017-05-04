@@ -7,9 +7,11 @@ import com.goJava6Group7.finalProject.exceptions.frontend.*;
 import com.goJava6Group7.finalProject.main.Session;
 import com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil;
 
-import java.io.IOException;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.goJava6Group7.finalProject.entities.User.Role.ADMIN;
@@ -93,7 +95,7 @@ public class ProjectController {
             throws RoomIsReservedForTheseDatesException {
         Dao<Reservation> daoReservation = dbManager.getDaoReservation();
         if (room.getHotel()
-                .getHotelRooms()
+                .getRooms()
                 .stream()
                 .noneMatch(roomAtHotel -> !isBooked(roomAtHotel, dataOfArrival, dateOfDeparture))) {
             throw new RoomIsReservedForTheseDatesException("The room is reserved for these dates: "
@@ -227,7 +229,7 @@ public class ProjectController {
      */
     public void addRoomToHotel(Room room, Hotel hotel) {
 
-        hotel.getHotelRooms().add(room);
+        hotel.getRooms().add(room);
     }
 
     /**
@@ -249,7 +251,7 @@ public class ProjectController {
 //        newParametersOfRoom.keySet().stream().map(parameterName ->);
 
         oldRoom.setPrice(Integer.parseInt(newParametersOfRoom.get("Price")));
-        oldRoom.setName(newParametersOfRoom.get("Name"));
+
         throw new UnsupportedOperationException();
     }
 
@@ -273,7 +275,7 @@ public class ProjectController {
         List<Hotel> allHotels = dbManager.getDaoHotel().getAll();
 
         return allHotels.stream()
-                .filter((Hotel hotel) -> hotel.getHotelName().equalsIgnoreCase(hotelName))
+                .filter((Hotel hotel) -> hotel.getName().equalsIgnoreCase(hotelName))
                 .collect(Collectors.toList());
 //                .findFirst().get();
     }
@@ -290,7 +292,7 @@ public class ProjectController {
         System.out.println("Here is a list of hotels matching your criteria: ");
 
         List<Hotel> myHotels = allHotels.stream()
-                .filter((Hotel hotel) -> hotel.getHotelName().equalsIgnoreCase(hotelName))
+                .filter((Hotel hotel) -> hotel.getName().equalsIgnoreCase(hotelName))
                 .collect(Collectors.toList());
 
         System.out.println(myHotels);
@@ -326,18 +328,18 @@ public class ProjectController {
         } else {
             for (Reservation booking : bookings) {
                 // if checkin or checkout dates are during an existing stay
-                if ((booking.getDateOfArrival().isBefore(checkin) &&
-                        (booking.getDateOfDeparture().isAfter(checkin)))
-                        || (booking.getDateOfArrival().isBefore(checkout) &&
-                        (booking.getDateOfDeparture().isAfter(checkout)))) isBooked = true;
+                if ((booking.getCheckIn().isBefore(checkin) &&
+                        (booking.getCheckOut().isAfter(checkin)))
+                        || (booking.getCheckIn().isBefore(checkout) &&
+                        (booking.getCheckOut().isAfter(checkout)))) isBooked = true;
 
                 // if checkin or checkout dates are the same as an existing stay
-                if ((booking.getDateOfArrival().isEqual(checkin))
-                        || (booking.getDateOfArrival().isEqual(checkout))) isBooked = true;
+                if ((booking.getCheckIn().isEqual(checkin))
+                        || (booking.getCheckOut().isEqual(checkout))) isBooked = true;
 
                 // if checkin before and checkout after checkin and checkout of existing stay
-                if ((checkin.isBefore(booking.getDateOfArrival()))
-                        && (checkout.isAfter(booking.getDateOfArrival()))) isBooked = true;
+                if ((checkin.isBefore(booking.getCheckIn()))
+                        && (checkout.isAfter(booking.getCheckOut()))) isBooked = true;
             }
         }
 
@@ -367,12 +369,12 @@ public class ProjectController {
         List<Room> rooms = new ArrayList<>();
 
         List<Hotel> cityHotels = allHotels.stream()
-                .filter((Hotel hotel) -> hotel.getHotelCity().equalsIgnoreCase(cityName))
+                .filter((Hotel hotel) -> hotel.getCity().equalsIgnoreCase(cityName))
                 .collect(Collectors.toList());
 
         // create room array with all rooms in the city
         for (Hotel hotel : cityHotels) {
-            rooms.addAll(hotel.getHotelRooms());
+            rooms.addAll(hotel.getRooms());
         }
 
         // delete room if it is booked during requested period
@@ -395,12 +397,12 @@ public class ProjectController {
         LocalDate checkout = getCheckoutDate(checkin);
 
         myHotels = allHotels.stream()
-                .filter((Hotel hotel) -> hotel.getHotelName().equalsIgnoreCase(hotelName))
+                .filter((Hotel hotel) -> hotel.getName().equalsIgnoreCase(hotelName))
                 .collect(Collectors.toList());
 
         // create room array with all rooms in the hotel
         for (Hotel hotel : myHotels) {
-            rooms.addAll(hotel.getHotelRooms());
+            rooms.addAll(hotel.getRooms());
         }
 
         // delete room if it is booked during requested period
@@ -441,15 +443,15 @@ public class ProjectController {
         System.out.println("Congratulations, your room is booked!");
         System.out.println("\nHere is a summary of your booking:");
         System.out.println("Booking name: " + newBook.getUser().getName() + "\nHotel: "+
-                newBook.getRoom().getHotel().getHotelName() + ";\nRoom: " + newBook.getRoom() +
-                "\nCheck-in Date: " + newBook.getDateOfArrival() + "\nCheckout date:" + newBook.getDateOfDeparture() + ".");
+                newBook.getRoom().getHotel().getName() + ";\nRoom: " + newBook.getRoom() +
+                "\nCheck-in Date: " + newBook.getCheckIn() + "\nCheckout date:" + newBook.getCheckOut() + ".");
 
         System.out.println("Thank you for using our services to book your stay!");
     }
 
     public List<Room> findRoomsInHotel(Hotel hotel) {
 
-        return hotel.getHotelRooms();
+        return hotel.getRooms();
 
     }
 
@@ -511,13 +513,13 @@ public class ProjectController {
             System.out.println("If this is correct, please enter Y, else press any key");
 
             while (true) {
-                try {
+//                try {
                     yn = readStringFromConsole();
                     break;
-                } catch (IOException e) {
-                    System.out.println("You entered a wrong input, please try again");
-                    continue;
-                }
+//                } catch (IOException e) {
+//                    System.out.println("You entered a wrong input, please try again");
+//                    continue;
+//                }
             }
             if (yn.equalsIgnoreCase("Y")) ok = true;
         }

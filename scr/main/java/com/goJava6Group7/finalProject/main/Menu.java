@@ -1,22 +1,16 @@
 package com.goJava6Group7.finalProject.main;
 
 import com.goJava6Group7.finalProject.controllers.ProjectController;
-import com.goJava6Group7.finalProject.entities.Hotel;
-import com.goJava6Group7.finalProject.entities.Room;
-import com.goJava6Group7.finalProject.entities.SearchResults;
-import com.goJava6Group7.finalProject.entities.User;
-import com.goJava6Group7.finalProject.exceptions.backend.BackendException;
+import com.goJava6Group7.finalProject.entities.*;
 import com.goJava6Group7.finalProject.exceptions.frontend.HotelAlreadyExistsException;
 import com.goJava6Group7.finalProject.exceptions.frontend.RoomAlreadyExistsException;
-
-import static com.goJava6Group7.finalProject.data.dataBase.impl.DataBaseManagerFactory.*;
-import static com.goJava6Group7.finalProject.data.dataBase.impl.DataBaseManagerFactory.DataBaseManagerType.*;
-import static com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil.*;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil.*;
 
 /**
  * Created by Igor on 13.04.2017.
@@ -402,24 +396,28 @@ public class Menu {
                 case 1:
                     printConfirmChangeDB();
                     if (confirm()) {
-                        getDataBaseManager(XML).initDB();
+//                        getDataBaseManager(XML).initDB();
+                        System.exit(0);//Пока что просто выходим
                     } else adminMenu();
 
                 case 2:
                     printConfirmChangeDB();
                     if (confirm()) {
-                        getDataBaseManager(BINARY).initDB();
+//                        getDataBaseManager(BINARY).initDB();
+                        System.exit(0);//Пока что просто выходим
                     } else adminMenu();
 
                 case 3:
                     adminMenu();
             }
-        } catch (BackendException e) {
+        } finally {
+            //nothing here
+        }/*catch (BackendException e) {
             e.printStackTrace();
             //TODO Подумать, что делать, если не поменяется база. Сообщение выдать (его пока нет в backend) и вернуться в админ меню?
 //                    System.out.println(e.getMessage());
 //                    adminMenu();
-        }
+        }*/
     }
 
     public void adminChooseDBMenu() {
@@ -444,7 +442,11 @@ public class Menu {
         System.out.println("Please enter the hotel city");
         String city = readStringFromConsole();
 
-        Hotel hotel = new Hotel(name, city);
+        System.out.println("Please enter the hotel кфештп");
+        int rating = readPositiveInt();
+
+
+        Hotel hotel = new Hotel(name, city, rating);
 
         try {
             controller.addHotel(hotel);
@@ -478,13 +480,15 @@ public class Menu {
             int maxNumberOfPerson = 10;//можно сделать константу в Hotel - MAX_NUMBER_OF_GUESTS_IN_ROOM
             int numberOfPerson = readIntToMaxNum(maxNumberOfPerson);
 
-            System.out.println("Please enter a class of room:");
-            String roomClass = readStringFromConsole();//нужен Enum для классов комнат
+            //TODO(Игорь) добавлен Enum для классов комнат. Нужно реализовать их выбор
+//            System.out.println("Please enter a class of room:");
+            RoomClass roomClass = RoomClass.Apartment;//нужен Enum для классов комнат
 
             System.out.println("Please enter the price per room:");
             int price = readPositiveInt();
 
-            Room room = new Room(roomClass, numberOfPerson, price, hotel);
+            Room room = new Room(numberOfPerson, price, roomClass);
+            room.setHotel(hotel);
             //TODO убрала проверку на null, т.к. все параметры проверяю при вводе
 
             //TODO когда у backend появится поле Hotel в Room переделать метод в контроллере для добавления комнаты

@@ -3,13 +3,10 @@ package com.goJava6Group7.finalProject.controllers;
 import com.goJava6Group7.finalProject.data.dataBase.DataBaseManager;
 import com.goJava6Group7.finalProject.entities.Hotel;
 import com.goJava6Group7.finalProject.entities.Room;
-import com.goJava6Group7.finalProject.exceptions.frontend.RoomAlreadyExistsException;
+import com.goJava6Group7.finalProject.entities.RoomClass;
 import com.goJava6Group7.finalProject.utils.IdUtil;
 
-
-
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 /**
@@ -64,6 +61,7 @@ public class ProjectControllerAdmin {
         Scanner scanner = new Scanner(System.in);
         String hotelName;
 
+/*
         while (true){
             try {
                 System.out.println("Please enter the hotel of this new room");
@@ -71,7 +69,7 @@ public class ProjectControllerAdmin {
 
                 // check if hotel exists and throw exception if hotel does not exist
                 if (allHotels.stream()
-                        .filter(o -> o.getHotelName().equals(hotelName))
+                        .filter(o -> o.getName().equals(hotelName))
                         .findFirst()
                         .isPresent()){
                     break;
@@ -82,11 +80,14 @@ public class ProjectControllerAdmin {
                 continue;
             }
         }
+*/
 
         // get room name
         String roomName;
 
         // check if room name already exists
+//        TODO(Игорь) Появился Enum для класса комнаты вместо её имени - поменять логику метода
+/*
         while (true){
             try {
                 System.out.println("Please enter the new room's name");
@@ -109,6 +110,7 @@ public class ProjectControllerAdmin {
                 continue;
             }
         }
+*/
 
         // get guest number
         System.out.println("Please enter the number of guests for this room");
@@ -120,7 +122,8 @@ public class ProjectControllerAdmin {
 
         // Call constructor to create new room
 
-        Room newRoom = new Room(roomId, roomName, numberOfGuests, price, hotelName);
+        //TODO(Игорь) - изменил конструктор согласно текущей стуктуре
+        Room newRoom = new Room(numberOfGuests, price, RoomClass.Apartment);
 
         // save room in DB using DAO
 

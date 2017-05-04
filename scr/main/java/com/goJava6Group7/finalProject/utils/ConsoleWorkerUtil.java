@@ -256,11 +256,11 @@ public class ConsoleWorkerUtil {
         // i is used to as a reference number for booking function, in case they want to book a room
         final int[] i = {1};
         hotelsByCityByDate.forEach(hotel->{
-            System.out.println("\n" + hotel.getHotelName() + ":");
+            System.out.println("\n" + hotel.getName() + ":");
             rooms.forEach(room->{
-                if ((room.getHotel().getHotelName()).equalsIgnoreCase(hotel.getHotelName())){
-                    System.out.println("   "+ i[0] + ": Room name: " + room.getName() +"; # of guests: " +
-                            room.getNumberOfPersons() + "; Price per night: " + room.getPrice() + ".");
+                if ((room.getHotel().getName()).equalsIgnoreCase(hotel.getName())){
+                    System.out.println("   "+ i[0] + ": Room name: " + room.getRoomClass() +"; # of guests: " +
+                            room.getCapacity() + "; Price per night: " + room.getPrice() + ".");
                     i[0]++;
                 }
             });

@@ -5,10 +5,8 @@ import com.goJava6Group7.finalProject.utils.IdUtil;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.Date;
-import java.util.Objects;
-
 import java.time.LocalDate;
+import java.util.Objects;
 
 /**
  * Created by Igor on 13.04.2017.
@@ -54,17 +52,21 @@ public class Reservation extends Entity {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || !(o instanceof Reservation)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        Reservation reservation = (Reservation) o;
-        return reservation.hotel.equals(this.hotel) && reservation.room.equals(this.room)
-                && reservation.checkIn.getTime() >= this.checkIn.getTime()
-                    && reservation.checkIn.getTime() < this.checkOut.getTime();
+        Reservation that = (Reservation) o;
+
+        if (id != that.id) return false;
+        if (user != null ? !user.equals(that.user) : that.user != null) return false;
+        if (room != null ? !room.equals(that.room) : that.room != null) return false;
+        if (checkIn != null ? !checkIn.equals(that.checkIn) : that.checkIn != null) return false;
+        return checkOut != null ? checkOut.equals(that.checkOut) : that.checkOut == null;
+
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, user, hotel, room, checkIn, checkOut);
+        return Objects.hash(id, user, room, checkIn, checkOut);
     }
 
     public long getId() {
@@ -77,14 +79,6 @@ public class Reservation extends Entity {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public Hotel getHotel() {
-        return hotel;
-    }
-
-    public void setHotel(Hotel hotel) {
-        this.hotel = hotel;
     }
 
     public Room getRoom() {
@@ -116,7 +110,6 @@ public class Reservation extends Entity {
         return "Reservation{" +
                 "id=" + id +
                 ", user=" + user +
-                ", hotel=" + hotel +
                 ", room=" + room +
                 ", checkIn=" + checkIn +
                 ", checkOut=" + checkOut +
