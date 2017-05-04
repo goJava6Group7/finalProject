@@ -19,6 +19,8 @@ public class Room extends Entity {
     private int price;
     @XmlElement
     private RoomClass roomClass;
+    private Hotel hotel;
+    private List<Reservation> bookings;
 
     public Room() {
     }

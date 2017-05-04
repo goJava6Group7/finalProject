@@ -1,0 +1,128 @@
+import java.util.Scanner;
+
+/**
+ * Created by guillaume on 4/26/17.
+ */
+public class Menu {
+
+    boolean exit = false;
+
+    private void printHeader(){
+        System.out.println("*******************************");
+        System.out.println("|      Welcome to our         |");
+        System.out.println("|   Booking Application       |");
+        System.out.println("*******************************");
+    }
+
+    /*
+    access rights for all:
+     */
+
+    private void printUserMainMenu(){
+        System.out.println("\nPlease make a selection");
+        System.out.println("[1] Register");
+            // (check login)
+            // -- enter your username, check if username already exists
+            // -- enter your password; no need to check password yet
+        System.out.println("[2] Login"); // if logged in, show "logout"
+            // Check login and pass
+            //-- enter your name
+            //-- enter your password
+        System.out.println("[3] Search / book a room");
+            /*
+              -- [1] Search room by hotel and dates"; // for all
+                ---- Please enter the hotel name
+                ---- Please enter you check in date
+                ---- Please enter your checkout date
+                    We must show the list of rooms
+                        ------ "Do you want to book a room?"
+                        ------ if yes, "Please choose the room you want to book"
+                        ------ get room number from user and call method bookroom with: Room + checkindate + checkoutdate
+                            -------- "You have successfully booked your room" + print booking details (hotel, room, dates)
+                            -------- return to "search room menu"
+                        ------ if no: return to: search / book a room menu
+              -- [2] Search room by city and dates"; // for all
+                ---- Please enter the city
+                ---- Please enter you check in date
+                ---- Please enter your checkout date
+                    We must show the list of rooms
+                        ------ "Do you want to book a room?"
+                        ------ if yes, "Please choose the room you want to book"
+                        ------ get room number from user and call method bookroom with: Room + checkindate + checkoutdate
+                            -------- "You have successfully booked your room" + print booking details (hotel, room, dates)
+                            -------- return to "search room menu"
+                        ------ if no: return to: search / book a room menu
+              -- [3] Go back to main menu";
+             */
+        System.out.println("[4] Search a hotel");
+        /*
+        -- [1] Search hotel by name");
+            ---- Please enter the hotel name
+                    We must show the list of hotels
+                    **** if time, add function to book room from here
+        -- [2] Search hotel by city and dates");
+                    We must show a list of hotels
+                    **** if time, add function to book room from here
+        -- [3] Go back to main menu");
+         */
+        System.out.println("[5] Admin menu"); // only admins (require sign-in); go to printAdminMainMenu
+        /*
+        -- [1] Choose database")
+            ---- "Please choose the database you want to work with"
+            ---- [1] XML
+            ---- [2] Binary
+            ---- confirm: "Are you sure you want to change database? If you do, we will restart the system"
+        -- [2] Add a hotel"); // constructor with all fields: name, city,
+            ---- "Please enter hotel name: "
+            ---- "Please enter hotel city: "
+            **** call constructor
+            **** check for null exception: throw exception "We could not create this hotel"
+            **** add this hotel to DAO
+            ---- "Your hotel was created" + print hotel
+            **** back to admin menu
+        -- [3] Add a room"); // first find hotel, then constructor with all fields,
+            ---- "Please enter the name of the hotel in which you want to add a room"
+            **** search hotel by name
+            ---- show list of hotels
+            ---- "Please choose the number of the hotel in which you want to add a room"
+            ---- "Please enter the number of guests"
+            **** call constructor and create room
+            **** check for null exception
+            **** add room to DAO
+            ---- "Your room was successfully created" + print room
+            **** back to main admin menu
+        -- [4] Update or delete a hotel"); // do like we do for users
+            ---- "Please enter the name of the hotel you want to update or delete"
+            **** search hotel by name
+            ---- show list of hotels
+            ---- "Please choose the number of the hotel you want to update or delete"
+                ------ [1] update hotel
+                    **** get hotel by ID
+                    ---- "Please enter new hotel name"
+                    **** set hotel name
+                    ---- "Please enter new hotel city"
+                    **** set hotel city
+                ------ [2] delete hotel
+                    **** get hotel by ID, find it and delete it in DAO
+        -- [5] Update or delete a room");
+            ---- "Please enter the name of the hotel of the room you want to update or delete"
+            **** search hotel by hotel name
+            ---- show list of hotels
+            ---- "Please choose the number of the hotel of the room you want to update or delete"
+            ---- print list of rooms of this hotel
+            ---- "Please choose the number of the room you want to update or delete"
+                ------ [1] update room
+                    **** get room from list
+                    ---- "Please enter new room parameters "
+                    set method to set new parameters
+                ------ [2] delete room
+                    **** get room by ID, find it and delete it in DAO
+        -- [6] Find and update a user"); // search user by userName
+            ---- "Please enter the username of the user you want to update or delete"
+                ------ [1] update user
+                    **** "Please enter new password"
+                    **** "Please enter new email"
+                ------ [2] delete user
+                    **** get user by username, find it and delete it in DAO
+        [7] Back to main menu
+         */

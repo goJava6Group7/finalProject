@@ -8,6 +8,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
 import java.util.Objects;
 
+import java.time.LocalDate;
+
 /**
  * Created by Igor on 13.04.2017.
  */
@@ -16,18 +18,16 @@ import java.util.Objects;
 public class Reservation extends Entity {
     private long id;
     private User user;
-    private Hotel hotel;
     private Room room;
-    private Date checkIn;
-    private Date checkOut;
+    private LocalDate checkIn;
+    private LocalDate checkOut;
 
     public Reservation() {
     }
 
-    public Reservation(User user, Hotel hotel, Room room, Date checkIn, Date checkOut) {
+    public Reservation(User user, Room room, LocalDate checkIn, LocalDate checkOut) {
         this.id = IdUtil.getReservationId();
         this.user = user;
-        this.hotel = hotel;
         this.room = room;
         this.checkIn = checkIn;
         this.checkOut = checkOut;
@@ -95,19 +95,19 @@ public class Reservation extends Entity {
         this.room = room;
     }
 
-    public Date getCheckIn() {
+    public LocalDate getCheckIn() {
         return checkIn;
     }
 
-    public void setCheckIn(Date checkIn) {
+    public void setCheckIn(LocalDate checkIn) {
         this.checkIn = checkIn;
     }
 
-    public Date getCheckOut() {
+    public LocalDate getCheckOut() {
         return checkOut;
     }
 
-    public void setCheckOut(Date checkOut) {
+    public void setCheckOut(LocalDate checkOut) {
         this.checkOut = checkOut;
     }
 

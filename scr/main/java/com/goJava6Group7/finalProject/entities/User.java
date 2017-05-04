@@ -22,12 +22,18 @@ public class User extends Entity {
     private String password;
     @XmlElement
     private String name;
+    private Role role;
+
+    public enum Role{
+        ADMIN, USER, GUEST
+    }
 
     public User(){
     }
 
     public User(String name, String login, String password) {
         this.id = IdUtil.getUserId();
+        role = Role.GUEST;
         this.name = name;
         this.login = login;
         this.password = password;

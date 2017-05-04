@@ -27,7 +27,7 @@ public class Main {
         Menu menu = new Menu(controller, session);
 
         //Start our main interaction with client
-        menu.mainMenu();
+        menu.runMenu();
 
     }
 
