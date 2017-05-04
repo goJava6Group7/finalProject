@@ -176,7 +176,10 @@ public class Menu {
                 performActionUserRoomResultsMenu(results, getMenuInput(1,3));
                 break;
             case 3:
-                break;
+                if (!session.isGuest()){
+                    printUserMainMenu();
+                    performActionUserMainMenu(getMenuInput(1,6));
+                } else break;
         }
     }
 
@@ -190,7 +193,10 @@ public class Menu {
                 performActionUserRoomMenu(getMenuInput(1, 3));
                 break;
             case 3:
-                break;
+                if (!session.isGuest()){
+                    printUserMainMenu();
+                    performActionUserMainMenu(getMenuInput(1,6));
+                } else break;
         }
     }
 
@@ -206,7 +212,10 @@ public class Menu {
                 performActionUserHotelResultsMenu(results, getMenuInput(1,3));
                 break;
             case 3:
-                break;
+                if (!session.isGuest()){
+                    printUserMainMenu();
+                    performActionUserMainMenu(getMenuInput(1,6));
+                } else break;
         }
 
     }
@@ -221,7 +230,10 @@ public class Menu {
                 performActionUserHotelMenu(getMenuInput(1, 3));
                 break;
             case 3:
-                break;
+                if (!session.isGuest()){
+                    printUserMainMenu();
+                    performActionUserMainMenu(getMenuInput(1,6));
+                } else break;
         }
     }
 
