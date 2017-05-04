@@ -295,36 +295,7 @@ public class ProjectController {
 
         List<Room> rooms = searchRoomByCityDate(cityName, checkin, checkout);
 
-        // create array of hotels with available rooms from the room array
-        List<Hotel> hotelDuplicates = new ArrayList<>();
-        for (Room room : rooms) {
-            hotelDuplicates.add(room.getHotel());
-        }
-
-        // removing duplicates
-        Set<Hotel> hotelsNoD = new HashSet<Hotel>();
-        hotelsNoD.addAll(hotelDuplicates);
-
-        List<Hotel> hotelsByCityByDate = new ArrayList<>();
-        hotelsByCityByDate.addAll(hotelsNoD);
-
-        // here it would be good to print the hotels without the rooms, do this later
-        System.out.println("\nHere is a list of hotels with rooms available when you will be in " + cityName +
-                " from " + checkin + " to " + checkout);
-
-
-        // printing results in a clean way, showing only available rooms
-        // i is used to as a reference number for booking function, in case they want to book a room
-        final int[] i = {0};
-        hotelsByCityByDate.forEach(hotel->{
-            System.out.println("\n" + hotel.getHotelName() + ":");
-            rooms.forEach(room->{
-                if ((room.getHotel().getHotelName()).equalsIgnoreCase(hotel.getHotelName()))
-                    System.out.println("   "+ i[0] + ": Room name: " + room.getName() +"; # of guests: " +
-                            room.getNumberOfPersons() + "; Price per night: " + room.getPrice() + ".");
-                i[0]++;
-            });
-        });
+        printRoomResults(rooms, checkin, checkout, cityName);
 
         SearchResults results = new SearchResults(checkin, checkout, rooms);
 
@@ -369,9 +340,7 @@ public class ProjectController {
 
         rooms = searchRoomByCityDate(cityName, checkin, checkout);
 
-        System.out.println("Here are the rooms available in " + cityName +
-                " from " + checkin + " to " + checkout);
-        System.out.println(rooms);
+        printRoomResults(rooms, checkin, checkout, cityName);
 
         SearchResults results = new SearchResults(checkin, checkout, rooms);
 
@@ -416,7 +385,7 @@ public class ProjectController {
                 .filter((Hotel hotel) -> hotel.getHotelName().equalsIgnoreCase(hotelName))
                 .collect(Collectors.toList());
 
-        // create room array with all rooms in the city
+        // create room array with all rooms in the hotel
         for (Hotel hotel : myHotels) {
             rooms.addAll(hotel.getHotelRooms());
         }
@@ -424,10 +393,7 @@ public class ProjectController {
         // delete room if it is booked during requested period
         rooms.removeIf(room -> isBooked(room, checkin, checkout));
 
-        System.out.println("Here are the rooms available in the hotel " + hotelName +
-                " from " + checkin + " to " + checkout);
-
-        System.out.println(rooms);
+        printRoomResults(rooms, checkin, checkout, hotelName);
 
         SearchResults results = new SearchResults(checkin, checkout, rooms);
 

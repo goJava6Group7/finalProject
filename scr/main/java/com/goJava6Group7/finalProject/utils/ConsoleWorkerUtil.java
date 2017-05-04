@@ -1,5 +1,7 @@
 package com.goJava6Group7.finalProject.utils;
 
+import com.goJava6Group7.finalProject.entities.Hotel;
+import com.goJava6Group7.finalProject.entities.Room;
 import com.goJava6Group7.finalProject.exceptions.frontend.CheckinDateException;
 import com.goJava6Group7.finalProject.exceptions.frontend.OutOfMenuRangeException;
 
@@ -8,7 +10,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * Created by Kontar Maryna on 26.04.2017.
@@ -175,6 +177,40 @@ public class ConsoleWorkerUtil {
             }
         }
         return checkout;
+    }
+
+    public static void printRoomResults(List<Room> rooms, LocalDate checkin, LocalDate checkout, String cityName){
+
+        // create array of hotels with available rooms from the room array
+        List<Hotel> hotelDuplicates = new ArrayList<>();
+        for (Room room : rooms) {
+            hotelDuplicates.add(room.getHotel());
+        }
+
+        // removing duplicates
+        Set<Hotel> hotelsNoD = new HashSet<Hotel>();
+        hotelsNoD.addAll(hotelDuplicates);
+
+        List<Hotel> hotelsByCityByDate = new ArrayList<>();
+        hotelsByCityByDate.addAll(hotelsNoD);
+
+        // here it would be good to print the hotels without the rooms, do this later
+        System.out.println("\nHere is a list of hotels with rooms available when you will be in " + cityName +
+                " from " + checkin + " to " + checkout + ":");
+
+
+        // printing results in a clean way, showing only available rooms
+        // i is used to as a reference number for booking function, in case they want to book a room
+        final int[] i = {0};
+        hotelsByCityByDate.forEach(hotel->{
+            System.out.println("\n" + hotel.getHotelName() + ":");
+            rooms.forEach(room->{
+                if ((room.getHotel().getHotelName()).equalsIgnoreCase(hotel.getHotelName()))
+                    System.out.println("   "+ i[0] + ": Room name: " + room.getName() +"; # of guests: " +
+                            room.getNumberOfPersons() + "; Price per night: " + room.getPrice() + ".");
+                i[0]++;
+            });
+        });
     }
 
 }
