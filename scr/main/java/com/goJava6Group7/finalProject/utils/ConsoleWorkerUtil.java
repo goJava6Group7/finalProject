@@ -19,57 +19,90 @@ public class ConsoleWorkerUtil {
 
     private ConsoleWorkerUtil() {
     }
-
+//*****************************MARYNA***************************************
     /**
-     * TODO убрать лишнии комментарии перед сдачей проекта
      * Kontar Maryna:
      * Method read integer from console
+     *
      * @return int entered from the console
-     * @throws IOException
      */
-    public static int readIntFromConsole() throws IOException {
+    public static int readIntFromConsole() {
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String str = br.readLine(); //throw IOException
-        br.close();
-        return Integer.parseInt(str);//throw NumberFormatException
+        while (true) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
+                String str = br.readLine(); //throw IOException
+                return Integer.parseInt(str);//throw NumberFormatException
+            } catch (Exception e) {
+                printReadIntFromConsoleException();
+            }
+        }
+    }
 
-//        Scanner scanner = new Scanner(System.in);
-//        return scanner.nextInt();
+    public static int readPositiveInt(){
+        return readIntToMaxNum(Integer.MAX_VALUE);
+    }
+
+    //TODO У Гийома есть такая функция getMenuInput (с другой сигнатурой),
+    // но я для себя переделала и использую не только для считывания номера пункта меню
+    public static int readIntToMaxNum(int maxNumber){
+        int readInt = readIntFromConsole();
+        while(true)
+        if (readInt > 0 && readInt <= maxNumber)
+            return readInt;
+        else printReadIntFromConsoleException(maxNumber);
     }
 
     /**
-     * TODO убрать лишнии комментарии перед сдачей проекта
      * Kontar Maryna:
      * Method read String from console
-     * @return String entered from the console
-     * @throws IOException
+     *
+     * @return String entered from the console if String isn't empty
      */
-    public static String readStringFromConsole() throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String str = br.readLine(); //throw IOException
-        br.close();
-        return str;
+    public static String readStringFromConsole() {
+
+        while (true) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
+                String str = br.readLine();  //throw IOException
+                if ( !str.isEmpty() ) return str;
+                else {
+                    System.out.println("You don't type anything. Try again.");
+                }
+            } catch (IOException e) {
+                printReadStringFromConsoleException();
+            }
+        }
     }
 
     /**
-     * TODO убрать лишнии комментарии перед сдачей проекта
      * Kontar Maryna:
-     * Method print exception message typing wrong int from console
+     * Method prints exception's message about wrong read integer from console
+     *
      * @param number
      */
     public static void printReadIntFromConsoleException(int number) {
-        System.out.println("You typed something strange. " +
+        System.out.println("You typed wrong number. " +
                 "And we want a number from 1 to " + number + ". Please, type again.");
+    }
+
+    public static void printReadIntFromConsoleException() {
+        System.out.println("You typed wrong number. Please, type again.");
+    }
+
+    public static void printReadStringFromConsoleException() {
+        System.out.println("You typed something wrong. Please, type again.");
+    }
+
+    public static void printConfirmChangeDB() {
+        System.out.println("Are you sure you want to change database? " +
+                "If you do, we will restart the system");
     }
 
     /**
      * Kontar Maryna:
      *
      * @return
-     * @throws IOException
      */
-    public static String askPassword() throws IOException {
+    public static String readPassword() {
         System.out.println("Please enter your password: ");
         return readStringFromConsole();
     }
@@ -78,26 +111,46 @@ public class ConsoleWorkerUtil {
      * Kontar Maryna:
      *
      * @return
-     * @throws IOException
      */
-    public static String askLogin() throws IOException {
+    public static String readLogin() {
         System.out.println("Please enter your login: ");
         return readStringFromConsole();
     }
 
+    /**
+     * TODO
+     * Kontar Maryna:
+     * <p>
+     * The method confirm something
+     *
+     * @return true if type Y and false otherwise
+     */
+    public static boolean confirm() {
+        System.out.println("Type Y if you agree, else press any key");
+        String confirm = readStringFromConsole();
+        return confirm.equalsIgnoreCase("Y");
+
+    }
 
 
-    public static String readNameFromConsole(String wordDef){
+
+
+// ************************************* GUILLAUME ********************************************
+
+
+
+
+    public static String readNameFromConsole(String wordDef) {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String text = "";
 
         System.out.println("Please enter the " + wordDef);
 
-        while(true) {
-            try{
+        while (true) {
+            try {
                 text = br.readLine();
                 break;
-            }catch (IOException e) {
+            } catch (IOException e) {
                 System.out.println("Incorrect input. Please enter the correct " + wordDef);
                 continue;
             }
@@ -122,15 +175,15 @@ public class ConsoleWorkerUtil {
         return choice;
     }
 
-    public static LocalDate readDateFromConsole(){
+    public static LocalDate readDateFromConsole() {
         LocalDate date1;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
-        while(true){
-            try{
+        while (true) {
+            try {
                 BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-                date1 = LocalDate.parse(br.readLine(),formatter); //throw IOException
+                date1 = LocalDate.parse(br.readLine(), formatter); //throw IOException
                 break;
-            } catch (Exception e){
+            } catch (Exception e) {
                 System.out.println("Please enter the right date format: d/MM/yyyy, for instance 20/01/2000 or 1/01/2000");
                 continue;
             }
@@ -138,16 +191,16 @@ public class ConsoleWorkerUtil {
         return date1;
     }
 
-    public static LocalDate getCheckinDate(){
+    public static LocalDate getCheckinDate() {
         LocalDate checkin;
 
-        while(true){
-            try{
+        while (true) {
+            try {
                 System.out.println("Please enter your desired check-in date");
                 checkin = readDateFromConsole();
                 if (checkin.isBefore(LocalDate.now())) throw new CheckinDateException();
                 break;
-            }catch (CheckinDateException e){
+            } catch (CheckinDateException e) {
                 System.out.println("The check-in date cannot be in the past. Please enter a correct date");
                 continue;
             }
@@ -156,20 +209,20 @@ public class ConsoleWorkerUtil {
     }
 
 
-    public static LocalDate getCheckoutDate(LocalDate checkin){
+    public static LocalDate getCheckoutDate(LocalDate checkin) {
         LocalDate checkout;
         LocalDate maxcheckout;
 
         maxcheckout = checkin.plusDays(30);
 
-        while(true){
-            try{
+        while (true) {
+            try {
                 System.out.println("Please enter your desired check-out date");
                 checkout = readDateFromConsole();
                 if (checkout.isBefore(checkin) || checkout.isAfter(maxcheckout) || checkout.isEqual(checkin))
                     throw new CheckinDateException();
                 break;
-            }catch (CheckinDateException e){
+            } catch (CheckinDateException e) {
                 System.out.println("The check-out must be after your check in date, and cannot be more than 30 days" +
                         " after your check-in date. \nYour check-in date is: " + checkin + " and your maximum check-out" +
                         "date is: " + maxcheckout + ". Please enter a correct date");

@@ -1,15 +1,22 @@
 package com.goJava6Group7.finalProject.main;
 
 import com.goJava6Group7.finalProject.controllers.ProjectController;
+import com.goJava6Group7.finalProject.entities.Hotel;
+import com.goJava6Group7.finalProject.entities.Room;
 import com.goJava6Group7.finalProject.entities.SearchResults;
 import com.goJava6Group7.finalProject.entities.User;
 import com.goJava6Group7.finalProject.exceptions.backend.BackendException;
+import com.goJava6Group7.finalProject.exceptions.frontend.HotelAlreadyExistsException;
+import com.goJava6Group7.finalProject.exceptions.frontend.RoomAlreadyExistsException;
 
 import static com.goJava6Group7.finalProject.data.dataBase.impl.DataBaseManagerFactory.*;
 import static com.goJava6Group7.finalProject.data.dataBase.impl.DataBaseManagerFactory.DataBaseManagerType.*;
 import static com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil.*;
 
-import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Igor on 13.04.2017.
@@ -93,29 +100,28 @@ public class Menu {
     }
 
 
-
-    private void performActionGuestMainMenu(int choice){
-        switch(choice){
+    private void performActionGuestMainMenu(int choice) {
+        switch (choice) {
             case 1:
                 controller.createUser();
                 break;
             case 2:
                 session = controller.login(session);
-                if (session.isGuest()){
+                if (session.isGuest()) {
                     printGuestMainMenu();
-                    performActionGuestMainMenu(getMenuInput(1,6));
-                }else{
+                    performActionGuestMainMenu(getMenuInput(1, 6));
+                } else {
                     printUserMainMenu();
-                    performActionUserMainMenu(getMenuInput(1,6));
+                    performActionUserMainMenu(getMenuInput(1, 6));
                 }
                 break;
             case 3:
                 printUserRoomMenu();
-                performActionUserRoomMenu(getMenuInput(1,3));
+                performActionUserRoomMenu(getMenuInput(1, 3));
                 break;
             case 4:
                 printUserHotelMenu();
-                performActionUserHotelMenu(getMenuInput(1,3));
+                performActionUserHotelMenu(getMenuInput(1, 3));
                 break;
             case 5:
                 // login
@@ -134,12 +140,12 @@ public class Menu {
             case 1:
                 controller.updateUser(session.getUser());
                 printUserMainMenu();
-                performActionUserMainMenu(getMenuInput(1,6));
+                performActionUserMainMenu(getMenuInput(1, 6));
                 break;
             case 2:
                 controller.logout(session);
                 printGuestMainMenu();
-                performActionGuestMainMenu(getMenuInput(1,6));
+                performActionGuestMainMenu(getMenuInput(1, 6));
                 break;
             case 3:
                 printUserRoomMenu();
@@ -168,12 +174,12 @@ public class Menu {
             case 1:
                 results = controller.findRoomByHotelDate();
                 printUserRoomResultsMenu();
-                performActionUserRoomResultsMenu(results, getMenuInput(1,3));
+                performActionUserRoomResultsMenu(results, getMenuInput(1, 3));
                 break;
             case 2:
                 results = controller.findRoomByCityDate();
                 printUserRoomResultsMenu();
-                performActionUserRoomResultsMenu(results, getMenuInput(1,3));
+                performActionUserRoomResultsMenu(results, getMenuInput(1, 3));
                 break;
             case 3:
                 if (!session.isGuest()){
@@ -212,7 +218,7 @@ public class Menu {
             case 2:
                 results = controller.findHotelByCityDate();
                 printUserHotelResultsMenu();
-                performActionUserHotelResultsMenu(results, getMenuInput(1,3));
+                performActionUserHotelResultsMenu(results, getMenuInput(1, 3));
                 break;
             case 3:
                 if (!session.isGuest()){
@@ -291,42 +297,28 @@ public class Menu {
     }
 
 
-
-// ************** ADMIN MENU
+// ************************************* ADMIN MENU ********************************************
 
     public void adminMenu() {
-        if (ifAdminLogin()) {
-            printAdminMainMenu();
-            performActionAdminMainMenu();
-        } else {
-            System.out.println("You do not have administrator rights.");
-            runMenu();
-        }
+        printAdminMainMenu();
+        performActionAdminMainMenu(getMenuInput(1, 7));
+
+//        TODO Вынести это туда, где будет вызываться админ меню
+//        if (isAdmin()) {
+//            adminMenu();
+//        } else {
+//            System.out.println("You do not have administrator rights. Login as administrator.");
+//            runMenu();
+//        }
     }
 
 
-    /**
-     * TODO Какой-то "кривой" код. Переделать. Возможно взять login(Session) Гийома, но его метод возвращает Session
-     * Kontar Maryna:
-     * The method ask for login and password and return true if they belong to admin
-     *
-     * @return true if it's admin want to login and false otherwise
-     */
-    private boolean ifAdminLogin() {
-        try {
-            return adminLoginAndPasswordVerification(askLogin(), askPassword());
-        } catch (IOException e) {
-            System.out.println("These login or password are wrong. Try again.");
-            ifAdminLogin();
-        }
-        return false;
-    }
-
-
+//    *******************Admin verification*******************************************
 
     /**
      * TODO Уточнить по проверке на админа!!! И о том, что должна возвращать функция loginAndPasswordVerification
      * TODO Использую для проверки роли user. Если user - администратор, то устанавливаю для него новую сессию
+     * Не перенесла в controller, потому что надо вызывать assignmentSessionForAdmin(user) и работать с session
      * Kontar Maryna:
      * The method checks if login and password belongs to the admin
      *
@@ -337,12 +329,16 @@ public class Menu {
      */
     private boolean adminLoginAndPasswordVerification(String login, String password) {
         User user = controller.loginAndPasswordVerification(login, password);
-        //TODO ПРОВЕРКА НА АДМИНА ПРАВИЛЬНАЯ??? ИЛИ session.isAdmin()?
+        //TODO ПРОВЕРКА НА АДМИНА ПРАВИЛЬНАЯ???
         if (user != null && user.getRole().equals(User.Role.ADMIN)) {
             assignmentSessionForAdmin(user);
             return true;
         }
         return false;
+    }
+
+    private boolean isAdmin() {
+        return adminLoginAndPasswordVerification(readLogin(), readPassword());
     }
 
     /**
@@ -359,122 +355,168 @@ public class Menu {
         session.setAdmin(true);
     }
 
+
     public void printAdminMainMenu() {
         System.out.println("Please make a selection");
         System.out.println("[1] Choose database");
-        System.out.println("[2] Add a hotel"); // constructor with all fields: name, city,
-        System.out.println("[3] Add a room"); // first find hotel, then constructor with all fields,
+        System.out.println("[2] Add a hotel");
+        System.out.println("[3] Add a room");
         System.out.println("[4] Update or delete a hotel"); // do like we do for users
         System.out.println("[5] Update or delete a room");
         System.out.println("[6] Find and update a user"); // search user by userName
         System.out.println("[7] Back to main menu");
     }
 
-    private void performActionAdminMainMenu() {
-
-        int choice = 0;
-
-        try {
-            choice = readIntFromConsole();
-        } catch (Exception e) {
-            printReadIntFromConsoleException(7);
-            printAdminMainMenu();
-            performActionAdminMainMenu();
-        }
+    private void performActionAdminMainMenu(int choice) {
 
         switch (choice) {
             case 1:
                 chooseTheDatabase();
             case 2:
                 addHotel();
-            case 3: //TODO
-            case 4:
+            case 3:
+                addRoom();
+            case 4: //TODO
             case 5:
             case 6:
-            case 7:
+            case 7: runMenu();
             default:
         }
 
     }
 
+    //********************************Choose database*********************************
 
-    //TODO Упростить
+    /**
+     * TODO Достаточно просто сменить БД? Вся перезагрузка произойдет сама (в функциях backend)?
+     * Kontar Maryna:
+     * The method iInitializes the selected database
+     */
     private void chooseTheDatabase() {
 
         adminChooseDBMenu();
 
-        int choice;
-        int choiceDB = 0;
-
+        int choiceDB = getMenuInput(1, 3);
         try {
-            choice = readIntFromConsole();
-            System.out.println("Are you sure you want to change database? " +
-                    "If you do, we will restart the system");
-            if (confirm()) {choiceDB = choice;}
-            else adminMenu();
-        } catch (Exception e) {
-            printReadIntFromConsoleException(2);
-            chooseTheDatabase();
-        }
+            switch (choiceDB) {
+                case 1:
+                    printConfirmChangeDB();
+                    if (confirm()) {
+                        getDataBaseManager(XML).initDB();
+                    } else adminMenu();
 
-        switch (choiceDB) {
-            case 1:
-                try {
-                    getDataBaseManager(XML).initDB();
-                } catch (BackendException e) {
-                    e.printStackTrace();
-                }
-            case 2:
-                try {
-                    getDataBaseManager(BINARY).initDB();
-                } catch (BackendException e) {
-                    e.printStackTrace();
-                }
-        }
+                case 2:
+                    printConfirmChangeDB();
+                    if (confirm()) {
+                        getDataBaseManager(BINARY).initDB();
+                    } else adminMenu();
 
+                case 3:
+                    adminMenu();
+            }
+        } catch (BackendException e) {
+            e.printStackTrace();
+            //TODO Подумать, что делать, если не поменяется база. Сообщение выдать (его пока нет в backend) и вернуться в админ меню?
+//                    System.out.println(e.getMessage());
+//                    adminMenu();
+        }
     }
 
     public void adminChooseDBMenu() {
         System.out.println("Please choose the database you want to work with");
         System.out.println("[1] XML database");
-        System.out.println("[2] Binary database"); // tell them that if they change DB, system will restart
-    }
-
-    /**
-     * TODO Слишком запутано написала. Подумать над рефакторингом
-     * Kontar Maryna:
-     *
-     * The method confirm something
-     * @return true if 1 and false otherwise
-     */
-    private boolean confirm() {
-        printConfirmMenu();
-        try {
-            if (readIntFromConsole() == 1)
-                return true;
-            else if (readIntFromConsole() == 2)
-                return false;
-        } catch (Exception e) {
-            printReadIntFromConsoleException(2);
-            confirm();
-        }
-    return false;
-    }
-
-    private void printConfirmMenu() {
-        System.out.println("[1] Yes");
-        System.out.println("[2] No");
+        System.out.println("[2] Binary database");
+        System.out.println("[3] Back to admin menu");
     }
 
 
-    //TODO Не сделано!!!
+    //********************************Add hotel***************************************
+    //TODO Определиться что считать одинаковыми отелями и где "ловить" одинаковый отель.
+    // Здесь или в controller.addHotel(hotel). Если здесь, я могу перенаправить в adminMenu().
+    // А если в controller.addHotel(hotel), то не понятно что делать с пойманым там исключением.
     private void addHotel() {
+
+        System.out.println("Please enter the hotel name you want to add to database: "
+                + controller.dbManager.getClass().getSimpleName());
+        String name = readStringFromConsole();
+
+        //вынести в отдельную функцию считывание города и проверять его с Enum существующих городов
+        System.out.println("Please enter the hotel city");
+        String city = readStringFromConsole();
+
+        Hotel hotel = new Hotel(name, city);
+
+        try {
+            controller.addHotel(hotel);
+        } catch (HotelAlreadyExistsException e) {
+            System.out.println(e.getMessage());
+            adminMenu();
+        }
+
+        System.out.println("Your hotel was created: " + hotel);
+
+        adminMenu();
     }
 
     public void addRoom() {
-        System.out.println("Please enter the hotel in which you want to add a room");
-        //search hotel method; not void but Hotel. User search not void, but string; and admin search is Hotel.
+
+        System.out.println("Please enter the name of the hotel in which you want to add a room");
+        String hotelName = readStringFromConsole();
+        List<Hotel> listOfHotels = controller.findHotelByHotelName(hotelName);
+
+        if (!listOfHotels.isEmpty()) {
+
+            Map<Integer, Hotel> mapOfHotels = createHotelMap(listOfHotels);
+            System.out.println("Please choose the number of the hotel " +
+                    "in which you want to add a room:");
+            mapOfHotels.forEach((key, value) -> System.out.println("[" + (key + 1) + "]: " + value));
+
+            int hotelKey = readIntToMaxNum(listOfHotels.size());
+            Hotel hotel = mapOfHotels.get(hotelKey);
+
+            System.out.println("Please enter the number of person:");
+            int maxNumberOfPerson = 10;//можно сделать константу в Hotel - MAX_NUMBER_OF_GUESTS_IN_ROOM
+            int numberOfPerson = readIntToMaxNum(maxNumberOfPerson);
+
+            System.out.println("Please enter a class of room:");
+            String roomClass = readStringFromConsole();//нужен Enum для классов комнат
+
+            System.out.println("Please enter the price per room:");
+            int price = readPositiveInt();
+
+            Room room = new Room(roomClass, numberOfPerson, price, hotel);
+            //TODO убрала проверку на null, т.к. все параметры проверяю при вводе
+
+            //TODO когда у backend появится поле Hotel в Room переделать метод в контроллере для добавления комнаты
+            try {
+                controller.createRoom(room);
+            } catch (RoomAlreadyExistsException e) {
+                System.out.println(e.getMessage());
+                adminMenu();
+            }
+
+            System.out.println("Your room was successfully created: " + room);
+
+            adminMenu();
+
+        } else {
+            System.out.println("There isn't hotel " + hotelName + " in database. Try again");
+            adminMenu();// or addRoom()
+        }
     }
+
+    //TODO написала метод, чтобы можно было выберать номер отеля из списка найденных по имени отелей
+    //Подумать как проше сделать
+    private Map<Integer, Hotel> createHotelMap(List<Hotel> listOfHotels) {
+        List<Integer> listOfHotelNumbers = Arrays.asList(new Integer[listOfHotels.size()]);
+        Map<Integer, Hotel> mapOfHotels = new HashMap<>();
+        mapOfHotels.values().addAll(listOfHotels);
+        mapOfHotels.keySet().addAll(listOfHotelNumbers);
+        return mapOfHotels;
+    }
+
+
+
 
     private void searchUser() {
         System.out.println("Please enter the login of the user");

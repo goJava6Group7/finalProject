@@ -79,7 +79,7 @@ public class ProjectController {
      * TODO Эта функция написана мной, п.ч. изначально так поделили задания с Гийомом,
      * TODO но потом мне надо было реализовывать админ меню, а функции остались
      * TODO Возможно надо написать функцию isFreeRoom(){return !isBooked}.
-     * TODO потому что отрицанию воспринимаются мозгом намного медленнее
+     * TODO потому что отрицания воспринимаются мозгом намного медленнее
      * Kontar Maryna:
      *
      * @param reserveOnUser
@@ -126,6 +126,7 @@ public class ProjectController {
     /**
      * TODO Игорю на проверку
      * TODO(Замечания) - определится с тем, что будет считаться идентичным Отелем
+     * TODO Добавлять ли отель с уже существующим именем и названием города? У него будет другое id и если equals по id, то єто разные отели
      * Kontar Maryna:
      * The method adds the hotel to the database, if the hotel is not in the database
      *
@@ -217,7 +218,7 @@ public class ProjectController {
     }
 
     /**
-     * TODO Решить, что будет возвращать метод (boolean, Room). Надо ли проверять существует ли комната в БД и дописать javaDoc
+     * TODO Решить, что будет возвращать метод (boolean или Room). Надо ли проверять существует ли комната в БД и дописать javaDoc
      * Kontar Maryna:
      * The method add room to the hotel
      *
@@ -264,6 +265,18 @@ public class ProjectController {
         return daoUser.delete(user);
     }
 
+    //TODO Нет проверки на null (isEmpty). Проверяю при вызове этого метода.
+    // Если поменяю сигнатуру на Hotel findHotelByHotelName(String hotelName)
+    // будет кидать NoSuchElementException("No value present") (.findFirst().get();)
+    public List<Hotel> findHotelByHotelName(String hotelName) {
+
+        List<Hotel> allHotels = dbManager.getDaoHotel().getAll();
+
+        return allHotels.stream()
+                .filter((Hotel hotel) -> hotel.getHotelName().equalsIgnoreCase(hotelName))
+                .collect(Collectors.toList());
+//                .findFirst().get();
+    }
     
 // ************************************* GUILLAUME ********************************************
 

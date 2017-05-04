@@ -1,5 +1,7 @@
 package com.goJava6Group7.finalProject.entities;
 
+import com.goJava6Group7.finalProject.utils.IdUtil;
+
 import java.util.List;
 
 /**
@@ -15,8 +17,8 @@ public class Room extends Entity {
     private List<Reservation> bookings;
 
     //TODO(замечания) - id должно генерироваться, а НЕ присваиватся
-    public Room(String id, String name, int numberOfPersons, int price, Hotel hotel) {
-        this.id = id;
+    public Room( String name, int numberOfPersons, int price, Hotel hotel) {
+        this.id = IdUtil.IdGenerator();
         this.name = name;
         this.numberOfPersons = numberOfPersons;
         this.price = price;
