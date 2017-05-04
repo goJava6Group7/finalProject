@@ -402,16 +402,36 @@ public class ProjectController {
     }
 
 
-    public void bookRoom(SearchResults results) {
+    public void bookRoom(SearchResults results, Session session){
 
         LocalDate checkin = results.getCheckin();
         LocalDate checkout = results.getCheckout();
         List<Room> rooms = results.getRooms();
+        int roomChoice;
 
-        System.out.println("Please enter the number of the room you would like to book" +
-                " from " + checkin + " to " + checkout);
-        System.out.println(rooms);
+        System.out.println("Please enter the number of the room you would like to book from the list:");
+        printRoomResults(rooms, checkin, checkout);
 
+        roomChoice = getMenuInput(1,rooms.size()) - 1;
+
+        Room room = rooms.get(roomChoice);
+
+        // if user not logged in, prompt him to login:
+
+        Reservation newBook = new Reservation(session.getUser(), room, checkin, checkout);
+
+        // add booking to DAO
+        Dao<Reservation> daoR = dbManager.getDaoReservation();
+        daoR.create(newBook);
+        // is it enough? Do not we need to add the reservation to room as well? 
+
+        System.out.println("Congratulations, your room is booked!");
+        System.out.println("\nHere is a summary of your booking:");
+        System.out.println("Booking name: " + newBook.getUser().getName() + "\nHotel: "+
+                newBook.getRoom().getHotel().getHotelName() + ";\nRoom: " + newBook.getRoom() +
+                "\nCheck-in Date: " + newBook.getDateOfArrival() + "\nCheckout date:" + newBook.getDateOfDeparture() + ".");
+
+        System.out.println("Thank you for using our services to book your stay!");
     }
 
     public List<Room> findRoomsInHotel(Hotel hotel) {

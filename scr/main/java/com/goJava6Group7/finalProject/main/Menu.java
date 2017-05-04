@@ -186,7 +186,10 @@ public class Menu {
     private void performActionUserRoomResultsMenu(SearchResults results, int choice) {
         switch (choice) {
             case 1:
-                controller.bookRoom(results);
+                checkLoginStatus();
+                controller.bookRoom(results, session);
+                printBookingResultsMenu();
+                performActionBookingResultsMenu(getMenuInput(1,2));
                 break;
             case 2:
                 printUserRoomMenu();
@@ -223,7 +226,10 @@ public class Menu {
     private void performActionUserHotelResultsMenu(SearchResults results, int choice) {
         switch (choice) {
             case 1:
-                controller.bookRoom(results);
+                checkLoginStatus();
+                controller.bookRoom(results, session);
+                printBookingResultsMenu();
+                performActionBookingResultsMenu(getMenuInput(1,2));
                 break;
             case 2:
                 printUserHotelMenu();
@@ -234,6 +240,53 @@ public class Menu {
                     printUserMainMenu();
                     performActionUserMainMenu(getMenuInput(1,6));
                 } else break;
+        }
+    }
+
+    private void printLoginMenu() {
+        System.out.println("\nPlease make a selection");
+        System.out.println("[1] Login");
+        System.out.println("[2] Register");
+    }
+
+    private void performActionPrintLoginMenu(int choice){
+        switch(choice){
+            case 1:
+                session = controller.login(session);
+                break;
+            case 2:
+                session.setUser(controller.createUser());
+                session.setGuest(false);
+                session.setAdmin(false);
+                break;
+        }
+    }
+
+    private void printBookingResultsMenu() {
+        System.out.println("\nPlease make a selection");
+        System.out.println("[1] Go back to main menu");
+        System.out.println("[2] Exit");
+    }
+
+    private void performActionBookingResultsMenu(int choice){
+        switch(choice){
+            case 1:
+                printUserMainMenu();
+                performActionUserMainMenu(getMenuInput(1,6));
+                break;
+            case 2:
+                System.out.println("Thank you for using our application, we hope to see you again soon!");
+                System.exit (0);
+        }
+    }
+
+    private void checkLoginStatus(){
+        if (session.isGuest()){
+            System.out.println("You need to login first");
+            while(session.isGuest()){
+                printLoginMenu();
+                performActionPrintLoginMenu(getMenuInput(1, 2));
+            }
         }
     }
 
