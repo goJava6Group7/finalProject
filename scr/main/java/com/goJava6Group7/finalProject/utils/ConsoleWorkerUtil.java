@@ -201,14 +201,15 @@ public class ConsoleWorkerUtil {
 
         // printing results in a clean way, showing only available rooms
         // i is used to as a reference number for booking function, in case they want to book a room
-        final int[] i = {0};
+        final int[] i = {1};
         hotelsByCityByDate.forEach(hotel->{
             System.out.println("\n" + hotel.getHotelName() + ":");
             rooms.forEach(room->{
-                if ((room.getHotel().getHotelName()).equalsIgnoreCase(hotel.getHotelName()))
+                if ((room.getHotel().getHotelName()).equalsIgnoreCase(hotel.getHotelName())){
                     System.out.println("   "+ i[0] + ": Room name: " + room.getName() +"; # of guests: " +
                             room.getNumberOfPersons() + "; Price per night: " + room.getPrice() + ".");
-                i[0]++;
+                    i[0]++;
+                }
             });
         });
     }
