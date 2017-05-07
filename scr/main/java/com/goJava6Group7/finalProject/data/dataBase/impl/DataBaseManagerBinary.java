@@ -56,14 +56,14 @@ public final class DataBaseManagerBinary implements DataBaseManager, Serializabl
 
     @Override
     public boolean initDB() {
-        File file = new File("Binary_Database");
+        File file = new File("Binary_Database.dat");
         if (!file.exists()) {
             System.err.println("Binary_Database doesn't exist. It will be created by default");
             createDefaultDatabase();
         }
 
         try {
-            FileInputStream fis = new FileInputStream("Binary_Database");
+            FileInputStream fis = new FileInputStream("Binary_Database.dat");
             ObjectInputStream ois = new ObjectInputStream(fis);
             DataBaseManagerBinary dataBaseManagerBinary = (DataBaseManagerBinary) ois.readObject();
             this.rooms = dataBaseManagerBinary.rooms;
@@ -85,7 +85,7 @@ public final class DataBaseManagerBinary implements DataBaseManager, Serializabl
     @Override
     public boolean updateDatabase() {
         try {
-            FileOutputStream fos = new FileOutputStream("Binary_Database");
+            FileOutputStream fos = new FileOutputStream("Binary_Database.dat");
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             DataBaseManagerBinary dataBaseManagerBinary = new DataBaseManagerBinary(this.rooms, this.users, this.hotels, this.reservations);
             oos.writeObject(dataBaseManagerBinary);
@@ -101,7 +101,7 @@ public final class DataBaseManagerBinary implements DataBaseManager, Serializabl
     private void createDefaultDatabase() {
 
         try {
-            FileOutputStream fos = new FileOutputStream("Binary_Database");
+            FileOutputStream fos = new FileOutputStream("Binary_Database.dat");
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             DataBaseManagerBinary dataBaseManagerBinary = new DataBaseManagerBinary();
             oos.writeObject(dataBaseManagerBinary);

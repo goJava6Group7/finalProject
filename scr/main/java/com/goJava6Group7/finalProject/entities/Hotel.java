@@ -60,13 +60,12 @@ public class Hotel extends Entity {
         if (o == null || !(o instanceof Hotel)) return false;
 
         Hotel hotel = (Hotel) o;
-        return hotel.id == this.id && hotel.name.equals(this.name)
-                && hotel.city.equals(this.city) && hotel.rating == this.rating;
+        return hotel.id == this.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, city, rating);
+        return Objects.hash(id);
     }
 
     public long getId() {

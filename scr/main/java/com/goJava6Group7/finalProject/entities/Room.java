@@ -57,13 +57,12 @@ public class Room extends Entity {
         if (o == null || !(o instanceof Room)) return false;
 
         Room room = (Room) o;
-        return  room.id == this.id && room.capacity == this.capacity
-                && room.price == this.price && room.roomClass.equals(this.roomClass);
+        return  room.id == this.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, capacity, price, roomClass);
+        return Objects.hash(id);
     }
 
     public long getId() {

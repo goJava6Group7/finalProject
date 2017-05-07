@@ -3,6 +3,9 @@ package com.goJava6Group7.finalProject.entities;
 import com.goJava6Group7.finalProject.data.dataBase.DataBaseManager;
 import com.goJava6Group7.finalProject.data.dataBase.impl.DataBaseManagerFactory;
 import com.goJava6Group7.finalProject.utils.IdUtil;
+
+import java.time.LocalDate;
+
 /**
  * Created by Igor on 13.04.2017.
  */
@@ -19,8 +22,11 @@ public class EntityTest {
         User user2 = new User("Jane","Beautiful wut wut","1234");
         User user3 = new User("Ivan","Dzen","qwerty");
         Hotel hotel2 = new Hotel("Zupa Hotel", "Sin City", 4);
+        LocalDate checkIn = LocalDate.now();
+        LocalDate checkOut = LocalDate.now();
+        Reservation reservation = new Reservation(user, room, checkIn, checkOut);
+        Reservation reservation2 = new Reservation(user2, room2, checkIn, checkOut);
 
-//        System.out.print(hotel2.getOutput());
         System.out.println(Room.getOutputHeader());
         System.out.print(room.getOutput());
         System.out.print(room2.getOutput());
@@ -34,6 +40,10 @@ public class EntityTest {
         System.out.println(Hotel.getOutputHeader());
         System.out.println(hotel.getOutput());
         System.out.println(hotel2.getOutput());
+        System.out.println();
+        System.out.println(Reservation.getOutputHeader());
+        System.out.println(reservation.getOutput());
+        System.out.println(reservation2.getOutput());
 
 
 

@@ -1,14 +1,11 @@
 package com.goJava6Group7.finalProject.data;
 
+import com.goJava6Group7.finalProject.entities.*;
 import org.junit.Test;
 import com.goJava6Group7.finalProject.data.dataBase.DataBaseManager;
 import com.goJava6Group7.finalProject.data.dataBase.impl.DataBaseManagerFactory;
 import com.goJava6Group7.finalProject.data.dataBase.impl.DataBaseManagerXml;
 import com.goJava6Group7.finalProject.data.dataBase.impl.DataBaseManagerBinary;
-import com.goJava6Group7.finalProject.entities.Hotel;
-import com.goJava6Group7.finalProject.entities.Room;
-import com.goJava6Group7.finalProject.entities.RoomClass;
-import com.goJava6Group7.finalProject.entities.User;
 import com.goJava6Group7.finalProject.utils.IdUtil;
 
 import javax.xml.bind.JAXBContext;
@@ -19,7 +16,10 @@ import java.io.*;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Properties;
+import java.time.LocalDate;
 
 import static org.junit.Assert.assertEquals;
 
@@ -37,6 +37,9 @@ public class DataTest {
         Hotel hotel = new Hotel("Live Hostel","Kiev", 2);
         User user = new User("John","Handsome","pswd");
         User user2 = new User("Jone","Handsome","pswd");
+        LocalDate checkIn = LocalDate.now();
+        LocalDate checkOut = LocalDate.now();
+        Reservation reservation = new Reservation(user, room, checkIn, checkOut);
         switch (dataBaseManager.getClass().getSimpleName()){
             case "DataBaseManagerBinary" : {
 
@@ -47,15 +50,17 @@ public class DataTest {
                     dataBaseManager.getDaoRoom().create(room);
                     dataBaseManager.getDaoHotel().create(hotel);
                     dataBaseManager.getDaoUser().create(user);
+                    dataBaseManager.getDaoUser().create(user2);
+                    dataBaseManager.getDaoReservation().create(reservation);
 
-                    FileOutputStream fos = new FileOutputStream("Binary_Database");
+                    FileOutputStream fos = new FileOutputStream("Binary_Database.dat");
                     ObjectOutputStream oos = new ObjectOutputStream(fos);
                     oos.writeObject(dataBaseManager);
                     oos.flush();
                     oos.close();
                     dataBaseManager = null;
 
-                    FileInputStream fis = new FileInputStream("Binary_Database");
+                    FileInputStream fis = new FileInputStream("Binary_Database.dat");
                     ObjectInputStream ois = new ObjectInputStream(fis);
                     dataBaseManager = (DataBaseManagerBinary) ois.readObject();
 
@@ -96,9 +101,15 @@ public class DataTest {
                 }
             }
         }
+
+
+//        System.out.println(Arrays.deepToString(dataBaseManager.getDaoUser().getAll().toArray()));
+//        System.out.println(Arrays.deepToString(dataBaseManager.getDaoReservation().getAll().toArray()));
+
         assertEquals(user, dataBaseManager.getDaoUser().get(user));
         assertEquals(hotel, dataBaseManager.getDaoHotel().get(hotel));
         assertEquals(room, dataBaseManager.getDaoRoom().get(room));
+
     }
 
     @Test

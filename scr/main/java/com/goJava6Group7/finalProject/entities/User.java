@@ -63,13 +63,12 @@ public class User extends Entity {
         if (o == null || !(o instanceof User)) return false;
 
         User user = (User) o;
-        return user.id == this.id && user.name.equals(this.name)
-                && user.login.equals(this.login) && user.password.equals(this.password);
+        return user.id == this.id && user.login.equals(this.login);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, login, password);
+        return Objects.hash(id, login);
     }
 
     public long getId() {

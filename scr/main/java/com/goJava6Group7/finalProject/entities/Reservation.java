@@ -34,7 +34,7 @@ public class Reservation extends Entity {
     @Override
     public String getOutput(){
 
-        String output = String.format("%-4d \t %ty:%tm:%td \t %ty:%tm:%td %n", this.getId(), this.getCheckIn(), this.getCheckOut());
+        String output = String.format("%-4d \t %-10tD \t %-10tD", this.getId(), this.getCheckIn(), this.getCheckOut());
 
         return output;
 
@@ -56,17 +56,13 @@ public class Reservation extends Entity {
 
         Reservation that = (Reservation) o;
 
-        if (id != that.id) return false;
-        if (user != null ? !user.equals(that.user) : that.user != null) return false;
-        if (room != null ? !room.equals(that.room) : that.room != null) return false;
-        if (checkIn != null ? !checkIn.equals(that.checkIn) : that.checkIn != null) return false;
-        return checkOut != null ? checkOut.equals(that.checkOut) : that.checkOut == null;
+        return (id == that.id);
 
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, user, room, checkIn, checkOut);
+        return Objects.hash(id);
     }
 
     public long getId() {
