@@ -303,17 +303,17 @@ public class ProjectController {
 
         String hotelName = ConsoleWorkerUtil.readNameFromConsole("hotel name");
 
-        System.out.println("Here is a list of hotels matching your criteria: ");
-
         List<Hotel> myHotels = allHotels.stream()
                 .filter((Hotel hotel) -> hotel.getName().equalsIgnoreCase(hotelName))
                 .collect(Collectors.toList());
 
-        System.out.println(myHotels);
-
-        System.out.println("To book a room, please choose the 'book a room' or 'search hotel by" +
-                "city and dates' options in the main menu");
-
+        if (myHotels.size() == 0) System.out.println("No hotel matching your criteria");
+        else {
+            System.out.println("Here is a list of hotels matching your criteria: ");
+            System.out.println(myHotels);
+            System.out.println("To book a room, please choose the 'book a room' or 'search hotel by" +
+                    "city and dates' options in the main menu");
+        }
     }
 
     public SearchResults findHotelByCityDate() {
@@ -360,7 +360,7 @@ public class ProjectController {
         return isBooked;
     }
 
-    public SearchResults findRoomByCityDate() {
+    public SearchResults findRoomByCityDate() throws NullSearchResultsException {
         List<Room> rooms;
 
         String cityName = readNameFromConsole("city name");
@@ -368,6 +368,7 @@ public class ProjectController {
         LocalDate checkout = getCheckoutDate(checkin);
 
         rooms = searchRoomByCityDate(cityName, checkin, checkout);
+
 
         printRoomResults(rooms, checkin, checkout);
 
@@ -398,7 +399,7 @@ public class ProjectController {
     }
 
 
-    public SearchResults findRoomByHotelDate() {
+    public SearchResults findRoomByHotelDate() throws NullSearchResultsException {
 
         Dao<Hotel> daoHotel = dbManager.getDaoHotel();
         List<Hotel> allHotels = daoHotel.getAll();
@@ -536,22 +537,24 @@ public class ProjectController {
 //                }
             }
             if (yn.equalsIgnoreCase("Y")) ok = true;
+
+            // check if user exists, if not create new user in DAO
+            List<User> allUsers = dbManager.getDaoUser().getAll();
+            String finalName = name;
+            String finalUserName = userName;
+            if (allUsers.stream()
+                    .anyMatch((User o) -> o.getName().equalsIgnoreCase(finalName) ||
+                            o.getLogin().equals(finalUserName))){
+                System.out.println("An account with this name and / or login already exists. " +
+                        "Please try again");
+                ok = false;
+            }
         }
 
         newUser = new User(name, userName, password);
-
         // procedure to save user to DB
         Dao<User> daoUser = dbManager.getDaoUser();
-
-        // check if user exists, if not create new user in DAO
-        List<User> allUsers = dbManager.getDaoUser().getAll();
-        String finalName = name;
-        String finalUserName = userName;
-        if (allUsers.stream()
-                .anyMatch((User o) -> o.getName().equalsIgnoreCase(finalName) || o.getLogin().equals(finalUserName)))
-            System.out.println("An account with this name and / or login already exists. Please try again");
-
-        else daoUser.create(newUser);
+        daoUser.create(newUser);
 
         return newUser;
 
@@ -581,6 +584,5 @@ public class ProjectController {
 
         return user;
     }
-
 
 }

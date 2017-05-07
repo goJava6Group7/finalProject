@@ -2,10 +2,7 @@ package com.goJava6Group7.finalProject.main;
 
 import com.goJava6Group7.finalProject.controllers.ProjectController;
 import com.goJava6Group7.finalProject.entities.*;
-import com.goJava6Group7.finalProject.exceptions.frontend.HotelAlreadyExistsException;
-import com.goJava6Group7.finalProject.exceptions.frontend.IsNotHotelsInDatabaseException;
-import com.goJava6Group7.finalProject.exceptions.frontend.AreNotRoomsInHotelException;
-import com.goJava6Group7.finalProject.exceptions.frontend.RoomAlreadyExistsException;
+import com.goJava6Group7.finalProject.exceptions.frontend.*;
 
 import java.util.*;
 
@@ -174,18 +171,46 @@ public class Menu {
 
 
     private void performActionUserRoomMenu(int choice) {
-        SearchResults results;
+        SearchResults results = null;
         switch (choice) {
             case 1:
-                results = controller.findRoomByHotelDate();
-                printUserRoomResultsMenu();
-                performActionUserRoomResultsMenu(results, getMenuInput(1, 3));
-                break;
+                try{
+                    results = controller.findRoomByHotelDate();
+                    if (results == null) throw new NullSearchResultsException("");
+                } catch(NullSearchResultsException | NullPointerException e){
+                    System.out.println("There is no room matching your criteria");
+                }
+                if (results == null) {
+                    if (!session.isGuest()) {
+                        printUserMainMenu();
+                        performActionUserMainMenu(getMenuInput(1, 6));
+                        break;
+                    } else break;
+                }
+                else{
+                    printUserRoomResultsMenu();
+                    performActionUserRoomResultsMenu(results, getMenuInput(1, 3));
+                    break;
+                }
             case 2:
-                results = controller.findRoomByCityDate();
-                printUserRoomResultsMenu();
-                performActionUserRoomResultsMenu(results, getMenuInput(1, 3));
-                break;
+                try{
+                    results = controller.findRoomByCityDate();
+                    if (results == null) throw new NullSearchResultsException("");
+                } catch(NullSearchResultsException | NullPointerException e){
+                    System.out.println("There is no room matching your criteria");
+                }
+                if (results == null) {
+                    if (!session.isGuest()) {
+                        printUserMainMenu();
+                        performActionUserMainMenu(getMenuInput(1, 6));
+                        break;
+                    } else break;
+                }
+                else{
+                    printUserRoomResultsMenu();
+                    performActionUserRoomResultsMenu(results, getMenuInput(1, 3));
+                    break;
+                }
             case 3:
                 if (!session.isGuest()) {
                     printUserMainMenu();
@@ -215,23 +240,36 @@ public class Menu {
     }
 
     private void performActionUserHotelMenu(int choice) {
-        SearchResults results;
+        SearchResults results = null;
         switch (choice) {
             case 1:
                 controller.findHotelByHotelName();
                 break;
             case 2:
-                results = controller.findHotelByCityDate();
-                printUserHotelResultsMenu();
-                performActionUserHotelResultsMenu(results, getMenuInput(1, 3));
-                break;
+                try{
+                    controller.findHotelByCityDate();
+                    if (results == null) throw new NullSearchResultsException("");
+                } catch(NullSearchResultsException | NullPointerException e){
+                    System.out.println("There is no hotel matching your criteria");
+                }
+                if (results == null) {
+                    if (!session.isGuest()) {
+                        printUserMainMenu();
+                        performActionUserMainMenu(getMenuInput(1, 6));
+                        break;
+                    } else break;
+                }
+                else{
+                    printUserHotelResultsMenu();
+                    performActionUserHotelResultsMenu(results, getMenuInput(1, 3));
+                    break;
+                }
             case 3:
                 if (!session.isGuest()) {
                     printUserMainMenu();
                     performActionUserMainMenu(getMenuInput(1, 6));
                 } else break;
         }
-
     }
 
     private void performActionUserHotelResultsMenu(SearchResults results, int choice) {
