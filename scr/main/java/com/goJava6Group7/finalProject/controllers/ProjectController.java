@@ -329,6 +329,8 @@ public class ProjectController {
 //                .findFirst().get();
     }
 
+
+    
 // ************************************* GUILLAUME ********************************************
 
     public void findHotelByHotelName() {
