@@ -8,10 +8,7 @@ import com.goJava6Group7.finalProject.main.Session;
 import com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.goJava6Group7.finalProject.entities.User.Role.ADMIN;
@@ -23,7 +20,7 @@ import static com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil.*;
  */
 public class ProjectController {
 
-    public DataBaseManager dbManager;
+    private DataBaseManager dbManager;
 
     public ProjectController(DataBaseManager dbManager) {
         this.dbManager = dbManager;
@@ -98,7 +95,7 @@ public class ProjectController {
                 .getRooms()
                 .stream()
                 .noneMatch(roomAtHotel -> !isBooked(roomAtHotel, dataOfArrival, dateOfDeparture))) {
-            throw new RoomIsReservedForTheseDatesException("The room is reserved for these dates: "
+            throw new RoomIsReservedForTheseDatesException("The room " + room + "is reserved for these dates: "
                     + dataOfArrival + " - " + dateOfDeparture);
         }
         return daoReservation.create(new Reservation(reserveOnUser, room, dataOfArrival, dateOfDeparture));
@@ -173,33 +170,41 @@ public class ProjectController {
 //    }
 
     /**
-     * TODO СТАРОЕ Игорю на проверку НАВЕРНОЕ НАДО ПОМЕНЯТЬ СИГНАТУРУ МЕТОДА update на update(Hotel hotel, Hotel newHotel)
-     * TODO СТАРОЕ (Замечания) - согласен
      * TODO у backend метод update заменяет отель, если "hotels.stream().filter(i -> i.equals(hotel))".
      * TODO А equals у них по всем 4-ом параметрам. НАДО ОБСУДИТЬ!!!!
-     * (или на update(Hotel hotel, параметры отеля))
      * Kontar Maryna:
      *
      * @param hotel
-     * @param newHotel
+     * @param newParametersOfHotel
      * @return
-     * @throws HotelIsNotInDatabaseException
      */
-    public Hotel updateHotel(Hotel hotel, Hotel newHotel) throws HotelIsNotInDatabaseException {
-//        Dao<Hotel> daoHotel = dbManager.getDaoHotel();
-        //TODO(Замечания) - лишняя проверка. Если мы будем делать update, то к этому моменту уже будем знать, что отель существует
-//        if (allHotels.stream().anyMatch(currentHotel -> hotel.equals(hotel))) {
-//            throw new HotelIsNotInDatabaseException("The " + hotel + "is not in database "
-//                    + dbManager.getClass().getSimpleName());
-//        }
-        return dbManager.getDaoHotel().update(newHotel);
+    public Hotel updateHotel(Hotel hotel, Map<HotelParameters, String> newParametersOfHotel) {
+
+        Dao<Hotel> daoHotel = dbManager.getDaoHotel();
+
+        for (Map.Entry<HotelParameters, String> entry : newParametersOfHotel.entrySet()) {
+            String value = entry.getValue();
+            switch (entry.getKey()) {
+                case NAME:
+                    if (value != null)
+                        hotel.setName(value);
+                    break;
+                case CITY:
+                    if (value != null)
+                        hotel.setCity(value);
+                    break;
+                case RATING:
+                    if (value != null)
+                        hotel.setRating(Integer.parseInt(value));
+                    break;
+            }
+        }
+        return daoHotel.update(hotel);
     }
 
     /**
-     * TODO Игорю на проверку. У backend в Room нет поля Hotel.
-     * TODO Поэтому сначала создаю абстрактную комнату(createRoom)а потом добавляю ее к отелю (addRoomToHotel).
-     * TODO Видимо придется переделывать эти две функции в одну и не проверять есть ли комната в отеле,
-     * TODO т.к. могут быть одинаковые комнаты. Или проверять только по id
+     * TODO проверять есть ли комната в отеле? Могут быть одинаковые по всем параметрам (кроме id) комнаты в отеле.
+     * TODO Или проверять только по id? Или equals только по id
      * Kontar Maryna:
      * The method create room if room isn't in database
      *
@@ -212,24 +217,14 @@ public class ProjectController {
         Dao<Room> daoRoom = dbManager.getDaoRoom();
         List<Room> allRooms = daoRoom.getAll();
 
-        if (allRooms.stream().anyMatch(roomAtDatabase -> roomAtDatabase.equals(room))) {
+        if (allRooms.stream()
+                .anyMatch(roomAtDatabase -> roomAtDatabase.equals(room))
+//                .anyMatch(roomAtDatabase -> roomAtDatabase.getId() == room.getId())
+                )
             throw new RoomAlreadyExistsException("The " + room + "already exists in database "
                     + dbManager.getClass().getSimpleName());
-        }
+
         return daoRoom.create(room);
-    }
-
-    /**
-     * TODO Решить, что будет возвращать метод (boolean или Room). Надо ли проверять существует ли комната в БД и дописать javaDoc
-     * Kontar Maryna:
-     * The method add room to the hotel
-     *
-     * @param room
-     * @param hotel
-     */
-    public void addRoomToHotel(Room room, Hotel hotel) {
-
-        hotel.getRooms().add(room);
     }
 
     /**
@@ -246,23 +241,42 @@ public class ProjectController {
         return daoRoom.delete(room);
     }
 
-    //TODO Не готово. Надо обсудить и подумать
-        public Room updateRoom(Room oldRoom, HashMap<String, String> newParametersOfRoom) {
-//        newParametersOfRoom.keySet().stream().map(parameterName ->);
+    public Room updateRoom(Room room, Map<RoomParameters, String> newParametersOfRoom) {
 
-        oldRoom.setPrice(Integer.parseInt(newParametersOfRoom.get("Price")));
+        Dao<Room> daoRoom = dbManager.getDaoRoom();
 
-        throw new UnsupportedOperationException();
+        for (Map.Entry<RoomParameters, String> entry : newParametersOfRoom.entrySet()) {
+            String value = entry.getValue();
+            switch (entry.getKey()) {
+                case ROOM_CLASS:
+                    if (value != null)
+//                        room.setRoomClass(value); //TODO как из String получить enum (без if)
+                    break;
+                case CAPACITY:
+                    if (value != null)
+                        room.setCapacity(Integer.parseInt(value));
+                    break;
+                case PRICE:
+                    if (value != null)
+                        room.setPrice(Integer.parseInt(value));
+                    break;
+            }
+        }
+        return daoRoom.update(room);
+
+
     }
 
     /**
      * TODO Игорю на проверку
      * Kontar Maryna:
      * The method delete User
+     *
      * @param user
      * @return true if the deletion was successful and false otherwise
      */
-    public boolean deleteUser(User user){
+    public boolean deleteUser(User user) {
+
         Dao<User> daoUser = dbManager.getDaoUser();
         return daoUser.delete(user);
     }
@@ -279,7 +293,7 @@ public class ProjectController {
                 .collect(Collectors.toList());
 //                .findFirst().get();
     }
-    
+
 // ************************************* GUILLAUME ********************************************
 
     public void findHotelByHotelName() {
@@ -417,7 +431,7 @@ public class ProjectController {
     }
 
 
-    public void bookRoom(SearchResults results, Session session){
+    public void bookRoom(SearchResults results, Session session) {
 
         LocalDate checkin = results.getCheckin();
         LocalDate checkout = results.getCheckout();
@@ -427,7 +441,7 @@ public class ProjectController {
         System.out.println("Please enter the number of the room you would like to book from the list:");
         printRoomResults(rooms, checkin, checkout);
 
-        roomChoice = getMenuInput(1,rooms.size()) - 1;
+        roomChoice = getMenuInput(1, rooms.size()) - 1;
 
         Room room = rooms.get(roomChoice);
 
@@ -442,7 +456,7 @@ public class ProjectController {
 
         System.out.println("Congratulations, your room is booked!");
         System.out.println("\nHere is a summary of your booking:");
-        System.out.println("Booking name: " + newBook.getUser().getName() + "\nHotel: "+
+        System.out.println("Booking name: " + newBook.getUser().getName() + "\nHotel: " +
                 newBook.getRoom().getHotel().getName() + ";\nRoom: " + newBook.getRoom() +
                 "\nCheck-in Date: " + newBook.getCheckIn() + "\nCheckout date:" + newBook.getCheckOut() + ".");
 
@@ -455,14 +469,14 @@ public class ProjectController {
 
     }
 
-    public Session login (Session session){
+    public Session login(Session session) {
         String userName;
         String pass;
         User user;
 
         if (!session.isGuest()) System.out.println("You already logged in as " + session.getUser().getLogin());
 
-        if (session.isGuest()){
+        if (session.isGuest()) {
             // get login credentials from user
             userName = readNameFromConsole("your username");
             pass = readNameFromConsole("your password");
@@ -470,12 +484,12 @@ public class ProjectController {
             // try to login
             user = loginAndPasswordVerification(userName, pass);
             if (user == null) System.out.println("Wrong login credentials: please either register or try again");
-            else{
+            else {
                 // update session info
                 session.setUser(user);
                 session.setGuest(false);
 
-                if (user.getRole()==ADMIN) session.setAdmin(true);
+                if (user.getRole() == ADMIN) session.setAdmin(true);
             }
         }
 
@@ -483,7 +497,7 @@ public class ProjectController {
     }
 
 
-    public Session logout(Session session){
+    public Session logout(Session session) {
         session.setUser(null);
         session.setGuest(true);
         session.setAdmin(false);
@@ -514,8 +528,8 @@ public class ProjectController {
 
             while (true) {
 //                try {
-                    yn = readStringFromConsole();
-                    break;
+                yn = readStringFromConsole();
+                break;
 //                } catch (IOException e) {
 //                    System.out.println("You entered a wrong input, please try again");
 //                    continue;
@@ -543,7 +557,7 @@ public class ProjectController {
 
     }
 
-    public User updateUser(User user){
+    public User updateUser(User user) {
 
         String userName;
         String pass;

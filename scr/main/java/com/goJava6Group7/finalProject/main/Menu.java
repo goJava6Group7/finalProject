@@ -3,14 +3,15 @@ package com.goJava6Group7.finalProject.main;
 import com.goJava6Group7.finalProject.controllers.ProjectController;
 import com.goJava6Group7.finalProject.entities.*;
 import com.goJava6Group7.finalProject.exceptions.frontend.HotelAlreadyExistsException;
+import com.goJava6Group7.finalProject.exceptions.frontend.IsNotHotelsInDatabaseException;
+import com.goJava6Group7.finalProject.exceptions.frontend.AreNotRoomsInHotelException;
 import com.goJava6Group7.finalProject.exceptions.frontend.RoomAlreadyExistsException;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil.*;
+import static com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil.HotelParameters.*;
+import static com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil.RoomParameters.*;
 
 /**
  * Created by Igor on 13.04.2017.
@@ -119,8 +120,13 @@ public class Menu {
                 break;
             case 5:
                 // login
-                printAdminMainMenu();
-                //performActionAdminMainMenu();
+                if (isAdmin()) {
+                    adminMenu();
+                } else {
+                    System.out.println("You do not have administrator rights. Login as administrator.");
+                    runMenu();
+                }
+                break;
             case 6:
                 exit = true;
                 System.out.println("Thank you for using our application");
@@ -151,8 +157,13 @@ public class Menu {
                 break;
             case 5:
                 // login
-                printAdminMainMenu();
-                //performActionAdminMainMenu();
+                if (isAdmin()) {
+                    adminMenu();
+                } else {
+                    System.out.println("You do not have administrator rights. Login as administrator.");
+                    runMenu();
+                }
+                break;
             case 6:
                 exit = true;
                 System.out.println("Thank you for using our application");
@@ -176,9 +187,9 @@ public class Menu {
                 performActionUserRoomResultsMenu(results, getMenuInput(1, 3));
                 break;
             case 3:
-                if (!session.isGuest()){
+                if (!session.isGuest()) {
                     printUserMainMenu();
-                    performActionUserMainMenu(getMenuInput(1,6));
+                    performActionUserMainMenu(getMenuInput(1, 6));
                 } else break;
         }
     }
@@ -189,16 +200,16 @@ public class Menu {
                 checkLoginStatus();
                 controller.bookRoom(results, session);
                 printBookingResultsMenu();
-                performActionBookingResultsMenu(getMenuInput(1,2));
+                performActionBookingResultsMenu(getMenuInput(1, 2));
                 break;
             case 2:
                 printUserRoomMenu();
                 performActionUserRoomMenu(getMenuInput(1, 3));
                 break;
             case 3:
-                if (!session.isGuest()){
+                if (!session.isGuest()) {
                     printUserMainMenu();
-                    performActionUserMainMenu(getMenuInput(1,6));
+                    performActionUserMainMenu(getMenuInput(1, 6));
                 } else break;
         }
     }
@@ -215,9 +226,9 @@ public class Menu {
                 performActionUserHotelResultsMenu(results, getMenuInput(1, 3));
                 break;
             case 3:
-                if (!session.isGuest()){
+                if (!session.isGuest()) {
                     printUserMainMenu();
-                    performActionUserMainMenu(getMenuInput(1,6));
+                    performActionUserMainMenu(getMenuInput(1, 6));
                 } else break;
         }
 
@@ -229,16 +240,16 @@ public class Menu {
                 checkLoginStatus();
                 controller.bookRoom(results, session);
                 printBookingResultsMenu();
-                performActionBookingResultsMenu(getMenuInput(1,2));
+                performActionBookingResultsMenu(getMenuInput(1, 2));
                 break;
             case 2:
                 printUserHotelMenu();
                 performActionUserHotelMenu(getMenuInput(1, 3));
                 break;
             case 3:
-                if (!session.isGuest()){
+                if (!session.isGuest()) {
                     printUserMainMenu();
-                    performActionUserMainMenu(getMenuInput(1,6));
+                    performActionUserMainMenu(getMenuInput(1, 6));
                 } else break;
         }
     }
@@ -249,8 +260,8 @@ public class Menu {
         System.out.println("[2] Register");
     }
 
-    private void performActionPrintLoginMenu(int choice){
-        switch(choice){
+    private void performActionPrintLoginMenu(int choice) {
+        switch (choice) {
             case 1:
                 session = controller.login(session);
                 break;
@@ -268,22 +279,22 @@ public class Menu {
         System.out.println("[2] Exit");
     }
 
-    private void performActionBookingResultsMenu(int choice){
-        switch(choice){
+    private void performActionBookingResultsMenu(int choice) {
+        switch (choice) {
             case 1:
                 printUserMainMenu();
-                performActionUserMainMenu(getMenuInput(1,6));
+                performActionUserMainMenu(getMenuInput(1, 6));
                 break;
             case 2:
                 System.out.println("Thank you for using our application, we hope to see you again soon!");
-                System.exit (0);
+                System.exit(0);
         }
     }
 
-    private void checkLoginStatus(){
-        if (session.isGuest()){
+    private void checkLoginStatus() {
+        if (session.isGuest()) {
             System.out.println("You need to login first");
-            while(session.isGuest()){
+            while (session.isGuest()) {
                 printLoginMenu();
                 performActionPrintLoginMenu(getMenuInput(1, 2));
             }
@@ -291,11 +302,14 @@ public class Menu {
     }
 
 
-// ************************************* ADMIN MENU ********************************************
+    // ************************************* ADMIN MENU ********************************************
+    private boolean adminExit;
 
-    public void adminMenu() {
-        printAdminMainMenu();
-        performActionAdminMainMenu(getMenuInput(1, 7));
+    private void adminMenu() {
+        while (!adminExit) {
+            printAdminMainMenu();
+            performActionAdminMainMenu(readIntToMaxNum(7));
+        }
 
 //        TODO Вынести это туда, где будет вызываться админ меню
 //        if (isAdmin()) {
@@ -332,7 +346,8 @@ public class Menu {
     }
 
     private boolean isAdmin() {
-        return adminLoginAndPasswordVerification(readLogin(), readPassword());
+        return session.isAdmin()
+                || adminLoginAndPasswordVerification(readLogin(), readPassword());
     }
 
     /**
@@ -350,7 +365,10 @@ public class Menu {
     }
 
 
-    public void printAdminMainMenu() {
+    //****************************** Admin main menu *********************************
+    private void printAdminMainMenu() {
+        System.out.println("");
+        System.out.println("\tADMIN MENU");
         System.out.println("Please make a selection");
         System.out.println("[1] Choose database");
         System.out.println("[2] Add a hotel");
@@ -365,19 +383,30 @@ public class Menu {
 
         switch (choice) {
             case 1:
-                chooseTheDatabase();
+                changeTheDatabase();
+                break;
             case 2:
                 addHotel();
+                break;
             case 3:
                 addRoom();
-            case 4: //TODO
-            case 5:
-            case 6:
-            case 7: runMenu();
+                break;
+            case 4:
+                updateOrDeleteAHotel();
+                break;
+            case 5: updateOrDeleteARoom();
+                break;
+            case 6: //TODO
+                break;
+            case 7:
+                adminExit = true;
+                runMenu();
+                break;
             default:
         }
 
     }
+
 
     //********************************Choose database*********************************
 
@@ -386,29 +415,35 @@ public class Menu {
      * Kontar Maryna:
      * The method iInitializes the selected database
      */
-    private void chooseTheDatabase() {
+    private void changeTheDatabase() {
 
-        adminChooseDBMenu();
+        printAdminChooseDBMenu();
 
-        int choiceDB = getMenuInput(1, 3);
+        int choiceDB = readIntToMaxNum(3);
         try {
             switch (choiceDB) {
                 case 1:
                     printConfirmChangeDB();
                     if (confirm()) {
 //                        getDataBaseManager(XML).initDB();
+                        System.out.println("Now you work with XML database.");
                         System.exit(0);//Пока что просто выходим
-                    } else adminMenu();
-
+                    } else {
+                        System.out.println("DATABASE WAS NOT CHANGED.");
+                        return;// adminMenu()
+                    }
                 case 2:
                     printConfirmChangeDB();
                     if (confirm()) {
 //                        getDataBaseManager(BINARY).initDB();
+                        System.out.println("Now you work with BINARY database.");
                         System.exit(0);//Пока что просто выходим
-                    } else adminMenu();
-
+                    } else {
+                        System.out.println("DATABASE WAS NOT CHANGED.");
+                        return;// adminMenu()
+                    }
                 case 3:
-                    adminMenu();
+                    return;//adminMenu()
             }
         } finally {
             //nothing here
@@ -416,11 +451,11 @@ public class Menu {
             e.printStackTrace();
             //TODO Подумать, что делать, если не поменяется база. Сообщение выдать (его пока нет в backend) и вернуться в админ меню?
 //                    System.out.println(e.getMessage());
-//                    adminMenu();
+//                    return;// adminMenu()
         }*/
     }
 
-    public void adminChooseDBMenu() {
+    private void printAdminChooseDBMenu() {
         System.out.println("Please choose the database you want to work with");
         System.out.println("[1] XML database");
         System.out.println("[2] Binary database");
@@ -434,92 +469,344 @@ public class Menu {
     // А если в controller.addHotel(hotel), то не понятно что делать с пойманым там исключением.
     private void addHotel() {
 
-        System.out.println("Please enter the hotel name you want to add to database: "
-                + controller.dbManager.getClass().getSimpleName());
+        System.out.println("Please enter the hotel name you want to add to database: ");
         String name = readStringFromConsole();
 
         //вынести в отдельную функцию считывание города и проверять его с Enum существующих городов
         System.out.println("Please enter the hotel city");
         String city = readStringFromConsole();
 
-        System.out.println("Please enter the hotel кфештп");
+        System.out.println("Please enter the hotel rating");
         int rating = readPositiveInt();
-
 
         Hotel hotel = new Hotel(name, city, rating);
 
         try {
             controller.addHotel(hotel);
+            System.out.println("Your hotel was created: " + hotel);
         } catch (HotelAlreadyExistsException e) {
             System.out.println(e.getMessage());
-            adminMenu();
+        } catch (RuntimeException e) {
+            System.out.println("HOTEL WASN'T CREATE!!!");
         }
-
-        System.out.println("Your hotel was created: " + hotel);
-
-        adminMenu();
     }
 
-    public void addRoom() {
 
+    //********************************Add room***************************************
+
+    //TODO Слишком сложный выбор отеля, надо подумать над упрощением
+    private void addRoom() {
+
+        Hotel hotel;
         System.out.println("Please enter the name of the hotel in which you want to add a room");
         String hotelName = readStringFromConsole();
+        try {
+            hotel = chooseHotelFromListOfHotelsWithSameHotelName(hotelName);
+        } catch (IsNotHotelsInDatabaseException e) {
+            System.out.println(e.getMessage());
+            return;// adminMenu();
+        }
+
+        System.out.println("Please enter the number of person:");
+        int maxNumberOfPerson = 20;//можно сделать константу в Hotel - MAX_NUMBER_OF_GUESTS_IN_ROOM
+        int numberOfPerson = readIntToMaxNum(maxNumberOfPerson);
+
+        RoomClass roomClass = chooseRoomClass();
+
+        System.out.println("Please enter the price per room:");
+        int price = readPositiveInt();
+
+        Room room = new Room(numberOfPerson, price, roomClass);
+        room.setHotel(hotel);//ПОКА НЕ ПРОВЕРЯЮ hotel НА null.hotel не должен быть равен null
+        // т.к. в chooseHotelFromListOfHotelsWithSameHotelName это не допускается, но при другой реализации может и быть равным null
+
+        try {
+            controller.createRoom(room);
+            System.out.println("Your room was successfully created: " + room);
+        } catch (RoomAlreadyExistsException e) {
+            System.out.println(e.getMessage());
+        } catch (RuntimeException e) {
+            System.out.println("ROOM WASN'T CREATE!!!");
+        }
+    }
+
+    //TODO Слишком длинное имя у функциию. Возвращать null, если нет отелей или кидать exception
+    private Hotel chooseHotelFromListOfHotelsWithSameHotelName(String hotelName) throws IsNotHotelsInDatabaseException {
+
         List<Hotel> listOfHotels = controller.findHotelByHotelName(hotelName);
 
         if (!listOfHotels.isEmpty()) {
 
-            Map<Integer, Hotel> mapOfHotels = createHotelMap(listOfHotels);
-            System.out.println("Please choose the number of the hotel " +
-                    "in which you want to add a room:");
-            mapOfHotels.forEach((key, value) -> System.out.println("[" + (key + 1) + "]: " + value));
+            Map<Integer, Hotel> mapOfHotels = createEntityMap(listOfHotels);
+            System.out.println("Please choose the number of the hotel you want to change: ");
+            System.out.println("\t" + Hotel.getOutputHeader());
+            mapOfHotels.forEach((key, value) -> System.out.println("[" + key + "]: " + value.getOutput()));
 
             int hotelKey = readIntToMaxNum(listOfHotels.size());
-            Hotel hotel = mapOfHotels.get(hotelKey);
 
-            System.out.println("Please enter the number of person:");
-            int maxNumberOfPerson = 10;//можно сделать константу в Hotel - MAX_NUMBER_OF_GUESTS_IN_ROOM
-            int numberOfPerson = readIntToMaxNum(maxNumberOfPerson);
-
-            //TODO(Игорь) добавлен Enum для классов комнат. Нужно реализовать их выбор
-//            System.out.println("Please enter a class of room:");
-            RoomClass roomClass = RoomClass.Apartment;//нужен Enum для классов комнат
-
-            System.out.println("Please enter the price per room:");
-            int price = readPositiveInt();
-
-            Room room = new Room(numberOfPerson, price, roomClass);
-            room.setHotel(hotel);
-            //TODO убрала проверку на null, т.к. все параметры проверяю при вводе
-
-            //TODO когда у backend появится поле Hotel в Room переделать метод в контроллере для добавления комнаты
-            try {
-                controller.createRoom(room);
-            } catch (RoomAlreadyExistsException e) {
-                System.out.println(e.getMessage());
-                adminMenu();
-            }
-
-            System.out.println("Your room was successfully created: " + room);
-
-            adminMenu();
+            return mapOfHotels.get(hotelKey);
 
         } else {
-            System.out.println("There isn't hotel " + hotelName + " in database. Try again");
-            adminMenu();// or addRoom()
+            throw new IsNotHotelsInDatabaseException("There isn't hotel " + hotelName + "  in database.");
         }
     }
 
     //TODO написала метод, чтобы можно было выберать номер отеля из списка найденных по имени отелей
     //Подумать как проше сделать
-    private Map<Integer, Hotel> createHotelMap(List<Hotel> listOfHotels) {
-        List<Integer> listOfHotelNumbers = Arrays.asList(new Integer[listOfHotels.size()]);
-        Map<Integer, Hotel> mapOfHotels = new HashMap<>();
-        mapOfHotels.values().addAll(listOfHotels);
-        mapOfHotels.keySet().addAll(listOfHotelNumbers);
-        return mapOfHotels;
+    private <T extends Entity> Map<Integer, T > createEntityMap(List<T> listOfEntities) {
+
+        Map<Integer, T> mapOfEntities = new HashMap<>(listOfEntities.size());
+
+        int i = 0;
+        for (T entity : listOfEntities) {
+            i = i + 1;
+            mapOfEntities.put(i, entity);
+        }
+        return mapOfEntities;
+    }
+
+    /**
+     * The method selects a class room from a list provided by the class of room menu
+     *
+     * @return RoomClass
+     */
+    private RoomClass chooseRoomClass() {
+
+        printClassOfRoomMenu();
+
+        int classRoomNumber = readIntToMaxNum(5);
+
+        switch (classRoomNumber) {
+            case 1:
+                return RoomClass.Standart;
+            case 2:
+                return RoomClass.Suite;
+            case 3:
+                return RoomClass.Business;
+            case 4:
+                return RoomClass.Apartment;
+            case 5:
+                return RoomClass.President;
+            default:
+                return RoomClass.Standart; // Never should happen
+        }
+    }
+
+    private void printClassOfRoomMenu() {
+        System.out.println("Please choose a class of room: ");
+        System.out.println("[1] Standard");
+        System.out.println("[2] Suite");
+        System.out.println("[3] Business");
+        System.out.println("[4] Apartment");
+        System.out.println("[5] President");
     }
 
 
+//*********************** Update or delete a hotel *******************************
+
+    private void updateOrDeleteAHotel() {
+
+        System.out.println("Please enter the name of the hotel you want to update or delete");
+
+        Hotel hotel;
+        String hotelName = readStringFromConsole();
+        try {
+            hotel = chooseHotelFromListOfHotelsWithSameHotelName(hotelName);
+        } catch (IsNotHotelsInDatabaseException e) {
+            System.out.println(e.getMessage());
+            return;// adminMenu();
+        }
+
+        printUpdateOrDeleteEntityMenu("hotel");
+        int numberOfSelectedAction = readIntToMaxNum(3);
+
+        switch (numberOfSelectedAction) {
+            case 1:
+                updateHotel(hotel);
+                break;
+            case 2:
+                deleteHotel(hotel);
+                break;
+            case 3:
+                return; //adminMenu
+        }
+
+    }
+
+    private void printUpdateOrDeleteEntityMenu(String entityName) {
+        System.out.println("Please choose: ");
+        System.out.println("[1] Update " + entityName);
+        System.out.println("[2] Delete " + entityName);
+        System.out.println("[3] Back to admin menu");
+    }
+
+    private void updateHotel(Hotel hotel) {
+
+        System.out.println("Do you want to change hotel " + NAME + " ?");
+        String newHotelName = null;
+        if (confirm()) {
+            System.out.println("Please enter new hotel " + NAME);
+            newHotelName = readStringFromConsole();
+        }
+
+        System.out.println("Do you want to change hotel " + CITY + " ?");
+        String newHotelCity = null;
+        if (confirm()) {
+            System.out.println("Please enter new hotel " + CITY);
+            newHotelCity = readStringFromConsole();
+        }
+
+        System.out.println("Do you want to change hotel " + RATING + " ?");
+        Integer newHotelRating = null;
+        if (confirm()) {
+            System.out.println("Please enter new hotel " + RATING);
+            newHotelRating = readIntFromConsole();
+        }
+
+        Map<HotelParameters, String> newParametersOfHotel =
+                createHotelParametersMap(newHotelName, newHotelCity, newHotelRating);
+
+        Hotel newHotel = controller.updateHotel(hotel, newParametersOfHotel);
+        if (newHotel != null)
+            System.out.println("Hotel was successfully updated: " + newHotel);
+        else System.out.println("HOTEL WASN'T UPDATE!!!");
+    }
+
+    private Map<HotelParameters, String> createHotelParametersMap
+            (String newHotelName, String newHotelCity, Integer newHotelRating) {
+
+        Map<HotelParameters, String> newParametersOfHotel = new HashMap<>();
+
+        newParametersOfHotel.put(NAME, newHotelName);
+        newParametersOfHotel.put(CITY, newHotelCity);
+        newParametersOfHotel.put(RATING, (newHotelRating == null) ? null : String.valueOf(newHotelRating));
+
+        return newParametersOfHotel;
+    }
+
+    private void deleteHotel(Hotel hotel) {
+
+        printConfirmDeleteEntity("hotel");
+        if (confirm() && controller.deleteHotel(hotel)) {
+            System.out.println("Hotel was successfully deleted: " + hotel);
+        } else
+            System.out.println("HOTEL WASN'T DELETE!!!");
+    }
+
+
+//*********************** Update or delete a room *******************************
+
+    private void updateOrDeleteARoom() {
+
+        System.out.println("Please enter the name of the hotel of the room you want to update or delete");
+
+        Hotel hotel;
+        String hotelName = readStringFromConsole();
+        try {
+            hotel = chooseHotelFromListOfHotelsWithSameHotelName(hotelName);
+        } catch (IsNotHotelsInDatabaseException e) {
+            System.out.println(e.getMessage());
+            return;// adminMenu();
+        }
+
+        Room room;
+        try {
+            room = chooseRoomFromHotel(hotel);
+        } catch (AreNotRoomsInHotelException e) {
+            System.out.println(e.getMessage());
+            return;// adminMenu();
+        }
+
+        printUpdateOrDeleteEntityMenu("room");
+        int numberOfSelectedAction = readIntToMaxNum(3);
+
+        switch (numberOfSelectedAction) {
+            case 1:
+                updateRoom(room);
+                break;
+            case 2:
+                deleteRoom(room);
+                break;
+            case 3:
+                return; //adminMenu
+        }
+
+    }
+
+    private Room chooseRoomFromHotel(Hotel hotel) throws AreNotRoomsInHotelException {
+
+        List<Room> listOfRooms = hotel.getRooms();
+
+        if (listOfRooms != null) {
+
+            Map<Integer, Room> mapOfRooms = createEntityMap(listOfRooms);
+
+            System.out.println("Please choose the number of the room you want to change: ");
+            System.out.println("\t" + Room.getOutputHeader());
+            mapOfRooms.forEach((key, value) -> System.out.println("[" + key + "]: " + value.getOutput()));
+
+            int roomKey = readIntToMaxNum(listOfRooms.size());
+
+             return mapOfRooms.get(roomKey);
+
+        } else {
+            throw new AreNotRoomsInHotelException("There aren't rooms in " + hotel + ".");
+        }
+    }
+
+    private void updateRoom(Room room) {
+
+        System.out.println("Do you want to change room " + ROOM_CLASS + " ?");
+        RoomClass newRoomClass = null;
+        if (confirm()) {
+            System.out.println("Please enter new " + ROOM_CLASS);
+            newRoomClass = chooseRoomClass();
+        }
+
+        System.out.println("Do you want to change room " + CAPACITY + " ?");
+        Integer newRoomCapacity = null;
+        if (confirm()) {
+            System.out.println("Please enter new room " + CAPACITY);
+            newRoomCapacity = readIntFromConsole();
+        }
+
+        System.out.println("Do you want to change room " + PRICE + " ?");
+        Integer newRoomPrice = null;
+        if (confirm()) {
+            System.out.println("Please enter new room " + PRICE);
+            newRoomPrice = readIntFromConsole();
+        }
+
+        Map<RoomParameters, String> newRoomParametersMap =
+                createRoomParametersMap(newRoomClass, newRoomCapacity, newRoomPrice);
+
+        Room newRoom = controller.updateRoom(room, newRoomParametersMap);
+        if (newRoom != null)
+            System.out.println("Room was successfully updated: " + newRoom);
+        else System.out.println("Room WASN'T UPDATE!!!");
+    }
+
+    private Map<RoomParameters, String> createRoomParametersMap
+            (RoomClass newRoomClass, Integer newRoomCapacity, Integer newHotelRating) {
+
+        Map<RoomParameters, String> newRoomParametersMap = new HashMap<>();
+
+        newRoomParametersMap.put(ROOM_CLASS, newRoomClass.toString());
+        newRoomParametersMap.put(CAPACITY, (newRoomCapacity == null) ? null : String.valueOf(newRoomCapacity));
+        newRoomParametersMap.put(PRICE, (newHotelRating == null) ? null : String.valueOf(newHotelRating));
+
+        return newRoomParametersMap;
+    }
+
+
+    private void deleteRoom(Room room) {
+
+        printConfirmDeleteEntity("room");
+        if (confirm() && controller.deleteRoom(room)) {
+            System.out.println("Room was successfully deleted: " + room);
+        } else
+            System.out.println("ROOM WASN'T DELETE!!!");
+    }
 
 
     private void searchUser() {
