@@ -42,7 +42,7 @@ public class ProjectController {
     public User loginAndPasswordVerification(String login, String password) {
         List<User> allUsers = dbManager.getDaoUser().getAll();
         Optional<User> optional = allUsers.stream()
-                .filter(o -> o.getName().equals(login) && o.getLogin().equals(password))
+                .filter(o -> o.getLogin().equals(login) && o.getPassword().equals(password))
                 .findFirst();
         return optional.orElse(null);
     }

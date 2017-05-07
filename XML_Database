@@ -82,6 +82,13 @@
             <name>Maryna</name>
             <role>ADMIN</role>
         </user>
+        <user>
+            <id>2</id>
+            <login>GGINGEMBRE</login>
+            <password>TEST</password>
+            <name>GGINGEMBRE</name>
+            <role>GUEST</role>
+        </user>
     </users>
     <hotels>
         <hotel>
