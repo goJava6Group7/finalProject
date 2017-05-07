@@ -60,7 +60,8 @@ public class Hotel extends Entity {
         if (o == null || !(o instanceof Hotel)) return false;
 
         Hotel hotel = (Hotel) o;
-        return hotel.id == this.id;
+        return hotel.id == this.id ;//&& hotel.name.equals(this.name)
+//                && hotel.city.equals(this.city) && hotel.rating == this.rating;
     }
 
     @Override

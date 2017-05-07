@@ -8,14 +8,12 @@ import com.goJava6Group7.finalProject.main.Session;
 import com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.goJava6Group7.finalProject.entities.User.Role.ADMIN;
 import static com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil.*;
+import static com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil.RoomParameters.CAPACITY;
 
 
 /**
@@ -23,7 +21,7 @@ import static com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil.*;
  */
 public class ProjectController {
 
-    public DataBaseManager dbManager;
+    private DataBaseManager dbManager;
 
     public ProjectController(DataBaseManager dbManager) {
         this.dbManager = dbManager;
@@ -43,92 +41,19 @@ public class ProjectController {
      * and null otherwise
      */
     public User loginAndPasswordVerification(String login, String password) {
+
         List<User> allUsers = dbManager.getDaoUser().getAll();
         Optional<User> optional = allUsers.stream()
-                .filter(o -> o.getName().equals(login) && o.getLogin().equals(password))
+                .filter(o -> o.getLogin().equals(login) && o.getPassword().equals(password))
                 .findFirst();
         return optional.orElse(null);
     }
 
-
-    /**
-     * TODO Игорю на проверку
-     * TODO Эта функция написана мной, п.ч. изначально так поделили задания с Гийомом,
-     * TODO но потом мне надо было реализовывать админ меню, а функции остались
-     * Kontar Maryna:
-     * Method create account for user with name, login and password
-     * if there isn't account with this name and login.
-     *
-     * @param name
-     * @param login
-     * @param password
-     * @return User if an account is created
-     * @throws AccountAlreadyExistException
-     */
-    public User createAccount(String name, String login, String password) throws AccountAlreadyExistException {
-
-        Dao<User> daoUser = dbManager.getDaoUser();
-        List<User> allUsers = daoUser.getAll();
-        User user = new User(name, login, password);
-        if (allUsers.stream()
-                .anyMatch((User o) -> o.getName().equals(name) || o.getLogin().equals(login))) {
-            throw new AccountAlreadyExistException("Account with these name or login already exists.");
-        }
-        return daoUser.create(user);
-    }
-
-    /**
-     * TODO Эта функция написана мной, п.ч. изначально так поделили задания с Гийомом,
-     * TODO но потом мне надо было реализовывать админ меню, а функции остались
-     * TODO Возможно надо написать функцию isFreeRoom(){return !isBooked}.
-     * TODO потому что отрицания воспринимаются мозгом намного медленнее
-     * Kontar Maryna:
-     *
-     * @param reserveOnUser
-     * @param room
-     * @param dataOfArrival
-     * @param dateOfDeparture
-     * @return Reservation if reservation is created
-     * @throws RoomIsReservedForTheseDatesException
-     */
-    public Reservation reserveRoom(User reserveOnUser, Room room, LocalDate dataOfArrival, LocalDate dateOfDeparture)
-            throws RoomIsReservedForTheseDatesException {
-        Dao<Reservation> daoReservation = dbManager.getDaoReservation();
-        if (room.getHotel()
-                .getRooms()
-                .stream()
-                .noneMatch(roomAtHotel -> !isBooked(roomAtHotel, dataOfArrival, dateOfDeparture))) {
-            throw new RoomIsReservedForTheseDatesException("The room is reserved for these dates: "
-                    + dataOfArrival + " - " + dateOfDeparture);
-        }
-        return daoReservation.create(new Reservation(reserveOnUser, room, dataOfArrival, dateOfDeparture));
-
-        //TODO Функция должна быть с входными параметрами.
-        //TODO Метод create сохранит этот reservation в БД и добавит в список бронирований данного user?
-        // Спросила у ребят из backend. Жду, пока они дойдут до этого
-    }
-
-    /**
-     * TODO Эта функция написана мной, п.ч. изначально так поделили задания с Гийомом,
-     * TODO но потом мне надо было реализовывать админ меню, а функции остались
-     * Kontar Maryna:
-     * The method delete room reservation
-     *
-     * @param reservation
-     * @return true if the deletion was successful and false otherwise
-     */
-    public boolean cancelRoomReservation(Reservation reservation) {
-
-        //TODO Проверять на наличие в БД НЕ НАДО (это сделано backend в функции delete(Reservation reservation) в DaoReservation)
-        Dao<Reservation> daoReservation = dbManager.getDaoReservation();
-        return daoReservation.delete(reservation);
-    }
-
-
     /**
      * TODO Игорю на проверку
      * TODO(Замечания) - определится с тем, что будет считаться идентичным Отелем
-     * TODO Добавлять ли отель с уже существующим именем и названием города? У него будет другое id и если equals по id, то єто разные отели
+     * TODO Добавлять ли отель с уже существующим именем и названием города?
+     * У него будет другое id и если equals по id, то єто разные отели
      * Kontar Maryna:
      * The method adds the hotel to the database, if the hotel is not in the database
      *
@@ -142,6 +67,7 @@ public class ProjectController {
         List<Hotel> allHotels = daoHotel.getAll();
 
         //TODO Надо проверять на наличие в БД, т.к. create(hotel) в DaoHotel не проверяет
+        //Т.к. теперь equals по id, то проверка видимо нужна по другим параметрам
         if (allHotels.stream().anyMatch(hotelAtDatabase -> hotelAtDatabase.equals(hotel))) {
             throw new HotelAlreadyExistsException("The " + hotel + "already exists in database "
                     + dbManager.getClass().getSimpleName());
@@ -173,33 +99,41 @@ public class ProjectController {
 //    }
 
     /**
-     * TODO СТАРОЕ Игорю на проверку НАВЕРНОЕ НАДО ПОМЕНЯТЬ СИГНАТУРУ МЕТОДА update на update(Hotel hotel, Hotel newHotel)
-     * TODO СТАРОЕ (Замечания) - согласен
      * TODO у backend метод update заменяет отель, если "hotels.stream().filter(i -> i.equals(hotel))".
      * TODO А equals у них по всем 4-ом параметрам. НАДО ОБСУДИТЬ!!!!
-     * (или на update(Hotel hotel, параметры отеля))
      * Kontar Maryna:
      *
      * @param hotel
-     * @param newHotel
+     * @param newParametersOfHotel
      * @return
-     * @throws HotelIsNotInDatabaseException
      */
-    public Hotel updateHotel(Hotel hotel, Hotel newHotel) throws HotelIsNotInDatabaseException {
-//        Dao<Hotel> daoHotel = dbManager.getDaoHotel();
-        //TODO(Замечания) - лишняя проверка. Если мы будем делать update, то к этому моменту уже будем знать, что отель существует
-//        if (allHotels.stream().anyMatch(currentHotel -> hotel.equals(hotel))) {
-//            throw new HotelIsNotInDatabaseException("The " + hotel + "is not in database "
-//                    + dbManager.getClass().getSimpleName());
-//        }
-        return dbManager.getDaoHotel().update(newHotel);
+    public Hotel updateHotel(Hotel hotel, Map<HotelParameters, String> newParametersOfHotel) {
+
+        Dao<Hotel> daoHotel = dbManager.getDaoHotel();
+
+        for (Map.Entry<HotelParameters, String> entry : newParametersOfHotel.entrySet()) {
+            String value = entry.getValue();
+            switch (entry.getKey()) {
+                case NAME:
+                    if (value != null)
+                        hotel.setName(value);
+                    break;
+                case CITY:
+                    if (value != null)
+                        hotel.setCity(value);
+                    break;
+                case RATING:
+                    if (value != null)
+                        hotel.setRating(Integer.parseInt(value));
+                    break;
+            }
+        }
+        return daoHotel.update(hotel);
     }
 
     /**
-     * TODO Игорю на проверку. У backend в Room нет поля Hotel.
-     * TODO Поэтому сначала создаю абстрактную комнату(createRoom)а потом добавляю ее к отелю (addRoomToHotel).
-     * TODO Видимо придется переделывать эти две функции в одну и не проверять есть ли комната в отеле,
-     * TODO т.к. могут быть одинаковые комнаты. Или проверять только по id
+     * TODO проверять есть ли комната в отеле? Могут быть одинаковые по всем параметрам (кроме id) комнаты в отеле.
+     * TODO Или проверять только по id? Или equals только по id
      * Kontar Maryna:
      * The method create room if room isn't in database
      *
@@ -212,24 +146,38 @@ public class ProjectController {
         Dao<Room> daoRoom = dbManager.getDaoRoom();
         List<Room> allRooms = daoRoom.getAll();
 
-        if (allRooms.stream().anyMatch(roomAtDatabase -> roomAtDatabase.equals(room))) {
+        if (allRooms.stream()
+                .anyMatch(roomAtDatabase -> roomAtDatabase.equals(room))
+//                .anyMatch(roomAtDatabase -> roomAtDatabase.getId() == room.getId())
+                )
             throw new RoomAlreadyExistsException("The " + room + "already exists in database "
                     + dbManager.getClass().getSimpleName());
-        }
+
         return daoRoom.create(room);
     }
 
-    /**
-     * TODO Решить, что будет возвращать метод (boolean или Room). Надо ли проверять существует ли комната в БД и дописать javaDoc
-     * Kontar Maryna:
-     * The method add room to the hotel
-     *
-     * @param room
-     * @param hotel
-     */
-    public void addRoomToHotel(Room room, Hotel hotel) {
+    public Room updateRoom(Room room, Map<RoomParameters, String> newParametersOfRoom) {
 
-        hotel.getRooms().add(room);
+        Dao<Room> daoRoom = dbManager.getDaoRoom();
+
+        for (Map.Entry<RoomParameters, String> entry : newParametersOfRoom.entrySet()) {
+            String value = entry.getValue();
+            switch (entry.getKey()) {
+                case ROOM_CLASS:
+                    if (value != null)
+//                        room.setRoomClass(value); //TODO как из String получить enum (без if)
+                        break;
+                case CAPACITY:
+                    if (value != null)
+                        room.setCapacity(Integer.parseInt(value));
+                    break;
+                case PRICE:
+                    if (value != null)
+                        room.setPrice(Integer.parseInt(value));
+                    break;
+            }
+        }
+        return daoRoom.update(room);
     }
 
     /**
@@ -246,26 +194,127 @@ public class ProjectController {
         return daoRoom.delete(room);
     }
 
-    //TODO Не готово. Надо обсудить и подумать
-        public Room updateRoom(Room oldRoom, HashMap<String, String> newParametersOfRoom) {
-//        newParametersOfRoom.keySet().stream().map(parameterName ->);
+    /**
+     * TODO Игорю на проверку
+     * TODO Эта функция написана мной, п.ч. изначально так поделили задания с Гийомом,
+     * TODO но потом мне надо было реализовывать админ меню, а функции остались
+     * Kontar Maryna:
+     * Method create account for user with name, login and password
+     * if there isn't account with this name and login.
+     *
+     * @param name
+     * @param login
+     * @param password
+     * @return User if an account is created
+     * @throws AccountAlreadyExistException
+     */
+    public User createAccount(String name, String login, String password) throws AccountAlreadyExistException {
 
-        oldRoom.setPrice(Integer.parseInt(newParametersOfRoom.get("Price")));
-
-        throw new UnsupportedOperationException();
+        Dao<User> daoUser = dbManager.getDaoUser();
+        List<User> allUsers = daoUser.getAll();
+        User user = new User(name, login, password);
+        if (allUsers.stream()
+                .anyMatch((User o) -> o.getName().equals(name) || o.getLogin().equals(login))) {
+            throw new AccountAlreadyExistException("Account with these name or login already exists.");
+        }
+        return daoUser.create(user);
     }
 
+    public User updateUser(User user, Map<UserParameters, String> newParametersOfUser){
+
+        Dao<User> daoUser = dbManager.getDaoUser();
+
+        for (Map.Entry<UserParameters, String> entry : newParametersOfUser.entrySet()) {
+            String value = entry.getValue();
+            switch (entry.getKey()) {
+                case NAME:
+                    if (value != null)
+                        user.setName(value); //TODO как из String получить enum (без if)
+                    break;
+                case LOGIN:
+                    if (value != null)
+                        user.setLogin(value);
+                    break;
+                case PASSWORD:
+                    if (value != null)
+                        user.setPassword(value);
+                    break;
+            }
+        }
+        return daoUser.update(user);
+    }
     /**
      * TODO Игорю на проверку
      * Kontar Maryna:
      * The method delete User
+     *
      * @param user
      * @return true if the deletion was successful and false otherwise
      */
-    public boolean deleteUser(User user){
+    public boolean deleteUser(User user) {
+
         Dao<User> daoUser = dbManager.getDaoUser();
         return daoUser.delete(user);
     }
+
+    public User findUserByLogin(String login) {
+
+        List<User> allUsers = dbManager.getDaoUser().getAll();
+
+        Optional<User> optional = allUsers.stream()
+                .filter((User user) -> user.getLogin().equals(login))
+                .findFirst();
+        return optional.orElse(null);
+
+    }
+
+    /**
+     * TODO Эта функция написана мной, п.ч. изначально так поделили задания с Гийомом,
+     * TODO но потом мне надо было реализовывать админ меню, а функции остались
+     * TODO Возможно надо написать функцию isFreeRoom(){return !isBooked}.
+     * TODO потому что отрицания воспринимаются мозгом намного медленнее
+     * Kontar Maryna:
+     *
+     * @param reserveOnUser
+     * @param room
+     * @param dataOfArrival
+     * @param dateOfDeparture
+     * @return Reservation if reservation is created
+     * @throws RoomIsReservedForTheseDatesException
+     */
+    public Reservation reserveRoom(User reserveOnUser, Room room, LocalDate dataOfArrival, LocalDate dateOfDeparture)
+            throws RoomIsReservedForTheseDatesException {
+        Dao<Reservation> daoReservation = dbManager.getDaoReservation();
+        if (room.getHotel()
+                .getRooms()
+                .stream()
+                .noneMatch(roomAtHotel -> !isBooked(roomAtHotel, dataOfArrival, dateOfDeparture))) {
+            throw new RoomIsReservedForTheseDatesException("The room " + room + "is reserved for these dates: "
+                    + dataOfArrival + " - " + dateOfDeparture);
+        }
+        return daoReservation.create(new Reservation(reserveOnUser, room, dataOfArrival, dateOfDeparture));
+
+        //TODO Функция должна быть с входными параметрами.
+        //TODO Метод create сохранит этот reservation в БД и добавит в список бронирований данного user?
+        // Спросила у ребят из backend. Жду, пока они дойдут до этого
+    }
+
+    /**
+     * TODO Эта функция написана мной, п.ч. изначально так поделили задания с Гийомом,
+     * TODO но потом мне надо было реализовывать админ меню, а функции остались
+     * Kontar Maryna:
+     * The method delete room reservation
+     *
+     * @param reservation
+     * @return true if the deletion was successful and false otherwise
+     */
+    public boolean cancelRoomReservation(Reservation reservation) {
+
+        //TODO Проверять на наличие в БД НЕ НАДО (это сделано backend в функции delete(Reservation reservation) в DaoReservation)
+        Dao<Reservation> daoReservation = dbManager.getDaoReservation();
+        return daoReservation.delete(reservation);
+    }
+
 
     //TODO Нет проверки на null (isEmpty). Проверяю при вызове этого метода.
     // Если поменяю сигнатуру на Hotel findHotelByHotelName(String hotelName)
@@ -279,6 +328,8 @@ public class ProjectController {
                 .collect(Collectors.toList());
 //                .findFirst().get();
     }
+
+
     
 // ************************************* GUILLAUME ********************************************
 
@@ -289,17 +340,17 @@ public class ProjectController {
 
         String hotelName = ConsoleWorkerUtil.readNameFromConsole("hotel name");
 
-        System.out.println("Here is a list of hotels matching your criteria: ");
-
         List<Hotel> myHotels = allHotels.stream()
                 .filter((Hotel hotel) -> hotel.getName().equalsIgnoreCase(hotelName))
                 .collect(Collectors.toList());
 
-        System.out.println(myHotels);
-
-        System.out.println("To book a room, please choose the 'book a room' or 'search hotel by" +
-                "city and dates' options in the main menu");
-
+        if (myHotels.size() == 0) System.out.println("No hotel matching your criteria");
+        else {
+            System.out.println("Here is a list of hotels matching your criteria: ");
+            System.out.println(myHotels);
+            System.out.println("To book a room, please choose the 'book a room' or 'search hotel by" +
+                    "city and dates' options in the main menu");
+        }
     }
 
     public SearchResults findHotelByCityDate() {
@@ -346,7 +397,7 @@ public class ProjectController {
         return isBooked;
     }
 
-    public SearchResults findRoomByCityDate() {
+    public SearchResults findRoomByCityDate() throws NullSearchResultsException {
         List<Room> rooms;
 
         String cityName = readNameFromConsole("city name");
@@ -354,6 +405,7 @@ public class ProjectController {
         LocalDate checkout = getCheckoutDate(checkin);
 
         rooms = searchRoomByCityDate(cityName, checkin, checkout);
+
 
         printRoomResults(rooms, checkin, checkout);
 
@@ -384,7 +436,7 @@ public class ProjectController {
     }
 
 
-    public SearchResults findRoomByHotelDate() {
+    public SearchResults findRoomByHotelDate() throws NullSearchResultsException {
 
         Dao<Hotel> daoHotel = dbManager.getDaoHotel();
         List<Hotel> allHotels = daoHotel.getAll();
@@ -417,7 +469,7 @@ public class ProjectController {
     }
 
 
-    public void bookRoom(SearchResults results, Session session){
+    public void bookRoom(SearchResults results, Session session) {
 
         LocalDate checkin = results.getCheckin();
         LocalDate checkout = results.getCheckout();
@@ -427,7 +479,7 @@ public class ProjectController {
         System.out.println("Please enter the number of the room you would like to book from the list:");
         printRoomResults(rooms, checkin, checkout);
 
-        roomChoice = getMenuInput(1,rooms.size()) - 1;
+        roomChoice = getMenuInput(1, rooms.size()) - 1;
 
         Room room = rooms.get(roomChoice);
 
@@ -442,7 +494,7 @@ public class ProjectController {
 
         System.out.println("Congratulations, your room is booked!");
         System.out.println("\nHere is a summary of your booking:");
-        System.out.println("Booking name: " + newBook.getUser().getName() + "\nHotel: "+
+        System.out.println("Booking name: " + newBook.getUser().getName() + "\nHotel: " +
                 newBook.getRoom().getHotel().getName() + ";\nRoom: " + newBook.getRoom() +
                 "\nCheck-in Date: " + newBook.getCheckIn() + "\nCheckout date:" + newBook.getCheckOut() + ".");
 
@@ -455,14 +507,14 @@ public class ProjectController {
 
     }
 
-    public Session login (Session session){
+    public Session login(Session session) {
         String userName;
         String pass;
         User user;
 
         if (!session.isGuest()) System.out.println("You already logged in as " + session.getUser().getLogin());
 
-        if (session.isGuest()){
+        if (session.isGuest()) {
             // get login credentials from user
             userName = readNameFromConsole("your username");
             pass = readNameFromConsole("your password");
@@ -470,12 +522,12 @@ public class ProjectController {
             // try to login
             user = loginAndPasswordVerification(userName, pass);
             if (user == null) System.out.println("Wrong login credentials: please either register or try again");
-            else{
+            else {
                 // update session info
                 session.setUser(user);
                 session.setGuest(false);
 
-                if (user.getRole()==ADMIN) session.setAdmin(true);
+                if (user.getRole() == ADMIN) session.setAdmin(true);
             }
         }
 
@@ -483,7 +535,7 @@ public class ProjectController {
     }
 
 
-    public Session logout(Session session){
+    public Session logout(Session session) {
         session.setUser(null);
         session.setGuest(true);
         session.setAdmin(false);
@@ -514,36 +566,38 @@ public class ProjectController {
 
             while (true) {
 //                try {
-                    yn = readStringFromConsole();
-                    break;
+                yn = readStringFromConsole();
+                break;
 //                } catch (IOException e) {
 //                    System.out.println("You entered a wrong input, please try again");
 //                    continue;
 //                }
             }
             if (yn.equalsIgnoreCase("Y")) ok = true;
+
+            // check if user exists, if not create new user in DAO
+            List<User> allUsers = dbManager.getDaoUser().getAll();
+            String finalName = name;
+            String finalUserName = userName;
+            if (allUsers.stream()
+                    .anyMatch((User o) -> o.getName().equalsIgnoreCase(finalName) ||
+                            o.getLogin().equals(finalUserName))){
+                System.out.println("An account with this name and / or login already exists. " +
+                        "Please try again");
+                ok = false;
+            }
         }
 
         newUser = new User(name, userName, password);
-
         // procedure to save user to DB
         Dao<User> daoUser = dbManager.getDaoUser();
-
-        // check if user exists, if not create new user in DAO
-        List<User> allUsers = dbManager.getDaoUser().getAll();
-        String finalName = name;
-        String finalUserName = userName;
-        if (allUsers.stream()
-                .anyMatch((User o) -> o.getName().equalsIgnoreCase(finalName) || o.getLogin().equals(finalUserName)))
-            System.out.println("An account with this name and / or login already exists. Please try again");
-
-        else daoUser.create(newUser);
+        daoUser.create(newUser);
 
         return newUser;
 
     }
 
-    public User updateUser(User user){
+    public User updateUser(User user) {
 
         String userName;
         String pass;
@@ -567,6 +621,5 @@ public class ProjectController {
 
         return user;
     }
-
 
 }

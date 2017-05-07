@@ -2,6 +2,8 @@ package com.goJava6Group7.finalProject.main;
 
 import com.goJava6Group7.finalProject.entities.User;
 
+import static com.goJava6Group7.finalProject.entities.User.Role.ADMIN;
+
 /**
  * Created by Igor on 13.04.2017.
  */
@@ -18,7 +20,11 @@ public class Session {
         isAdmin = false;
     }
 
-    public Session(User user){}
+    public Session(User user){
+        this.user = user;
+        if(user.getRole().equals(ADMIN))
+            setAdmin(true);
+    }
 
     public boolean isGuest() {
         return isGuest;

@@ -20,6 +20,12 @@ public class ConsoleWorkerUtil {
     private ConsoleWorkerUtil() {
     }
 //*****************************MARYNA***************************************
+
+    public enum  HotelParameters{NAME, CITY, RATING}
+
+    public enum  RoomParameters{CAPACITY, ROOM_CLASS, PRICE}
+
+    public enum  UserParameters{NAME, LOGIN, PASSWORD}
     /**
      * Kontar Maryna:
      * Method read integer from console
@@ -28,28 +34,38 @@ public class ConsoleWorkerUtil {
      */
     public static int readIntFromConsole() {
 
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         while (true) {
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
+            try {
                 String str = br.readLine(); //throw IOException
-                return Integer.parseInt(str);//throw NumberFormatException
+                if (!str.isEmpty()) {
+                     return Integer.parseInt(str);//throw NumberFormatException
+//                    break;
+                } else {
+                    System.out.println("You don't type anything. Try again.");
+                }
             } catch (Exception e) {
                 printReadIntFromConsoleException();
             }
         }
+//        return number;
     }
 
-    public static int readPositiveInt(){
+    public static int readPositiveInt() {
         return readIntToMaxNum(Integer.MAX_VALUE);
     }
 
     //TODO У Гийома есть такая функция getMenuInput (с другой сигнатурой),
     // но я для себя переделала и использую не только для считывания номера пункта меню
-    public static int readIntToMaxNum(int maxNumber){
-        int readInt = readIntFromConsole();
-        while(true)
-        if (readInt > 0 && readInt <= maxNumber)
-            return readInt;
-        else printReadIntFromConsoleException(maxNumber);
+    public static int readIntToMaxNum(int maxNumber) {
+        int readInt;
+        while (true) {
+            readInt = readIntFromConsole();
+            if (readInt > 0 && readInt <= maxNumber)
+                break;
+            else printReadIntFromConsoleException(maxNumber);
+        }
+        return readInt;
     }
 
     /**
@@ -59,11 +75,12 @@ public class ConsoleWorkerUtil {
      * @return String entered from the console if String isn't empty
      */
     public static String readStringFromConsole() {
-
+//        String str;
         while (true) {
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
+            try {
+                BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
                 String str = br.readLine();  //throw IOException
-                if ( !str.isEmpty() ) return str;
+                if (!str.isEmpty()) return str;
                 else {
                     System.out.println("You don't type anything. Try again.");
                 }
@@ -71,6 +88,7 @@ public class ConsoleWorkerUtil {
                 printReadStringFromConsoleException();
             }
         }
+//        return str;
     }
 
     /**
@@ -95,6 +113,10 @@ public class ConsoleWorkerUtil {
     public static void printConfirmChangeDB() {
         System.out.println("Are you sure you want to change database? " +
                 "If you do, we will restart the system");
+    }
+
+    public static void printConfirmDeleteEntity(String entityName) {
+        System.out.println("Are you sure you want delete this " + entityName + "?");
     }
 
     /**
@@ -133,11 +155,7 @@ public class ConsoleWorkerUtil {
     }
 
 
-
-
 // ************************************* GUILLAUME ********************************************
-
-
 
 
     public static String readNameFromConsole(String wordDef) {
@@ -232,7 +250,7 @@ public class ConsoleWorkerUtil {
         return checkout;
     }
 
-    public static void printRoomResults(List<Room> rooms, LocalDate checkin, LocalDate checkout){
+    public static void printRoomResults(List<Room> rooms, LocalDate checkin, LocalDate checkout) {
 
         // create array of hotels with available rooms from the room array
         List<Hotel> hotelDuplicates = new ArrayList<>();
@@ -255,11 +273,11 @@ public class ConsoleWorkerUtil {
         // printing results in a clean way, showing only available rooms
         // i is used to as a reference number for booking function, in case they want to book a room
         final int[] i = {1};
-        hotelsByCityByDate.forEach(hotel->{
+        hotelsByCityByDate.forEach(hotel -> {
             System.out.println("\n" + hotel.getName() + ":");
-            rooms.forEach(room->{
-                if ((room.getHotel().getName()).equalsIgnoreCase(hotel.getName())){
-                    System.out.println("   "+ i[0] + ": Room name: " + room.getRoomClass() +"; # of guests: " +
+            rooms.forEach(room -> {
+                if ((room.getHotel().getName()).equalsIgnoreCase(hotel.getName())) {
+                    System.out.println("   " + i[0] + ": Room name: " + room.getRoomClass() + "; # of guests: " +
                             room.getCapacity() + "; Price per night: " + room.getPrice() + ".");
                     i[0]++;
                 }

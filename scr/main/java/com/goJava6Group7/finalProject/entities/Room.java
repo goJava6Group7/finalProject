@@ -57,7 +57,8 @@ public class Room extends Entity {
         if (o == null || !(o instanceof Room)) return false;
 
         Room room = (Room) o;
-        return  room.id == this.id;
+        return  room.id == this.id ;//&& room.capacity == this.capacity
+//                && room.price == this.price && room.roomClass.equals(this.roomClass);
     }
 
     @Override
