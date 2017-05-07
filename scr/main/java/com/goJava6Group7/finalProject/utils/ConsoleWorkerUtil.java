@@ -25,6 +25,7 @@ public class ConsoleWorkerUtil {
 
     public enum  RoomParameters{CAPACITY, ROOM_CLASS, PRICE}
 
+    public enum  UserParameters{NAME, LOGIN, PASSWORD}
     /**
      * Kontar Maryna:
      * Method read integer from console

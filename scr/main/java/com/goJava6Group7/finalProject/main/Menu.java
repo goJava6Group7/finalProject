@@ -6,9 +6,11 @@ import com.goJava6Group7.finalProject.exceptions.frontend.*;
 
 import java.util.*;
 
+import static com.goJava6Group7.finalProject.entities.User.Role.*;
 import static com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil.*;
 import static com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil.HotelParameters.*;
 import static com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil.RoomParameters.*;
+import static com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil.UserParameters.*;
 
 /**
  * Created by Igor on 13.04.2017.
@@ -121,7 +123,8 @@ public class Menu {
                     adminMenu();
                 } else {
                     System.out.println("You do not have administrator rights. Login as administrator.");
-                    runMenu();
+                    printUserMainMenu();
+                    performActionUserMainMenu(readIntToMaxNum(6));
                 }
                 break;
             case 6:
@@ -158,7 +161,8 @@ public class Menu {
                     adminMenu();
                 } else {
                     System.out.println("You do not have administrator rights. Login as administrator.");
-                    runMenu();
+                    printUserMainMenu();
+                    performActionUserMainMenu(readIntToMaxNum(6));
                 }
                 break;
             case 6:
@@ -174,10 +178,10 @@ public class Menu {
         SearchResults results = null;
         switch (choice) {
             case 1:
-                try{
+                try {
                     results = controller.findRoomByHotelDate();
                     if (results == null) throw new NullSearchResultsException("");
-                } catch(NullSearchResultsException | NullPointerException e){
+                } catch (NullSearchResultsException | NullPointerException e) {
                     System.out.println("There is no room matching your criteria");
                 }
                 if (results == null) {
@@ -186,17 +190,16 @@ public class Menu {
                         performActionUserMainMenu(getMenuInput(1, 6));
                         break;
                     } else break;
-                }
-                else{
+                } else {
                     printUserRoomResultsMenu();
                     performActionUserRoomResultsMenu(results, getMenuInput(1, 3));
                     break;
                 }
             case 2:
-                try{
+                try {
                     results = controller.findRoomByCityDate();
                     if (results == null) throw new NullSearchResultsException("");
-                } catch(NullSearchResultsException | NullPointerException e){
+                } catch (NullSearchResultsException | NullPointerException e) {
                     System.out.println("There is no room matching your criteria");
                 }
                 if (results == null) {
@@ -205,8 +208,7 @@ public class Menu {
                         performActionUserMainMenu(getMenuInput(1, 6));
                         break;
                     } else break;
-                }
-                else{
+                } else {
                     printUserRoomResultsMenu();
                     performActionUserRoomResultsMenu(results, getMenuInput(1, 3));
                     break;
@@ -246,10 +248,10 @@ public class Menu {
                 controller.findHotelByHotelName();
                 break;
             case 2:
-                try{
+                try {
                     controller.findHotelByCityDate();
                     if (results == null) throw new NullSearchResultsException("");
-                } catch(NullSearchResultsException | NullPointerException e){
+                } catch (NullSearchResultsException | NullPointerException e) {
                     System.out.println("There is no hotel matching your criteria");
                 }
                 if (results == null) {
@@ -258,8 +260,7 @@ public class Menu {
                         performActionUserMainMenu(getMenuInput(1, 6));
                         break;
                     } else break;
-                }
-                else{
+                } else {
                     printUserHotelResultsMenu();
                     performActionUserHotelResultsMenu(results, getMenuInput(1, 3));
                     break;
@@ -344,6 +345,7 @@ public class Menu {
     private boolean adminExit;
 
     private void adminMenu() {
+        adminExit = false;
         while (!adminExit) {
             printAdminMainMenu();
             performActionAdminMainMenu(readIntToMaxNum(7));
@@ -354,7 +356,8 @@ public class Menu {
 //            adminMenu();
 //        } else {
 //            System.out.println("You do not have administrator rights. Login as administrator.");
-//            runMenu();
+//            printUserMainMenu();
+//            performActionUserMainMenu(readIntToMaxNum(6));
 //        }
     }
 
@@ -376,7 +379,7 @@ public class Menu {
     private boolean adminLoginAndPasswordVerification(String login, String password) {
         User user = controller.loginAndPasswordVerification(login, password);
         //TODO ПРОВЕРКА НА АДМИНА ПРАВИЛЬНАЯ???
-        if (user != null && user.getRole().equals(User.Role.ADMIN)) {
+        if (user != null && user.getRole().equals(ADMIN)) {
             assignmentSessionForAdmin(user);
             return true;
         }
@@ -399,7 +402,6 @@ public class Menu {
      */
     private void assignmentSessionForAdmin(User admin) {
         session = new Session(admin);
-        session.setAdmin(true);
     }
 
 
@@ -411,9 +413,9 @@ public class Menu {
         System.out.println("[1] Choose database");
         System.out.println("[2] Add a hotel");
         System.out.println("[3] Add a room");
-        System.out.println("[4] Update or delete a hotel"); // do like we do for users
+        System.out.println("[4] Update or delete a hotel");
         System.out.println("[5] Update or delete a room");
-        System.out.println("[6] Find and update a user"); // search user by userName
+        System.out.println("[6] Update or delete a user");
         System.out.println("[7] Back to main menu");
     }
 
@@ -432,15 +434,18 @@ public class Menu {
             case 4:
                 updateOrDeleteAHotel();
                 break;
-            case 5: updateOrDeleteARoom();
+            case 5:
+                updateOrDeleteARoom();
                 break;
-            case 6: //TODO
+            case 6:
+                updateOrDeleteUser();
                 break;
             case 7:
                 adminExit = true;
-                runMenu();
+                printUserMainMenu();
+                performActionUserMainMenu(readIntToMaxNum(6));
                 break;
-            default:
+            default://never happen
         }
 
     }
@@ -540,7 +545,7 @@ public class Menu {
         String hotelName = readStringFromConsole();
         try {
             hotel = chooseHotelFromListOfHotelsWithSameHotelName(hotelName);
-        } catch (IsNotHotelsInDatabaseException e) {
+        } catch (NoOneHotelInDatabaseException e) {
             System.out.println(e.getMessage());
             return;// adminMenu();
         }
@@ -569,11 +574,11 @@ public class Menu {
     }
 
     //TODO Слишком длинное имя у функциию. Возвращать null, если нет отелей или кидать exception
-    private Hotel chooseHotelFromListOfHotelsWithSameHotelName(String hotelName) throws IsNotHotelsInDatabaseException {
+    private Hotel chooseHotelFromListOfHotelsWithSameHotelName(String hotelName) throws NoOneHotelInDatabaseException {
 
         List<Hotel> listOfHotels = controller.findHotelByHotelName(hotelName);
 
-        if (!listOfHotels.isEmpty()) {
+        if (listOfHotels != null) {
 
             Map<Integer, Hotel> mapOfHotels = createEntityMap(listOfHotels);
             System.out.println("Please choose the number of the hotel you want to change: ");
@@ -585,13 +590,13 @@ public class Menu {
             return mapOfHotels.get(hotelKey);
 
         } else {
-            throw new IsNotHotelsInDatabaseException("There isn't hotel " + hotelName + "  in database.");
+            throw new NoOneHotelInDatabaseException("There isn't hotel " + hotelName + "  in database.");
         }
     }
 
-    //TODO написала метод, чтобы можно было выберать номер отеля из списка найденных по имени отелей
+    //TODO написала метод, чтобы можно было выберать номер отеля/комнаты из списка найденных отелей/комнат
     //Подумать как проше сделать
-    private <T extends Entity> Map<Integer, T > createEntityMap(List<T> listOfEntities) {
+    private <T extends Entity> Map<Integer, T> createEntityMap(List<T> listOfEntities) {
 
         Map<Integer, T> mapOfEntities = new HashMap<>(listOfEntities.size());
 
@@ -650,7 +655,7 @@ public class Menu {
         String hotelName = readStringFromConsole();
         try {
             hotel = chooseHotelFromListOfHotelsWithSameHotelName(hotelName);
-        } catch (IsNotHotelsInDatabaseException e) {
+        } catch (NoOneHotelInDatabaseException e) {
             System.out.println(e.getMessage());
             return;// adminMenu();
         }
@@ -680,10 +685,10 @@ public class Menu {
 
     private void updateHotel(Hotel hotel) {
 
-        System.out.println("Do you want to change hotel " + NAME + " ?");
+        System.out.println("Do you want to change hotel " + HotelParameters.NAME + " ?");
         String newHotelName = null;
         if (confirm()) {
-            System.out.println("Please enter new hotel " + NAME);
+            System.out.println("Please enter new hotel " + HotelParameters.NAME);
             newHotelName = readStringFromConsole();
         }
 
@@ -715,7 +720,7 @@ public class Menu {
 
         Map<HotelParameters, String> newParametersOfHotel = new HashMap<>();
 
-        newParametersOfHotel.put(NAME, newHotelName);
+        newParametersOfHotel.put(HotelParameters.NAME, newHotelName);
         newParametersOfHotel.put(CITY, newHotelCity);
         newParametersOfHotel.put(RATING, (newHotelRating == null) ? null : String.valueOf(newHotelRating));
 
@@ -742,7 +747,7 @@ public class Menu {
         String hotelName = readStringFromConsole();
         try {
             hotel = chooseHotelFromListOfHotelsWithSameHotelName(hotelName);
-        } catch (IsNotHotelsInDatabaseException e) {
+        } catch (NoOneHotelInDatabaseException e) {
             System.out.println(e.getMessage());
             return;// adminMenu();
         }
@@ -750,7 +755,7 @@ public class Menu {
         Room room;
         try {
             room = chooseRoomFromHotel(hotel);
-        } catch (AreNotRoomsInHotelException e) {
+        } catch (NoRoomsInHotelException e) {
             System.out.println(e.getMessage());
             return;// adminMenu();
         }
@@ -771,7 +776,7 @@ public class Menu {
 
     }
 
-    private Room chooseRoomFromHotel(Hotel hotel) throws AreNotRoomsInHotelException {
+    private Room chooseRoomFromHotel(Hotel hotel) throws NoRoomsInHotelException {
 
         List<Room> listOfRooms = hotel.getRooms();
 
@@ -785,10 +790,10 @@ public class Menu {
 
             int roomKey = readIntToMaxNum(listOfRooms.size());
 
-             return mapOfRooms.get(roomKey);
+            return mapOfRooms.get(roomKey);
 
         } else {
-            throw new AreNotRoomsInHotelException("There aren't rooms in " + hotel + ".");
+            throw new NoRoomsInHotelException("There aren't rooms in " + hotel + ".");
         }
     }
 
@@ -847,13 +852,106 @@ public class Menu {
     }
 
 
-    private void searchUser() {
-        System.out.println("Please enter the login of the user");
-        //search user method; not void but User. User search not void, but string; and admin search is Hotel.
-        // two points: update user, delete user. new menu with 3 points: update user, delete user, go back to admin menu
-        // do not update / delete admins: so in search, if it is admin, then return: "you cannot update or delete admins"
+    //**************************** Update or delete user ***************************
 
+    private void updateOrDeleteUser() {
+
+        System.out.println("Please enter the username(login) of the user you want to update or delete");
+
+        String userLogin = readStringFromConsole();
+        User user = controller.findUserByLogin(userLogin);
+
+        if (user != null) {
+
+            if(user.getRole().equals(ADMIN)){
+                System.out.println("YOU CANNOT UPDATE OR DELETE ADMINS.");
+                return;
+            }
+
+            printUpdateOrDeleteEntityMenu("user" + user);
+            int numberOfSelectedAction = readIntToMaxNum(3);
+
+            switch (numberOfSelectedAction) {
+                case 1:
+                    updateUser(user);
+                    break;
+                case 2:
+                    deleteUser(user);
+                    break;
+                case 3:
+                    return; //adminMenu
+            }
+
+        } else {
+            System.out.println("There isn't user with " + userLogin + " login.");
+        }
     }
 
+    private void updateUser(User user) {
 
+        //дополнительная проверка на случай, если єту функции используют
+        // еще где-нибудь кроме updateOrDeleteUser()
+        if (user.getRole().equals(ADMIN)){
+            System.out.println("YOU CANNOT UPDATE ADMINS.");
+            return;
+        }
+
+        System.out.println("Do you want to change user " + UserParameters.NAME + " ?");
+        String newUserName = null;
+        if (confirm()) {
+            System.out.println("Please enter new user " + UserParameters.NAME);
+            newUserName = readStringFromConsole();
+        }
+
+        System.out.println("Do you want to change user " + LOGIN + " ?");
+        String newUserLogin = null;
+        if (confirm()) {
+            System.out.println("Please enter new user " + LOGIN);
+            newUserLogin = readStringFromConsole();
+        }
+
+        System.out.println("Do you want to change user " + PASSWORD + " ?");
+        String newUserPassword = null;
+        if (confirm()) {
+            System.out.println("Please enter new user " + PASSWORD);
+            newUserPassword = readStringFromConsole();
+        }
+
+        Map<UserParameters, String> newParametersOfUser =
+                createUserParametersMap(newUserName, newUserLogin, newUserPassword);
+
+        User newUser = controller.updateUser(user, newParametersOfUser);
+        if (newUser != null)
+            System.out.println("User was successfully updated: " + newUser);
+        else System.out.println("USER WASN'T UPDATE!!!");
+    }
+
+    private Map<UserParameters, String> createUserParametersMap
+            (String newUserName, String newUserLogin, String newUserPassword) {
+
+        Map<UserParameters, String> newUserParameters = new HashMap<>();
+
+        newUserParameters.put(UserParameters.NAME, newUserName);
+        newUserParameters.put(LOGIN, newUserLogin);
+        newUserParameters.put(PASSWORD, newUserPassword);
+
+        return newUserParameters;
+    }
+
+    private void deleteUser(User user) {
+
+        //дополнительная проверка на случай, если єту функции используют
+        // еще где-нибудь кроме updateOrDeleteUser()
+        if (user.getRole().equals(ADMIN)){
+            System.out.println("YOU CANNOT DELETE ADMINS.");
+            return;
+        }
+
+        printConfirmDeleteEntity("user" + user);
+
+        if (confirm() && controller.deleteUser(user)) {
+            System.out.println("User was successfully deleted: " + user);
+        } else
+            System.out.println("USER WASN'T DELETE!!!");
+    }
 }
