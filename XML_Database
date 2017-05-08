@@ -43,6 +43,30 @@
             <price>1234</price>
             <roomClass>President</roomClass>
         </room>
+        <room>
+            <id>8</id>
+            <capacity>2</capacity>
+            <price>150</price>
+            <roomClass>Standart</roomClass>
+        </room>
+        <room>
+            <id>9</id>
+            <capacity>4</capacity>
+            <price>600</price>
+            <roomClass>Suite</roomClass>
+        </room>
+        <room>
+            <id>10</id>
+            <capacity>6</capacity>
+            <price>800</price>
+            <roomClass>Apartment</roomClass>
+        </room>
+        <room>
+            <id>11</id>
+            <capacity>10</capacity>
+            <price>3000</price>
+            <roomClass>President</roomClass>
+        </room>
     </rooms>
     <users>
         <user>
@@ -57,6 +81,13 @@
             <login>lala</login>
             <password>lalalala</password>
             <name>Fiona</name>
+            <role>GUEST</role>
+        </user>
+        <user>
+            <id>4</id>
+            <login>anna</login>
+            <password>test</password>
+            <name>anna</name>
             <role>GUEST</role>
         </user>
     </users>
@@ -96,6 +127,36 @@
             <name>Miraton</name>
             <city>Ontario</city>
             <rating>5</rating>
+        </hotel>
+        <hotel>
+            <id>8</id>
+            <name>hyatt</name>
+            <city>london</city>
+            <rating>6</rating>
+            <rooms>
+                <id>8</id>
+                <capacity>2</capacity>
+                <price>150</price>
+                <roomClass>Standart</roomClass>
+            </rooms>
+            <rooms>
+                <id>9</id>
+                <capacity>4</capacity>
+                <price>600</price>
+                <roomClass>Suite</roomClass>
+            </rooms>
+            <rooms>
+                <id>10</id>
+                <capacity>6</capacity>
+                <price>800</price>
+                <roomClass>Apartment</roomClass>
+            </rooms>
+            <rooms>
+                <id>11</id>
+                <capacity>10</capacity>
+                <price>3000</price>
+                <roomClass>President</roomClass>
+            </rooms>
         </hotel>
     </hotels>
     <reservations/>

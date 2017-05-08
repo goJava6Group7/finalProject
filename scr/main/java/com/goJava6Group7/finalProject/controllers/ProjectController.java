@@ -625,4 +625,8 @@ public class ProjectController {
         return user;
     }
 
+    public void updateDB(){
+        dbManager.updateDatabase();
+    }
+
 }

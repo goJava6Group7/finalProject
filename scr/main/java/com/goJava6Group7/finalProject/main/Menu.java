@@ -129,6 +129,7 @@ public class Menu {
                 break;
             case 6:
                 exit = true;
+                controller.updateDB();
                 System.out.println("Thank you for using our application");
                 // default:
                 //     System.out.println("An unknown error has occurred");
@@ -166,6 +167,7 @@ public class Menu {
                 }
                 break;
             case 6:
+                controller.updateDB();
                 exit = true;
                 System.out.println("Thank you for using our application");
                 // default:

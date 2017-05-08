@@ -19,6 +19,7 @@ public class Room extends Entity {
     private RoomClass roomClass;
     @XmlTransient
     private Hotel hotel;
+
     private List<Reservation> bookings;
 
     public Room() {

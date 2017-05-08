@@ -1,7 +1,6 @@
 package com.goJava6Group7.finalProject.data.dao.impl;
 
 import com.goJava6Group7.finalProject.data.dao.Dao;
-import com.goJava6Group7.finalProject.data.dataBase.impl.DataBaseManagerFactory;
 import com.goJava6Group7.finalProject.entities.Room;
 
 import java.util.List;
@@ -20,7 +19,7 @@ public class DaoRoom implements Dao<Room> {
     @Override
     public Room create(Room room) {
         this.rooms.add(room);
-        DataBaseManagerFactory.getDataBaseManager().updateDatabase();
+//        DataBaseManagerFactory.getDataBaseManager().updateDatabase();
         return room;
     }
 
