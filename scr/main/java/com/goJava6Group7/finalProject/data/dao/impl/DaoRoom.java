@@ -21,7 +21,6 @@ public class DaoRoom implements Dao<Room> {
     public Room create(Room room) {
         this.rooms.add(room);
         DataBaseManagerFactory.getDataBaseManager().updateDatabase();
-        DataBaseManagerFactory.getDataBaseManager().getDaoHotel().get(room.getHotel()).getRooms().add(room);
         return room;
     }
 
@@ -30,7 +29,6 @@ public class DaoRoom implements Dao<Room> {
         Optional<Room> optional = rooms.stream().filter(i -> i.equals(room)).findFirst();
         if (optional.isPresent()){
             rooms.remove(optional.get());
-            DataBaseManagerFactory.getDataBaseManager().updateDatabase();
             return true;
         }
          return false;
@@ -42,7 +40,6 @@ public class DaoRoom implements Dao<Room> {
         if (optional.isPresent()){
             rooms.remove(optional.get());
             rooms.add(room);
-            DataBaseManagerFactory.getDataBaseManager().updateDatabase();
             return room;
         }
         return null;

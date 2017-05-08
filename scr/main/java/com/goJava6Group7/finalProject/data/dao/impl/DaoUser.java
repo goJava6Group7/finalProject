@@ -21,7 +21,6 @@ public class DaoUser implements Dao<User> {
     @Override
     public User create(User user) {
        users.add(user);
-       DataBaseManagerFactory.getDataBaseManager().updateDatabase();
        return user;
     }
 
@@ -30,7 +29,6 @@ public class DaoUser implements Dao<User> {
         Optional<User> optional = users.stream().filter(i -> i.equals(user)).findFirst();
         if (optional.isPresent()){
             users.remove(optional.get());
-            DataBaseManagerFactory.getDataBaseManager().updateDatabase();
             return true;
         }
         return false;
@@ -42,7 +40,6 @@ public class DaoUser implements Dao<User> {
         if (optional.isPresent()){
             users.remove(optional.get());
             users.add(user);
-            DataBaseManagerFactory.getDataBaseManager().updateDatabase();
             return user;
         }
         return null;

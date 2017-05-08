@@ -20,7 +20,6 @@ public class DaoReservation implements Dao<Reservation> {
     @Override
     public Reservation create(Reservation reservation) {
         this.reservations.add(reservation);
-        DataBaseManagerFactory.getDataBaseManager().updateDatabase();
         return reservation;
     }
 
@@ -29,7 +28,6 @@ public class DaoReservation implements Dao<Reservation> {
         Optional<Reservation> optional = reservations.stream().filter(i -> i.equals(reservation)).findFirst();
         if (optional.isPresent()) {
             reservations.remove(reservation);
-            DataBaseManagerFactory.getDataBaseManager().updateDatabase();
             return true;
         }
         return false;
@@ -41,7 +39,6 @@ public class DaoReservation implements Dao<Reservation> {
         if (optional.isPresent()) {
             reservations.remove(optional.get());
             reservations.add(reservation);
-            DataBaseManagerFactory.getDataBaseManager().updateDatabase();
             return reservation;
         }
         return null;

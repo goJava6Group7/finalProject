@@ -1,12 +1,14 @@
 package com.goJava6Group7.finalProject.data.dao.impl;
 
 import com.goJava6Group7.finalProject.data.dao.Dao;
+import com.goJava6Group7.finalProject.data.dataBase.DataBaseManager;
 import com.goJava6Group7.finalProject.data.dataBase.impl.DataBaseManagerFactory;
 import com.goJava6Group7.finalProject.entities.Hotel;
 import com.goJava6Group7.finalProject.entities.Room;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
 
 /**
  * Created by Igor on 14.04.2017.
@@ -21,7 +23,6 @@ public class DaoHotel implements Dao<Hotel> {
     @Override
     public Hotel create(Hotel hotel) {
         hotels.add(hotel);
-        DataBaseManagerFactory.getDataBaseManager().updateDatabase();
         return hotel;
     }
 
@@ -30,7 +31,6 @@ public class DaoHotel implements Dao<Hotel> {
         Optional<Hotel> optional = hotels.stream().filter(i -> i.equals(hotel)).findFirst();
         if (optional.isPresent()){
             hotels.remove(optional.get());
-            DataBaseManagerFactory.getDataBaseManager().updateDatabase();
             return true;
         }
         return false;
@@ -42,7 +42,6 @@ public class DaoHotel implements Dao<Hotel> {
         if (optional.isPresent()){
             hotels.remove(optional.get());
             hotels.add(hotel);
-            DataBaseManagerFactory.getDataBaseManager().updateDatabase();
             return hotel;
         }
         return null;
