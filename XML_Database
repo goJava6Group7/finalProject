@@ -83,10 +83,10 @@
             <role>ADMIN</role>
         </user>
         <user>
-            <id>2</id>
-            <login>GGINGEMBRE</login>
-            <password>TEST</password>
-            <name>GGINGEMBRE</name>
+            <id>3</id>
+            <login>lala</login>
+            <password>lalalala</password>
+            <name>Fiona</name>
             <role>GUEST</role>
         </user>
     </users>
@@ -108,6 +108,18 @@
             <name>Huge</name>
             <city>Kharkiv</city>
             <rating>3</rating>
+        </hotel>
+        <hotel>
+            <id>6</id>
+            <name>Miraton</name>
+            <city>Ontario</city>
+            <rating>5</rating>
+        </hotel>
+        <hotel>
+            <id>7</id>
+            <name>Miraton</name>
+            <city>Ontario</city>
+            <rating>5</rating>
         </hotel>
     </hotels>
     <reservations/>
