@@ -244,7 +244,10 @@ public class Menu {
         switch (choice) {
             case 1:
                 controller.findHotelByHotelName();
-                break;
+                if (!session.isGuest()) {
+                    printUserMainMenu();
+                    performActionUserMainMenu(getMenuInput(1, 6));
+                } else break;
             case 2:
                 try{
                     controller.findHotelByCityDate();
