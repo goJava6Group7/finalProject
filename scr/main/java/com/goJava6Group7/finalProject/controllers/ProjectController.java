@@ -8,12 +8,14 @@ import com.goJava6Group7.finalProject.main.Session;
 import com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.goJava6Group7.finalProject.entities.User.Role.ADMIN;
 import static com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil.*;
-import static com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil.RoomParameters.CAPACITY;
 
 
 /**
@@ -152,6 +154,7 @@ public class ProjectController {
                 )
             throw new RoomAlreadyExistsException("The " + room + "already exists in database "
                     + dbManager.getClass().getSimpleName());
+        dbManager.getDaoHotel().addRoom(room.getHotel(), room);
 
         return daoRoom.create(room);
     }

@@ -3,12 +3,6 @@ package com.goJava6Group7.finalProject.main;
 import com.goJava6Group7.finalProject.controllers.ProjectController;
 import com.goJava6Group7.finalProject.data.dataBase.DataBaseManager;
 import com.goJava6Group7.finalProject.data.dataBase.impl.DataBaseManagerFactory;
-import com.goJava6Group7.finalProject.entities.*;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 
 /**
@@ -35,9 +29,9 @@ public class Main {
         list.add(r2);
         list.add(r3);
         dataBaseManager.getDaoHotel().get(hotel).setRooms(list); // add to hotel rooms
-
+*/
         /// in frontEnd this method we can call like projectController.getDbManager.updateDatabase(); before that we need to add get to dbManager field
-        dataBaseManager.updateDatabase();*/
+        dataBaseManager.updateDatabase();
 
         //2. On this step we already have right dataBaseManager and we can give it to controller
         ProjectController controller = new ProjectController(dataBaseManager);
