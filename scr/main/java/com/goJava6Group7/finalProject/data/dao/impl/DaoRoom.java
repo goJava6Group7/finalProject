@@ -21,6 +21,7 @@ public class DaoRoom implements Dao<Room> {
     public Room create(Room room) {
         this.rooms.add(room);
         DataBaseManagerFactory.getDataBaseManager().updateDatabase();
+
         return room;
     }
 

@@ -346,9 +346,12 @@ public class ProjectController {
 
         if (myHotels.size() == 0) System.out.println("No hotel matching your criteria");
         else {
-            System.out.println("Here is a list of hotels matching your criteria: ");
-            System.out.println(myHotels);
-            System.out.println("To book a room, please choose the 'book a room' or 'search hotel by" +
+            System.out.println("\nHere is a list of hotels matching your criteria: ");
+            System.out.println(Hotel.getOutputHeader());
+            for(Hotel hotel : myHotels) {
+                System.out.println(hotel.getOutput());
+            }
+            System.out.println("\nTo book a room, please choose the 'book a room' or 'search hotel by" +
                     "city and dates' options in the main menu");
         }
     }

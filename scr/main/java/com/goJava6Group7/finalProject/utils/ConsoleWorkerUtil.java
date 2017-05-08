@@ -275,10 +275,15 @@ public class ConsoleWorkerUtil {
         final int[] i = {1};
         hotelsByCityByDate.forEach(hotel -> {
             System.out.println("\n" + hotel.getName() + ":");
+            System.out.println(Room.getOutputHeader());
             rooms.forEach(room -> {
                 if ((room.getHotel().getName()).equalsIgnoreCase(hotel.getName())) {
-                    System.out.println("   " + i[0] + ": Room name: " + room.getRoomClass() + "; # of guests: " +
-                            room.getCapacity() + "; Price per night: " + room.getPrice() + ".");
+                    System.out.println(Room.getOutputHeader());
+                    for(Room room1 : rooms) {
+                        System.out.println(room1.getOutput());
+                    }
+                    //System.out.println("   " + i[0] + ": Room name: " + room.getRoomClass() + "; # of guests: " +
+                    //        room.getCapacity() + "; Price per night: " + room.getPrice() + ".");
                     i[0]++;
                 }
             });
