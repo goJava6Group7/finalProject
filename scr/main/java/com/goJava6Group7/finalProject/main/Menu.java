@@ -217,6 +217,7 @@ public class Menu {
                 if (!session.isGuest()) {
                     printUserMainMenu();
                     performActionUserMainMenu(getMenuInput(1, 6));
+                    break;
                 } else break;
         }
     }
@@ -237,6 +238,7 @@ public class Menu {
                 if (!session.isGuest()) {
                     printUserMainMenu();
                     performActionUserMainMenu(getMenuInput(1, 6));
+                    break;
                 } else break;
         }
     }
@@ -249,6 +251,7 @@ public class Menu {
                 if (!session.isGuest()) {
                     printUserMainMenu();
                     performActionUserMainMenu(getMenuInput(1, 6));
+                    break;
                 } else break;
             case 2:
                 try {
@@ -272,6 +275,7 @@ public class Menu {
                 if (!session.isGuest()) {
                     printUserMainMenu();
                     performActionUserMainMenu(getMenuInput(1, 6));
+                    break;
                 } else break;
         }
     }
@@ -292,6 +296,7 @@ public class Menu {
                 if (!session.isGuest()) {
                     printUserMainMenu();
                     performActionUserMainMenu(getMenuInput(1, 6));
+                    break;
                 } else break;
         }
     }
@@ -329,7 +334,7 @@ public class Menu {
                 break;
             case 2:
                 System.out.println("Thank you for using our application, we hope to see you again soon!");
-                System.exit(0);
+                break;
         }
     }
 

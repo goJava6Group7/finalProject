@@ -89,6 +89,13 @@
             <name>Fiona</name>
             <role>GUEST</role>
         </user>
+        <user>
+            <id>3</id>
+            <login>ggingembre</login>
+            <password>test</password>
+            <name>Guillaume</name>
+            <role>GUEST</role>
+        </user>
     </users>
     <hotels>
         <hotel>
