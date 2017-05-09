@@ -1,32 +1,43 @@
 package com.goJava6Group7.finalProject.entities;
 
+import com.goJava6Group7.finalProject.LocalDateAdapter;
 import com.goJava6Group7.finalProject.utils.IdUtil;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.time.LocalDate;
 import java.util.Objects;
+
+
 
 /**
  * Created by Igor on 13.04.2017.
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
+
 public class Reservation extends Entity {
+    @XmlElement
     private long id;
+    @XmlElement
     private User user;
-    private Room room;
-    private LocalDate checkIn;
-    private LocalDate checkOut;
+    @XmlElement
+    private long roomID;
+    @XmlElement
+    @XmlJavaTypeAdapter(value = LocalDateAdapter.class) private LocalDate checkIn;
+    @XmlElement
+    @XmlJavaTypeAdapter(value = LocalDateAdapter.class) private LocalDate checkOut;
 
     public Reservation() {
     }
 
-    public Reservation(User user, Room room, LocalDate checkIn, LocalDate checkOut) {
+    public Reservation(User user, long roomID, LocalDate checkIn, LocalDate checkOut) {
         this.id = IdUtil.getReservationId();
         this.user = user;
-        this.room = room;
+        this.roomID = roomID;
         this.checkIn = checkIn;
         this.checkOut = checkOut;
     }
@@ -34,7 +45,7 @@ public class Reservation extends Entity {
     @Override
     public String getOutput(){
 
-        String output = String.format("%-4d \t %-10tD \t %-10tD", this.getId(), this.getCheckIn(), this.getCheckOut());
+        String output = String.format("%-4d \t %ty:%tm:%td \t %ty:%tm:%td %n", this.getId(), this.getCheckIn(), this.getCheckOut());
 
         return output;
 
@@ -56,13 +67,21 @@ public class Reservation extends Entity {
 
         Reservation that = (Reservation) o;
 
-        return (id == that.id);
-
+        if (id != that.id) return false;
+        if (roomID != that.roomID) return false;
+        if (!user.equals(that.user)) return false;
+        if (!checkIn.equals(that.checkIn)) return false;
+        return checkOut.equals(that.checkOut);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + user.hashCode();
+        result = 31 * result + (int) (roomID ^ (roomID >>> 32));
+        result = 31 * result + checkIn.hashCode();
+        result = 31 * result + checkOut.hashCode();
+        return result;
     }
 
     public long getId() {
@@ -77,12 +96,12 @@ public class Reservation extends Entity {
         this.user = user;
     }
 
-    public Room getRoom() {
-        return room;
+    public long getRoomID() {
+        return roomID;
     }
 
-    public void setRoom(Room room) {
-        this.room = room;
+    public void setRoom(long roomID) {
+        this.roomID = roomID;
     }
 
     public LocalDate getCheckIn() {
@@ -106,9 +125,12 @@ public class Reservation extends Entity {
         return "Reservation{" +
                 "id=" + id +
                 ", user=" + user +
-                ", room=" + room +
+                ", roomID=" + roomID +
                 ", checkIn=" + checkIn +
                 ", checkOut=" + checkOut +
                 '}';
     }
+
+
+
 }

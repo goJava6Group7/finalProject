@@ -129,6 +129,7 @@ public class Menu {
                 break;
             case 6:
                 exit = true;
+                controller.updateDB();
                 System.out.println("Thank you for using our application");
                 // default:
                 //     System.out.println("An unknown error has occurred");
@@ -167,6 +168,7 @@ public class Menu {
                 break;
             case 6:
                 exit = true;
+                controller.updateDB();
                 System.out.println("Thank you for using our application");
                 // default:
                 //     System.out.println("An unknown error has occurred");
@@ -180,16 +182,20 @@ public class Menu {
             case 1:
                 try {
                     results = controller.findRoomByHotelDate();
-                    if (results == null) throw new NullSearchResultsException("");
+                    if (results == null | results.getRooms().size() == 0) throw new NullSearchResultsException("");
                 } catch (NullSearchResultsException | NullPointerException e) {
                     System.out.println("There is no room matching your criteria");
                 }
-                if (results == null) {
+                if (results == null ) {
                     if (!session.isGuest()) {
                         printUserMainMenu();
                         performActionUserMainMenu(getMenuInput(1, 6));
                         break;
                     } else break;
+                } else if(results.getRooms().size() == 0){
+                        printUserMainMenu();
+                        performActionUserMainMenu(getMenuInput(1, 6));
+                        break;
                 } else {
                     printUserRoomResultsMenu();
                     performActionUserRoomResultsMenu(results, getMenuInput(1, 3));
@@ -198,7 +204,7 @@ public class Menu {
             case 2:
                 try {
                     results = controller.findRoomByCityDate();
-                    if (results == null) throw new NullSearchResultsException("");
+                    if (results == null | results.getRooms().size() == 0) throw new NullSearchResultsException("");
                 } catch (NullSearchResultsException | NullPointerException e) {
                     System.out.println("There is no room matching your criteria");
                 }
@@ -208,7 +214,14 @@ public class Menu {
                         performActionUserMainMenu(getMenuInput(1, 6));
                         break;
                     } else break;
-                } else {
+                } else if ( results.getRooms().size() == 0){
+                    if (!session.isGuest()) {
+                        printUserMainMenu();
+                        performActionUserMainMenu(getMenuInput(1, 6));
+                        break;
+                    } else break;
+                }
+                else {
                     printUserRoomResultsMenu();
                     performActionUserRoomResultsMenu(results, getMenuInput(1, 3));
                     break;
@@ -217,6 +230,7 @@ public class Menu {
                 if (!session.isGuest()) {
                     printUserMainMenu();
                     performActionUserMainMenu(getMenuInput(1, 6));
+                    break;
                 } else break;
         }
     }
@@ -237,6 +251,7 @@ public class Menu {
                 if (!session.isGuest()) {
                     printUserMainMenu();
                     performActionUserMainMenu(getMenuInput(1, 6));
+                    break;
                 } else break;
         }
     }
@@ -246,15 +261,20 @@ public class Menu {
         switch (choice) {
             case 1:
                 controller.findHotelByHotelName();
-                break;
+                if (!session.isGuest()) {
+                    printUserMainMenu();
+                    performActionUserMainMenu(getMenuInput(1, 6));
+                    break;
+                } else break;
             case 2:
                 try {
-                    controller.findHotelByCityDate();
+                    results = controller.findHotelByCityDate();
+                    if (results.getRooms().size() == 0) throw new NullSearchResultsException("");
                     if (results == null) throw new NullSearchResultsException("");
                 } catch (NullSearchResultsException | NullPointerException e) {
                     System.out.println("There is no hotel matching your criteria");
                 }
-                if (results == null) {
+                if (results == null | results.getRooms().size() == 0 ) {
                     if (!session.isGuest()) {
                         printUserMainMenu();
                         performActionUserMainMenu(getMenuInput(1, 6));
@@ -269,6 +289,7 @@ public class Menu {
                 if (!session.isGuest()) {
                     printUserMainMenu();
                     performActionUserMainMenu(getMenuInput(1, 6));
+                    break;
                 } else break;
         }
     }
@@ -289,6 +310,7 @@ public class Menu {
                 if (!session.isGuest()) {
                     printUserMainMenu();
                     performActionUserMainMenu(getMenuInput(1, 6));
+                    break;
                 } else break;
         }
     }
@@ -326,7 +348,9 @@ public class Menu {
                 break;
             case 2:
                 System.out.println("Thank you for using our application, we hope to see you again soon!");
-                System.exit(0);
+                controller.updateDB();
+                exit = true;
+                break;
         }
     }
 
@@ -541,8 +565,8 @@ public class Menu {
     private void addRoom() {
 
         Hotel hotel;
-        System.out.println("Please enter the name of the hotel in which you want to add a room");
-        String hotelName = readStringFromConsole();
+        //System.out.println("Please enter the name of the hotel in which you want to add a room");
+        String hotelName = readNameFromConsole(" the hotel in which you want to add a room");
         try {
             hotel = chooseHotelFromListOfHotelsWithSameHotelName(hotelName);
         } catch (NoOneHotelInDatabaseException e) {
@@ -559,13 +583,16 @@ public class Menu {
         System.out.println("Please enter the price per room:");
         int price = readPositiveInt();
 
-        Room room = new Room(numberOfPerson, price, roomClass);
-        room.setHotel(hotel);//ПОКА НЕ ПРОВЕРЯЮ hotel НА null.hotel не должен быть равен null
+        System.out.println(hotel);
+
+        Room room = new Room(numberOfPerson, price, roomClass, hotel.getId());
+        room.setHotelID(hotel.getId());//ПОКА НЕ ПРОВЕРЯЮ hotel НА null.hotel не должен быть равен null
         // т.к. в chooseHotelFromListOfHotelsWithSameHotelName это не допускается, но при другой реализации может и быть равным null
 
         try {
             controller.createRoom(room);
             System.out.println("Your room was successfully created: " + room);
+            System.out.println("Room hotel: " + room.getId());
         } catch (RoomAlreadyExistsException e) {
             System.out.println(e.getMessage());
         } catch (RuntimeException e) {
@@ -621,7 +648,7 @@ public class Menu {
 
         switch (classRoomNumber) {
             case 1:
-                return RoomClass.Standart;
+                return RoomClass.Standard;
             case 2:
                 return RoomClass.Suite;
             case 3:
@@ -631,7 +658,7 @@ public class Menu {
             case 5:
                 return RoomClass.President;
             default:
-                return RoomClass.Standart; // Never should happen
+                return RoomClass.Standard; // Never should happen
         }
     }
 

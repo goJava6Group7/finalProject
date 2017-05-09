@@ -123,12 +123,12 @@ public class ProjectControllerAdmin {
         // Call constructor to create new room
 
         //TODO(Игорь) - изменил конструктор согласно текущей стуктуре
-        Room newRoom = new Room(numberOfGuests, price, RoomClass.Apartment);
+        //Room newRoom = new Room(numberOfGuests, price, RoomClass.Apartment, hotel);
 
         // save room in DB using DAO
 
-        dbManager.getDaoRoom().create(newRoom);
-        System.out.println("You have successfully created the following room: " + newRoom);
+        //dbManager.getDaoRoom().create(newRoom);
+        //System.out.println("You have successfully created the following room: " + newRoom);
     }
 
 }
