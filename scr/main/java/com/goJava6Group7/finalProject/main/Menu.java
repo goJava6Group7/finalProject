@@ -182,11 +182,11 @@ public class Menu {
             case 1:
                 try {
                     results = controller.findRoomByHotelDate();
-                    if (results == null) throw new NullSearchResultsException("");
+                    if (results == null | results.getRooms().size() == 0) throw new NullSearchResultsException("");
                 } catch (NullSearchResultsException | NullPointerException e) {
                     System.out.println("There is no room matching your criteria");
                 }
-                if (results == null) {
+                if (results == null | results.getRooms().size() == 0) {
                     if (!session.isGuest()) {
                         printUserMainMenu();
                         performActionUserMainMenu(getMenuInput(1, 6));
@@ -200,11 +200,11 @@ public class Menu {
             case 2:
                 try {
                     results = controller.findRoomByCityDate();
-                    if (results == null) throw new NullSearchResultsException("");
+                    if (results == null | results.getRooms().size() == 0) throw new NullSearchResultsException("");
                 } catch (NullSearchResultsException | NullPointerException e) {
                     System.out.println("There is no room matching your criteria");
                 }
-                if (results == null) {
+                if (results == null | results.getRooms().size() == 0) {
                     if (!session.isGuest()) {
                         printUserMainMenu();
                         performActionUserMainMenu(getMenuInput(1, 6));
@@ -258,11 +258,12 @@ public class Menu {
             case 2:
                 try {
                     results = controller.findHotelByCityDate();
+                    if (results.getRooms().size() == 0) throw new NullSearchResultsException("");
                     if (results == null) throw new NullSearchResultsException("");
                 } catch (NullSearchResultsException | NullPointerException e) {
                     System.out.println("There is no hotel matching your criteria");
                 }
-                if (results == null) {
+                if (results == null | results.getRooms().size() == 0 ) {
                     if (!session.isGuest()) {
                         printUserMainMenu();
                         performActionUserMainMenu(getMenuInput(1, 6));

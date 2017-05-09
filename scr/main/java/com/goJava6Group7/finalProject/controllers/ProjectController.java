@@ -362,13 +362,11 @@ public class ProjectController {
         LocalDate checkout = ConsoleWorkerUtil.getCheckoutDate(checkin);
 
         List<Room> rooms = searchRoomByCityDate(cityName, checkin, checkout);
-
-        printRoomResults(rooms, checkin, checkout);
-
         SearchResults results = new SearchResults(checkin, checkout, rooms);
 
-        return results;
+        if (rooms.size() != 0) printRoomResults(rooms, checkin, checkout);
 
+        return results;
     }
 
     public static boolean isBooked(Room room, LocalDate checkin, LocalDate checkout) {
@@ -413,8 +411,7 @@ public class ProjectController {
 
         rooms = searchRoomByCityDate(cityName, checkin, checkout);
 
-
-        printRoomResults(rooms, checkin, checkout);
+        if (rooms.size() != 0) printRoomResults(rooms, checkin, checkout);
 
         SearchResults results = new SearchResults(checkin, checkout, rooms);
 
@@ -492,7 +489,7 @@ public class ProjectController {
         // delete room if it is booked during requested period
         rooms.removeIf(room -> isBooked(room, checkin, checkout));
 
-        printRoomResults(rooms, checkin, checkout);
+        if (rooms.size() != 0) printRoomResults(rooms, checkin, checkout);
 
         SearchResults results = new SearchResults(checkin, checkout, rooms);
 
