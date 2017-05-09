@@ -39,7 +39,7 @@ public class Room extends Entity {
     @Override
     public String getOutput(){
 
-        String output = String.format("%-4d \t %-6d \t %-4d \t %-20s %n", this.getId(), this.getCapacity(), this.getPrice(), this.getRoomClass());
+        String output = String.format("%-4d \t %-6d \t %-4d \t %-20s", this.getId(), this.getCapacity(), this.getPrice(), this.getRoomClass());
 
         return output;
 

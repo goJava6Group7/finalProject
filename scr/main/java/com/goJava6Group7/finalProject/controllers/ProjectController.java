@@ -348,9 +348,13 @@ public class ProjectController {
 
         if (myHotels.size() == 0) System.out.println("No hotel matching your criteria");
         else {
-            System.out.println("Here is a list of hotels matching your criteria: ");
-            System.out.println(myHotels);
-            System.out.println("To book a room, please choose the 'book a room' or 'search hotel by" +
+            System.out.println("Here is a list of hotels matching your criteria: \n");
+            System.out.println(Hotel.getOutputHeader());
+            for (Hotel hotel : myHotels){
+                System.out.println(hotel.getOutput());
+            }
+
+            System.out.println("\nTo book a room, please choose the 'book a room' or 'search hotel by" +
                     "city and dates' options in the main menu");
         }
     }
@@ -374,10 +378,6 @@ public class ProjectController {
         List<Reservation> bookings;
 
         bookings = room.getBookings();
-
-        for (Reservation booking : bookings){
-            System.out.println(booking);
-        }
 
         if (bookings.size() == 0) {
             isBooked = false;
@@ -525,17 +525,18 @@ public class ProjectController {
         final Hotel[] roomHotel = new Hotel[1];
         hotelsByCityByDate.forEach(hotel -> {
             System.out.println("\n" + hotel.getName() + ":");
+            System.out.println("#" + "   " + Room.getOutputHeader());
             rooms.forEach(room -> {
                 roomHotel[0] = getHotelFromID(room.getHotelID());
                 if ((roomHotel[0].getName()).equalsIgnoreCase(hotel.getName())) {
-                    System.out.println("   " + i[0] + ": Room name: " + room.getRoomClass() + "; # of guests: " +
-                            room.getCapacity() + "; Price per night: " + room.getPrice() + ".");
+                    System.out.println(i[0] + "    " + room.getOutput());
+                    //System.out.println("   " + i[0] + ": Room name: " + room.getRoomClass() + "; # of guests: " +
+                    //        room.getCapacity() + "; Price per night: " + room.getPrice() + ".");
                     i[0]++;
                 }
             });
         });
     }
-
 
     public void bookRoom(SearchResults results, Session session) {
 

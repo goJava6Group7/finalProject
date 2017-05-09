@@ -186,12 +186,16 @@ public class Menu {
                 } catch (NullSearchResultsException | NullPointerException e) {
                     System.out.println("There is no room matching your criteria");
                 }
-                if (results == null | results.getRooms().size() == 0) {
+                if (results == null ) {
                     if (!session.isGuest()) {
                         printUserMainMenu();
                         performActionUserMainMenu(getMenuInput(1, 6));
                         break;
                     } else break;
+                } else if(results.getRooms().size() == 0){
+                        printUserMainMenu();
+                        performActionUserMainMenu(getMenuInput(1, 6));
+                        break;
                 } else {
                     printUserRoomResultsMenu();
                     performActionUserRoomResultsMenu(results, getMenuInput(1, 3));
@@ -204,13 +208,20 @@ public class Menu {
                 } catch (NullSearchResultsException | NullPointerException e) {
                     System.out.println("There is no room matching your criteria");
                 }
-                if (results == null | results.getRooms().size() == 0) {
+                if (results == null) {
                     if (!session.isGuest()) {
                         printUserMainMenu();
                         performActionUserMainMenu(getMenuInput(1, 6));
                         break;
                     } else break;
-                } else {
+                } else if ( results.getRooms().size() == 0){
+                    if (!session.isGuest()) {
+                        printUserMainMenu();
+                        performActionUserMainMenu(getMenuInput(1, 6));
+                        break;
+                    } else break;
+                }
+                else {
                     printUserRoomResultsMenu();
                     performActionUserRoomResultsMenu(results, getMenuInput(1, 3));
                     break;

@@ -31,6 +31,13 @@
             <name>Guillaume</name>
             <role>ADMIN</role>
         </user>
+        <user>
+            <id>2</id>
+            <login>test</login>
+            <password>test</password>
+            <name>test</name>
+            <role>GUEST</role>
+        </user>
     </users>
     <hotels>
         <hotel>
@@ -56,6 +63,19 @@
                     <roomID>1</roomID>
                     <checkIn>2017-05-10</checkIn>
                     <checkOut>2017-05-20</checkOut>
+                </bookings>
+                <bookings>
+                    <id>4</id>
+                    <user>
+                        <id>2</id>
+                        <login>test</login>
+                        <password>test</password>
+                        <name>test</name>
+                        <role>GUEST</role>
+                    </user>
+                    <roomID>1</roomID>
+                    <checkIn>2017-06-10</checkIn>
+                    <checkOut>2017-06-12</checkOut>
                 </bookings>
             </rooms>
             <rooms>
@@ -96,6 +116,19 @@
                     <roomID>3</roomID>
                     <checkIn>2017-05-11</checkIn>
                     <checkOut>2017-05-15</checkOut>
+                </bookings>
+                <bookings>
+                    <id>5</id>
+                    <user>
+                        <id>1</id>
+                        <login>ggingembre</login>
+                        <password>test</password>
+                        <name>Guillaume</name>
+                        <role>ADMIN</role>
+                    </user>
+                    <roomID>3</roomID>
+                    <checkIn>2017-06-20</checkIn>
+                    <checkOut>2017-06-22</checkOut>
                 </bookings>
             </rooms>
         </hotel>
@@ -151,6 +184,32 @@
             <roomID>3</roomID>
             <checkIn>2017-05-11</checkIn>
             <checkOut>2017-05-15</checkOut>
+        </reservation>
+        <reservation>
+            <id>4</id>
+            <user>
+                <id>2</id>
+                <login>test</login>
+                <password>test</password>
+                <name>test</name>
+                <role>GUEST</role>
+            </user>
+            <roomID>1</roomID>
+            <checkIn>2017-06-10</checkIn>
+            <checkOut>2017-06-12</checkOut>
+        </reservation>
+        <reservation>
+            <id>5</id>
+            <user>
+                <id>1</id>
+                <login>ggingembre</login>
+                <password>test</password>
+                <name>Guillaume</name>
+                <role>ADMIN</role>
+            </user>
+            <roomID>3</roomID>
+            <checkIn>2017-06-20</checkIn>
+            <checkOut>2017-06-22</checkOut>
         </reservation>
     </reservations>
 </XML_Database>
