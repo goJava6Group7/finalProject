@@ -11,10 +11,10 @@ public class EntityTest {
     public static void main(String[] args) {
         DataBaseManager dataBaseManager = DataBaseManagerFactory.getInstance();
         IdUtil.getInstance(dataBaseManager);
-        Room room = new Room(5,5, RoomClass.Business);
-        Room room2 = new Room(2,50, RoomClass.President);
-        Room room3 = new Room(3,150, RoomClass.Apartment);
         Hotel hotel = new Hotel("Live Hostel","Kiev", 2);
+        Room room = new Room(5,5, RoomClass.Business, hotel.getId());
+        Room room2 = new Room(2,50, RoomClass.President, hotel.getId());
+        Room room3 = new Room(3,150, RoomClass.Apartment, hotel.getId());
         User user = new User("John","Handsome","pswd");
         User user2 = new User("Jane","Beautiful wut wut","1234");
         User user3 = new User("Ivan","Dzen","qwerty");

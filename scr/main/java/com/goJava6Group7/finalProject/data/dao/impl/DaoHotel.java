@@ -5,6 +5,7 @@ import com.goJava6Group7.finalProject.data.dataBase.impl.DataBaseManagerFactory;
 import com.goJava6Group7.finalProject.entities.Hotel;
 import com.goJava6Group7.finalProject.entities.Room;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,6 +61,19 @@ public class DaoHotel implements Dao<Hotel> {
     @Override
     public List<Hotel> getAll() {
         return hotels;
+    }
+
+    public Hotel addRoom(Hotel hotel, Room room){
+        Optional<Hotel> optional = hotels.stream().filter(i -> i.getName().equals(hotel.getName())).findFirst();
+        if(optional.isPresent()){
+            Hotel existingHotel = optional.get();
+            List<Room> rooms = existingHotel.getRooms();
+            if(rooms == null) rooms = new ArrayList<>();
+            rooms.add(room);
+            existingHotel.setRooms(rooms);
+            return existingHotel;
+        }
+        return hotel;
     }
 
     @Override

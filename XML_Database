@@ -4,130 +4,153 @@
         <room>
             <id>1</id>
             <capacity>2</capacity>
-            <price>300</price>
-            <roomClass>Business</roomClass>
-            <hotel>
-                <id>1</id>
-                <name>Hilton</name>
-                <city>New York</city>
-                <rating>5</rating>
-            </hotel>
+            <price>100</price>
+            <roomClass>Standard</roomClass>
+            <hotelID>1</hotelID>
         </room>
         <room>
             <id>2</id>
-            <capacity>2</capacity>
-            <price>400</price>
-            <roomClass>Apartment</roomClass>
-            <hotel>
-                <id>1</id>
-                <name>Hilton</name>
-                <city>New York</city>
-                <rating>5</rating>
-            </hotel>
+            <capacity>4</capacity>
+            <price>500</price>
+            <roomClass>Suite</roomClass>
+            <hotelID>1</hotelID>
         </room>
         <room>
             <id>3</id>
-            <capacity>2</capacity>
-            <price>300</price>
-            <roomClass>Business</roomClass>
-            <hotel>
-                <id>1</id>
-                <name>Hilton</name>
-                <city>New York</city>
-                <rating>5</rating>
-            </hotel>
-        </room>
-        <room>
-            <id>4</id>
-            <capacity>4</capacity>
-            <price>400</price>
-            <roomClass>Suite</roomClass>
-            <hotel>
-                <id>3</id>
-                <name>Hilton</name>
-                <city>Marocco</city>
-                <rating>6</rating>
-            </hotel>
-        </room>
-        <room>
-            <id>5</id>
-            <capacity>3</capacity>
-            <price>100</price>
-            <roomClass>Standart</roomClass>
-            <hotel>
-                <id>4</id>
-                <name>Hilton</name>
-                <city>Brasilia</city>
-                <rating>4</rating>
-            </hotel>
-        </room>
-        <room>
-            <id>6</id>
-            <capacity>2</capacity>
-            <price>250</price>
-            <roomClass>Apartment</roomClass>
-            <hotel>
-                <id>4</id>
-                <name>Hilton</name>
-                <city>Brasilia</city>
-                <rating>4</rating>
-            </hotel>
+            <capacity>10</capacity>
+            <price>2000</price>
+            <roomClass>President</roomClass>
+            <hotelID>1</hotelID>
         </room>
     </rooms>
     <users>
         <user>
             <id>1</id>
-            <login>maryna</login>
-            <password>maryna</password>
-            <name>Maryna</name>
-            <role>ADMIN</role>
-        </user>
-        <user>
-            <id>3</id>
-            <login>lala</login>
-            <password>lalalala</password>
-            <name>Fiona</name>
-            <role>GUEST</role>
-        </user>
-        <user>
-            <id>3</id>
             <login>ggingembre</login>
             <password>test</password>
             <name>Guillaume</name>
-            <role>GUEST</role>
+            <role>ADMIN</role>
         </user>
     </users>
     <hotels>
         <hotel>
-            <id>3</id>
-            <name>Hilton</name>
-            <city>Marocco</city>
+            <id>1</id>
+            <name>Vintage</name>
+            <city>Lvov</city>
+            <rating>6</rating>
+            <rooms>
+                <id>1</id>
+                <capacity>2</capacity>
+                <price>100</price>
+                <roomClass>Standard</roomClass>
+                <hotelID>1</hotelID>
+                <bookings>
+                    <id>1</id>
+                    <user>
+                        <id>1</id>
+                        <login>ggingembre</login>
+                        <password>test</password>
+                        <name>Guillaume</name>
+                        <role>ADMIN</role>
+                    </user>
+                    <roomID>1</roomID>
+                    <checkIn>2017-05-10</checkIn>
+                    <checkOut>2017-05-20</checkOut>
+                </bookings>
+            </rooms>
+            <rooms>
+                <id>2</id>
+                <capacity>4</capacity>
+                <price>500</price>
+                <roomClass>Suite</roomClass>
+                <hotelID>1</hotelID>
+                <bookings>
+                    <id>2</id>
+                    <user>
+                        <id>1</id>
+                        <login>ggingembre</login>
+                        <password>test</password>
+                        <name>Guillaume</name>
+                        <role>ADMIN</role>
+                    </user>
+                    <roomID>2</roomID>
+                    <checkIn>2017-05-10</checkIn>
+                    <checkOut>2017-05-20</checkOut>
+                </bookings>
+            </rooms>
+            <rooms>
+                <id>3</id>
+                <capacity>10</capacity>
+                <price>2000</price>
+                <roomClass>President</roomClass>
+                <hotelID>1</hotelID>
+                <bookings>
+                    <id>3</id>
+                    <user>
+                        <id>1</id>
+                        <login>ggingembre</login>
+                        <password>test</password>
+                        <name>Guillaume</name>
+                        <role>ADMIN</role>
+                    </user>
+                    <roomID>3</roomID>
+                    <checkIn>2017-05-11</checkIn>
+                    <checkOut>2017-05-15</checkOut>
+                </bookings>
+            </rooms>
+        </hotel>
+        <hotel>
+            <id>2</id>
+            <name>Hyatt</name>
+            <city>Kiev</city>
             <rating>6</rating>
         </hotel>
         <hotel>
-            <id>4</id>
+            <id>3</id>
             <name>Hilton</name>
-            <city>Brasilia</city>
-            <rating>4</rating>
-        </hotel>
-        <hotel>
-            <id>5</id>
-            <name>Huge</name>
-            <city>Kharkiv</city>
-            <rating>3</rating>
-        </hotel>
-        <hotel>
-            <id>6</id>
-            <name>Miraton</name>
-            <city>Ontario</city>
-            <rating>5</rating>
-        </hotel>
-        <hotel>
-            <id>7</id>
-            <name>Miraton</name>
-            <city>Ontario</city>
-            <rating>5</rating>
+            <city>Kiev</city>
+            <rating>6</rating>
         </hotel>
     </hotels>
-    <reservations/>
+    <reservations>
+        <reservation>
+            <id>1</id>
+            <user>
+                <id>1</id>
+                <login>ggingembre</login>
+                <password>test</password>
+                <name>Guillaume</name>
+                <role>ADMIN</role>
+            </user>
+            <roomID>1</roomID>
+            <checkIn>2017-05-10</checkIn>
+            <checkOut>2017-05-20</checkOut>
+        </reservation>
+        <reservation>
+            <id>2</id>
+            <user>
+                <id>1</id>
+                <login>ggingembre</login>
+                <password>test</password>
+                <name>Guillaume</name>
+                <role>ADMIN</role>
+            </user>
+            <roomID>2</roomID>
+            <checkIn>2017-05-10</checkIn>
+            <checkOut>2017-05-20</checkOut>
+        </reservation>
+        <reservation>
+            <id>3</id>
+            <user>
+                <id>1</id>
+                <login>ggingembre</login>
+                <password>test</password>
+                <name>Guillaume</name>
+                <role>ADMIN</role>
+            </user>
+            <roomID>3</roomID>
+            <checkIn>2017-05-11</checkIn>
+            <checkOut>2017-05-15</checkOut>
+        </reservation>
+    </reservations>
 </XML_Database>

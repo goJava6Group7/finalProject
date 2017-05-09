@@ -33,8 +33,8 @@ public class DataTest {
     public void init(){
         DataBaseManager dataBaseManager = DataBaseManagerFactory.getInstance();
         IdUtil.getInstance(dataBaseManager);
-        Room room = new Room(5,5, RoomClass.Business);
         Hotel hotel = new Hotel("Live Hostel","Kiev", 2);
+        Room room = new Room(5,5, RoomClass.Business, hotel.getId());
         User user = new User("John","Handsome","pswd");
         User user2 = new User("Jone","Handsome","pswd");
         switch (dataBaseManager.getClass().getSimpleName()){
