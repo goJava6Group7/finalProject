@@ -583,7 +583,7 @@ public class Menu {
         System.out.println("Please enter the price per room:");
         int price = readPositiveInt();
 
-        System.out.println(hotel);
+//        System.out.println(hotel);
 
         Room room = new Room(numberOfPerson, price, roomClass, hotel.getId());
         room.setHotelID(hotel.getId());//ПОКА НЕ ПРОВЕРЯЮ hotel НА null.hotel не должен быть равен null
@@ -592,7 +592,11 @@ public class Menu {
         try {
             controller.createRoom(room);
             System.out.println("Your room was successfully created: " + room);
-            System.out.println("Room hotel: " + room.getId());
+//            hotel.getRooms().forEach(System.out::println);
+            System.out.println(hotel);
+//            System.out.println(Room.getOutputHeader());
+//            System.out.println(room.getOutput());
+//            System.out.println("Room hotel: " + room.getId());
         } catch (RoomAlreadyExistsException e) {
             System.out.println(e.getMessage());
         } catch (RuntimeException e) {

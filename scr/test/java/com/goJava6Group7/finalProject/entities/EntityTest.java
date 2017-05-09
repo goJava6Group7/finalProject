@@ -24,8 +24,8 @@ public class EntityTest {
         Hotel hotel2 = new Hotel("Zupa Hotel", "Sin City", 4);
         LocalDate checkIn = LocalDate.now();
         LocalDate checkOut = LocalDate.now();
-        Reservation reservation = new Reservation(user, room, checkIn, checkOut);
-        Reservation reservation2 = new Reservation(user2, room2, checkIn, checkOut);
+//        Reservation reservation = new Reservation(user, room, checkIn, checkOut);
+//        Reservation reservation2 = new Reservation(user2, room2, checkIn, checkOut);
 
         System.out.println(Room.getOutputHeader());
         System.out.print(room.getOutput());
@@ -42,8 +42,8 @@ public class EntityTest {
         System.out.println(hotel2.getOutput());
         System.out.println();
         System.out.println(Reservation.getOutputHeader());
-        System.out.println(reservation.getOutput());
-        System.out.println(reservation2.getOutput());
+//        System.out.println(reservation.getOutput());
+//        System.out.println(reservation2.getOutput());
 
 
 

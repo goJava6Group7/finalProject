@@ -151,7 +151,7 @@ public class ProjectController {
                 )
             throw new RoomAlreadyExistsException("The " + room + "already exists in database "
                     + dbManager.getClass().getSimpleName());
-                Hotel hotel = getHotelFromID(room.getHotelID());
+        Hotel hotel = getHotelFromID(room.getHotelID());
         dbManager.getDaoHotel().addRoom(hotel, room);
 
         return daoRoom.create(room);
@@ -184,15 +184,19 @@ public class ProjectController {
     /**
      * TODO Игорю на проверку
      * Kontar Maryna:
-     * The method delete room from hotel and return true if the deletion was successful
+     * The method delete room from hotel
      *
      * @param room
      * @return true if the deletion of room was successful and false otherwise
      */
     public boolean deleteRoom(Room room) {
-        //TODO Проверять на наличие в БД НЕ НАДО (это сделано backend в функции delete(Room room) в DaoRoom)
+
         Dao<Room> daoRoom = dbManager.getDaoRoom();
-        return daoRoom.delete(room);
+
+        if (daoRoom.delete(room)) {
+            Hotel hotel = getHotelFromID(room.getHotelID());
+            return dbManager.getDaoHotel().deleteRoom(hotel, room);
+        } else return false;
     }
 
     /**
@@ -221,7 +225,7 @@ public class ProjectController {
         return daoUser.create(user);
     }
 
-    public User updateUser(User user, Map<UserParameters, String> newParametersOfUser){
+    public User updateUser(User user, Map<UserParameters, String> newParametersOfUser) {
 
         Dao<User> daoUser = dbManager.getDaoUser();
 
@@ -244,6 +248,7 @@ public class ProjectController {
         }
         return daoUser.update(user);
     }
+
     /**
      * TODO Игорю на проверку
      * Kontar Maryna:
@@ -332,7 +337,6 @@ public class ProjectController {
     }
 
 
-
 // ************************************* GUILLAUME ********************************************
 
     public void findHotelByHotelName() {
@@ -350,7 +354,7 @@ public class ProjectController {
         else {
             System.out.println("Here is a list of hotels matching your criteria: \n");
             System.out.println(Hotel.getOutputHeader());
-            for (Hotel hotel : myHotels){
+            for (Hotel hotel : myHotels) {
                 System.out.println(hotel.getOutput());
             }
 
@@ -418,7 +422,7 @@ public class ProjectController {
         return results;
     }
 
-    public Hotel getHotelFromID (long hotelID){
+    public Hotel getHotelFromID(long hotelID) {
 
         Dao<Hotel> daoHotel = dbManager.getDaoHotel();
         List<Hotel> allHotels = daoHotel.getAll();
@@ -430,7 +434,7 @@ public class ProjectController {
         return myHotel;
     }
 
-    public Room getRoomFromID (long roomID){
+    public Room getRoomFromID(long roomID) {
 
         Dao<Room> daoRoom = dbManager.getDaoRoom();
         List<Room> allRooms = daoRoom.getAll();
@@ -504,7 +508,7 @@ public class ProjectController {
         Hotel myHotel;
         for (Room room : rooms) {
             myHotel = getHotelFromID(room.getHotelID());
-                    hotelDuplicates.add(myHotel);
+            hotelDuplicates.add(myHotel);
         }
 
         // removing duplicates
@@ -524,11 +528,11 @@ public class ProjectController {
         final int[] i = {1};
         final Hotel[] roomHotel = new Hotel[1];
         hotelsByCityByDate.forEach(hotel -> {
-            System.out.println("\n" + hotel.getName() + ":");
+            System.out.println("\n" + hotel.getName() + ", " + hotel.getCity() + ":");
             System.out.println("#" + "   " + Room.getOutputHeader());
             rooms.forEach(room -> {
                 roomHotel[0] = getHotelFromID(room.getHotelID());
-                if ((roomHotel[0].getName()).equalsIgnoreCase(hotel.getName())) {
+                if ((roomHotel[0].getId() == hotel.getId())) {
                     System.out.println(i[0] + "    " + room.getOutput());
                     //System.out.println("   " + i[0] + ": Room name: " + room.getRoomClass() + "; # of guests: " +
                     //        room.getCapacity() + "; Price per night: " + room.getPrice() + ".");
@@ -656,7 +660,7 @@ public class ProjectController {
             String finalUserName = userName;
             if (allUsers.stream()
                     .anyMatch((User o) -> o.getName().equalsIgnoreCase(finalName) ||
-                            o.getLogin().equals(finalUserName))){
+                            o.getLogin().equals(finalUserName))) {
                 System.out.println("An account with this name and / or login already exists. " +
                         "Please try again");
                 ok = false;
@@ -697,7 +701,7 @@ public class ProjectController {
         return user;
     }
 
-    public void updateDB(){
+    public void updateDB() {
         dbManager.updateDatabase();
     }
 

@@ -39,7 +39,7 @@ public class DataTest {
         User user2 = new User("Jone","Handsome","pswd");
         LocalDate checkIn = LocalDate.now();
         LocalDate checkOut = LocalDate.now();
-        Reservation reservation = new Reservation(user, room, checkIn, checkOut);
+//        Reservation reservation = new Reservation(user, room, checkIn, checkOut);
         switch (dataBaseManager.getClass().getSimpleName()){
             case "DataBaseManagerBinary" : {
 
@@ -51,7 +51,7 @@ public class DataTest {
                     dataBaseManager.getDaoHotel().create(hotel);
                     dataBaseManager.getDaoUser().create(user);
                     dataBaseManager.getDaoUser().create(user2);
-                    dataBaseManager.getDaoReservation().create(reservation);
+//                    dataBaseManager.getDaoReservation().create(reservation);
 
                     FileOutputStream fos = new FileOutputStream("Binary_Database.dat");
                     ObjectOutputStream oos = new ObjectOutputStream(fos);

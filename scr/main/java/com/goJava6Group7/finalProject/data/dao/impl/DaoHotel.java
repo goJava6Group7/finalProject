@@ -27,7 +27,7 @@ public class DaoHotel implements Dao<Hotel> {
     @Override
     public boolean delete(Hotel hotel) {
         Optional<Hotel> optional = hotels.stream().filter(i -> i.equals(hotel)).findFirst();
-        if (optional.isPresent()){
+        if (optional.isPresent()) {
             hotels.remove(optional.get());
             return true;
         }
@@ -37,7 +37,7 @@ public class DaoHotel implements Dao<Hotel> {
     @Override
     public Hotel update(Hotel hotel) {
         Optional<Hotel> optional = hotels.stream().filter(i -> i.equals(hotel)).findFirst();
-        if (optional.isPresent()){
+        if (optional.isPresent()) {
             hotels.remove(optional.get());
             hotels.add(hotel);
             return hotel;
@@ -48,7 +48,7 @@ public class DaoHotel implements Dao<Hotel> {
     @Override
     public Hotel get(Hotel hotel) {
         Optional<Hotel> optional = hotels.stream().filter(i -> i.equals(hotel)).findFirst();
-        if (optional.isPresent()){
+        if (optional.isPresent()) {
             return optional.get();
         }
         return null;
@@ -59,17 +59,28 @@ public class DaoHotel implements Dao<Hotel> {
         return hotels;
     }
 
-    public Hotel addRoom(Hotel hotel, Room room){
-        Optional<Hotel> optional = hotels.stream().filter(i -> i.getName().equals(hotel.getName())).findFirst();
-        if(optional.isPresent()){
+    public Hotel addRoom(Hotel hotel, Room room) {
+        Optional<Hotel> optional = hotels.stream().filter(i -> i.getId() == hotel.getId()).findFirst();
+        if (optional.isPresent()) {
             Hotel existingHotel = optional.get();
             List<Room> rooms = existingHotel.getRooms();
-            if(rooms == null) rooms = new ArrayList<>();
+            if (rooms == null) rooms = new ArrayList<>();
             rooms.add(room);
             existingHotel.setRooms(rooms);
             return existingHotel;
         }
         return hotel;
+    }
+
+    public boolean deleteRoom(Hotel hotel, Room room) {
+        Optional<Hotel> optional = hotels.stream().filter(i -> i.getId() == hotel.getId()).findFirst();
+        if (optional.isPresent()) {
+            Hotel existingHotel = optional.get();
+            List<Room> rooms = existingHotel.getRooms();
+            if (rooms == null) return false;
+            return rooms.remove(room);
+        }
+        return false;
     }
 
     @Override
