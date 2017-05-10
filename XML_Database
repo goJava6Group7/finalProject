@@ -69,26 +69,6 @@
     </users>
     <hotels>
         <hotel>
-            <id>1</id>
-            <name>Hilton</name>
-            <city>London</city>
-            <rating>5</rating>
-            <rooms>
-                <id>6</id>
-                <capacity>1</capacity>
-                <price>333</price>
-                <roomClass>Business</roomClass>
-                <hotelID>1</hotelID>
-            </rooms>
-            <rooms>
-                <id>12</id>
-                <capacity>2</capacity>
-                <price>890</price>
-                <roomClass>Apartment</roomClass>
-                <hotelID>1</hotelID>
-            </rooms>
-        </hotel>
-        <hotel>
             <id>2</id>
             <name>Hilton</name>
             <city>Paris</city>
@@ -124,6 +104,19 @@
                 <price>1677</price>
                 <roomClass>President</roomClass>
                 <hotelID>5</hotelID>
+                <bookings>
+                    <id>1</id>
+                    <user>
+                        <id>1</id>
+                        <login>Maryna</login>
+                        <password>maryna</password>
+                        <name>maryna</name>
+                        <role>ADMIN</role>
+                    </user>
+                    <roomID>8</roomID>
+                    <checkIn>2017-11-11</checkIn>
+                    <checkOut>2017-11-15</checkOut>
+                </bookings>
             </rooms>
             <rooms>
                 <id>9</id>
@@ -153,6 +146,40 @@
                 <hotelID>7</hotelID>
             </rooms>
         </hotel>
+        <hotel>
+            <id>1</id>
+            <name>Hilton</name>
+            <city>Dubai</city>
+            <rating>5</rating>
+            <rooms>
+                <id>6</id>
+                <capacity>1</capacity>
+                <price>333</price>
+                <roomClass>Business</roomClass>
+                <hotelID>1</hotelID>
+            </rooms>
+            <rooms>
+                <id>12</id>
+                <capacity>2</capacity>
+                <price>890</price>
+                <roomClass>Apartment</roomClass>
+                <hotelID>1</hotelID>
+            </rooms>
+        </hotel>
     </hotels>
-    <reservations/>
+    <reservations>
+        <reservation>
+            <id>1</id>
+            <user>
+                <id>1</id>
+                <login>Maryna</login>
+                <password>maryna</password>
+                <name>maryna</name>
+                <role>ADMIN</role>
+            </user>
+            <roomID>8</roomID>
+            <checkIn>2017-11-11</checkIn>
+            <checkOut>2017-11-15</checkOut>
+        </reservation>
+    </reservations>
 </XML_Database>

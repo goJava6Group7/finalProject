@@ -2,8 +2,10 @@ package com.goJava6Group7.finalProject.data.dao.impl;
 
 import com.goJava6Group7.finalProject.data.dao.Dao;
 import com.goJava6Group7.finalProject.data.dataBase.impl.DataBaseManagerFactory;
+import com.goJava6Group7.finalProject.entities.Reservation;
 import com.goJava6Group7.finalProject.entities.Room;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -19,13 +21,15 @@ public class DaoRoom implements Dao<Room> {
     }
 
     protected boolean deleteRoomsByHotelId(List<Long> idList) {
-        if (idList == null) {
-            return false;
+        if (idList == null) return false;
+
+        for (Long id : idList) {
+            rooms.removeIf(room -> room.getId() == id);
         }
-            for(Long id : idList) {
-                rooms.removeIf(room -> room.getId() == id);}
         return true;
     }
+
+
 
     @Override
     public Room create(Room room) {
@@ -35,14 +39,26 @@ public class DaoRoom implements Dao<Room> {
         return room;
     }
 
+    /**
+     * The method delete room with it's reservations from list of all rooms
+     * and delete room's reservations from list of all reservations
+     *
+     * @param room
+     * @return
+     */
     @Override
     public boolean delete(Room room) {
         Optional<Room> optional = rooms.stream().filter(i -> i.equals(room)).findFirst();
-        if (optional.isPresent()) {
-            rooms.remove(optional.get());
-            return true;
+        if (!optional.isPresent()) return false;
+
+        List<Long> idList = new ArrayList<>();
+        List<Reservation> reservations = optional.get().getBookings();//все резервации комнаты
+        if (reservations != null) {
+            reservations.forEach(reservation -> idList.add(reservation.getId()));
+            DataBaseManagerFactory.getDataBaseManager().getDaoReservation()
+                    .deleteReservationsByRoomId(idList);
         }
-        return false;
+        return rooms.remove(optional.get());
     }
 
     @Override

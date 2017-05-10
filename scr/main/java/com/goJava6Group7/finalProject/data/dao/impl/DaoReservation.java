@@ -35,6 +35,14 @@ public class DaoReservation implements Dao<Reservation> {
         return true;
     }
 
+    protected boolean deleteReservationsByRoomId(List<Long> idList) {
+        if (idList == null) return false;
+        for(Long id : idList) {
+            reservations.removeIf(reservation -> reservation.getId() == id);}
+        return true;
+    }
+
+
     @Override
     public Reservation create(Reservation reservation) {
         this.reservations.add(reservation);

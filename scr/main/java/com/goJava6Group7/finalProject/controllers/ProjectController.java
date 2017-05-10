@@ -52,10 +52,8 @@ public class ProjectController {
     }
 
     /**
-     * TODO Игорю на проверку
-     * TODO(Замечания) - определится с тем, что будет считаться идентичным Отелем
-     * TODO Добавлять ли отель с уже существующим именем и названием города?
-     * У него будет другое id и если equals по id, то єто разные отели
+     * TODO Добавлять ли отель с уже существующим именем, названием города и рейтингом?
+     * У него будет другое id и если equals по id, то это разные отели
      * Kontar Maryna:
      * The method adds the hotel to the database, if the hotel is not in the database
      *
@@ -86,23 +84,12 @@ public class ProjectController {
      * @return true if the deletion was successful and false otherwise
      */
     public boolean deleteHotel(Hotel hotel) {
-        //TODO Проверять на наличие в БД НЕ НАДО (это сделано backend в функции delete(Hotel hotel) в DaoHotel)
+
         Dao<Hotel> daoHotel = dbManager.getDaoHotel();
         return daoHotel.delete(hotel);
     }
 
-//    public boolean deleteHotel(Hotel hotel) throws HotelIsNotInDatabaseException {
-//
-//        if(allHotels.stream().anyMatch(hotelAtDatabase -> hotelAtDatabase.equals(hotel))){
-//            throw new HotelIsNotInDatabaseException("The " + hotel + "is not in database "
-//                    + dbManager.getClass().getSimpleName());
-//        }
-//        return DAOHotel.delete(hotel);
-//    }
-
     /**
-     * TODO у backend метод update заменяет отель, если "hotels.stream().filter(i -> i.equals(hotel))".
-     * TODO А equals у них по всем 4-ом параметрам. НАДО ОБСУДИТЬ!!!!
      * Kontar Maryna:
      *
      * @param hotel
@@ -196,7 +183,7 @@ public class ProjectController {
     /**
      * TODO Игорю на проверку
      * Kontar Maryna:
-     * The method delete room from hotel
+     * The method delete room from hotel after deleting from list of all rooms
      *
      * @param room
      * @return true if the deletion of room was successful and false otherwise
@@ -204,11 +191,8 @@ public class ProjectController {
     public boolean deleteRoom(Room room) {
 
         Dao<Room> daoRoom = dbManager.getDaoRoom();
-
-        if (daoRoom.delete(room)) {
-            Hotel hotel = getHotelFromID(room.getHotelID());
-            return dbManager.getDaoHotel().deleteRoomFromHotel(hotel, room);
-        } else return false;
+        Hotel hotel = getHotelFromID(room.getHotelID());
+        return daoRoom.delete(room) && dbManager.getDaoHotel().deleteRoomFromHotel(hotel, room);
     }
 
     /**

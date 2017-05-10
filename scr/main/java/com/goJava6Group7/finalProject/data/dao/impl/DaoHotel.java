@@ -34,11 +34,11 @@ public class DaoHotel implements Dao<Hotel> {
 
         List<Long> idList = new ArrayList<>();
 
-        List<Room> rooms = optional.get().getRooms();
+        List<Room> rooms = optional.get().getRooms();//все комнаты отеля
         if (rooms != null) {
 
             rooms.forEach(room -> idList.add(room.getId()));
-//оставить именно такую последовательность delete, иначе не сможет искать
+//оставить именно такую последовательность delete, иначе не сможет искать room.getId() (reservation.getRoomID())
             if (DataBaseManagerFactory.getDataBaseManager().getDaoRoom()
                     .deleteRoomsByHotelId(idList))
                 DataBaseManagerFactory.getDataBaseManager()

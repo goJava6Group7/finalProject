@@ -177,7 +177,7 @@ public class ConsoleWorkerUtil {
 
         while (choice < min || choice > max) {
             try {
-                System.out.print("\nEnter your selection");
+                System.out.print("\nEnter your selection:  \n");
                 choice = Integer.parseInt(br.readLine());
                 if (choice < min || choice > max) throw new OutOfMenuRangeException();
 
