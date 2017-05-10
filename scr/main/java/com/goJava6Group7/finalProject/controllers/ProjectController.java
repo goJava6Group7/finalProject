@@ -171,7 +171,7 @@ public class ProjectController {
                 case ROOM_CLASS:
                     if (value != null)
                         room.setRoomClass(RoomClass.valueOf(entry.getValue()));
-                        break;
+                    break;
                 case CAPACITY:
                     if (value != null)
                         room.setCapacity(Integer.parseInt(value));
@@ -186,9 +186,12 @@ public class ProjectController {
         // из списка комнат отеля изменения произошли, а просто в списке комнат - нет
         // Это произошло из-за того, что я ловлю RuntimeException и вывожу сообщение после этого
         //Что делать? Ловить и снова кидать, чтобі не произошла запись в БД?
-        daoRoom.update(room);
-        dbManager.getDaoHotel().updateRoomInHotel(getHotelFromID(room.getHotelID()),room);
-        return room;
+        if (daoRoom.update(room) != null){
+            if (dbManager.getDaoHotel()
+                    .updateRoomInHotel(getHotelFromID(room.getHotelID()), room) != null)
+                return room;
+        }
+        return null;
     }
 
     /**

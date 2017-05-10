@@ -2,20 +2,6 @@
 <XML_Database>
     <rooms>
         <room>
-            <id>1</id>
-            <capacity>2</capacity>
-            <price>550</price>
-            <roomClass>Business</roomClass>
-            <hotelID>1</hotelID>
-        </room>
-        <room>
-            <id>6</id>
-            <capacity>4</capacity>
-            <price>450</price>
-            <roomClass>Suite</roomClass>
-            <hotelID>1</hotelID>
-        </room>
-        <room>
             <id>8</id>
             <capacity>4</capacity>
             <price>1677</price>
@@ -35,6 +21,34 @@
             <price>8888</price>
             <roomClass>Business</roomClass>
             <hotelID>2</hotelID>
+        </room>
+        <room>
+            <id>6</id>
+            <capacity>1</capacity>
+            <price>333</price>
+            <roomClass>Business</roomClass>
+            <hotelID>1</hotelID>
+        </room>
+        <room>
+            <id>10</id>
+            <capacity>2</capacity>
+            <price>300</price>
+            <roomClass>Standard</roomClass>
+            <hotelID>7</hotelID>
+        </room>
+        <room>
+            <id>11</id>
+            <capacity>2</capacity>
+            <price>550</price>
+            <roomClass>Suite</roomClass>
+            <hotelID>7</hotelID>
+        </room>
+        <room>
+            <id>12</id>
+            <capacity>2</capacity>
+            <price>890</price>
+            <roomClass>Apartment</roomClass>
+            <hotelID>1</hotelID>
         </room>
     </rooms>
     <users>
@@ -60,17 +74,17 @@
             <city>London</city>
             <rating>5</rating>
             <rooms>
-                <id>1</id>
-                <capacity>2</capacity>
-                <price>550</price>
+                <id>6</id>
+                <capacity>1</capacity>
+                <price>333</price>
                 <roomClass>Business</roomClass>
                 <hotelID>1</hotelID>
             </rooms>
             <rooms>
-                <id>6</id>
-                <capacity>4</capacity>
-                <price>450</price>
-                <roomClass>Suite</roomClass>
+                <id>12</id>
+                <capacity>2</capacity>
+                <price>890</price>
+                <roomClass>Apartment</roomClass>
                 <hotelID>1</hotelID>
             </rooms>
         </hotel>
@@ -124,6 +138,26 @@
             <name>Radisson</name>
             <city>Toronto</city>
             <rating>6</rating>
+        </hotel>
+        <hotel>
+            <id>7</id>
+            <name>Hreschatyk</name>
+            <city>Kyiv</city>
+            <rating>4</rating>
+            <rooms>
+                <id>10</id>
+                <capacity>2</capacity>
+                <price>300</price>
+                <roomClass>Standard</roomClass>
+                <hotelID>7</hotelID>
+            </rooms>
+            <rooms>
+                <id>11</id>
+                <capacity>2</capacity>
+                <price>550</price>
+                <roomClass>Suite</roomClass>
+                <hotelID>7</hotelID>
+            </rooms>
         </hotel>
     </hotels>
     <reservations/>

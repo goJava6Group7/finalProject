@@ -31,8 +31,11 @@ public class DaoHotel implements Dao<Hotel> {
         if (optional.isPresent()) {
             List<Long> idList = new ArrayList<>();
             optional.get().getRooms().forEach(i -> idList.add(i.getId()));
-            hotels.remove(optional.get());
-            return DataBaseManagerFactory.getDataBaseManager().getDaoRoom().deleteRoomsByHotelId(idList);
+            if (hotels.remove(optional.get())){
+                if (DataBaseManagerFactory.getDataBaseManager().getDaoRoom().deleteRoomsByHotelId(idList))
+                    return DataBaseManagerFactory.getDataBaseManager().getDaoReservation().deleteReservationsByHotelId(idList);
+            }
+//            return true;
         }
         return false;
     }
