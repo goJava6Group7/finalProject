@@ -3,14 +3,17 @@ package com.goJava6Group7.finalProject.main;
 import com.goJava6Group7.finalProject.controllers.ProjectController;
 import com.goJava6Group7.finalProject.entities.*;
 import com.goJava6Group7.finalProject.exceptions.frontend.*;
+import com.goJava6Group7.finalProject.entities.Room.RoomParameters;
+import com.goJava6Group7.finalProject.entities.Hotel.HotelParameters;
+import com.goJava6Group7.finalProject.entities.User.UserParameters;
 
 import java.util.*;
 
+import static com.goJava6Group7.finalProject.entities.Hotel.HotelParameters.*;
+import static com.goJava6Group7.finalProject.entities.Room.RoomParameters.*;
+import static com.goJava6Group7.finalProject.entities.User.UserParameters.*;
 import static com.goJava6Group7.finalProject.entities.User.Role.*;
 import static com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil.*;
-import static com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil.HotelParameters.*;
-import static com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil.RoomParameters.*;
-import static com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil.UserParameters.*;
 
 /**
  * Created by Igor on 13.04.2017.
@@ -590,7 +593,8 @@ public class Menu {
         // т.к. в chooseHotelFromListOfHotelsWithSameHotelName это не допускается, но при другой реализации может и быть равным null
 
         try {
-            controller.createRoom(room);
+            if (controller.createRoom(room) == null)
+                throw new RuntimeException();
             System.out.println("Your room was successfully created: " + room);
 //            hotel.getRooms().forEach(System.out::println);
             System.out.println(hotel);
@@ -609,7 +613,7 @@ public class Menu {
 
         List<Hotel> listOfHotels = controller.findHotelByHotelName(hotelName);
 
-        if (listOfHotels != null) {
+        if (!listOfHotels.isEmpty()) {
 
             Map<Integer, Hotel> mapOfHotels = createEntityMap(listOfHotels);
             System.out.println("Please choose the number of the hotel you want to change: ");
@@ -621,7 +625,7 @@ public class Menu {
             return mapOfHotels.get(hotelKey);
 
         } else {
-            throw new NoOneHotelInDatabaseException("There isn't hotel " + hotelName + "  in database.");
+            throw new NoOneHotelInDatabaseException("There isn't hotel " + hotelName + " in database.");
         }
     }
 
@@ -865,7 +869,7 @@ public class Menu {
 
         Map<RoomParameters, String> newRoomParametersMap = new HashMap<>();
 
-        newRoomParametersMap.put(ROOM_CLASS, newRoomClass.toString());
+        newRoomParametersMap.put(ROOM_CLASS, (newRoomClass == null) ? null : newRoomClass.toString());
         newRoomParametersMap.put(CAPACITY, (newRoomCapacity == null) ? null : String.valueOf(newRoomCapacity));
         newRoomParametersMap.put(PRICE, (newHotelRating == null) ? null : String.valueOf(newHotelRating));
 

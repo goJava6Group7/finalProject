@@ -21,11 +21,6 @@ public class ConsoleWorkerUtil {
     }
 //*****************************MARYNA***************************************
 
-    public enum  HotelParameters{NAME, CITY, RATING}
-
-    public enum  RoomParameters{CAPACITY, ROOM_CLASS, PRICE}
-
-    public enum  UserParameters{NAME, LOGIN, PASSWORD}
     /**
      * Kontar Maryna:
      * Method read integer from console

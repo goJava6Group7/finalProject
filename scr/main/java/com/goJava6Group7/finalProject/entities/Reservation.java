@@ -65,23 +65,14 @@ public class Reservation extends Entity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Reservation that = (Reservation) o;
+        Reservation reservation = (Reservation) o;
 
-        if (id != that.id) return false;
-        if (roomID != that.roomID) return false;
-        if (!user.equals(that.user)) return false;
-        if (!checkIn.equals(that.checkIn)) return false;
-        return checkOut.equals(that.checkOut);
+        return reservation.id == this.id;
     }
 
     @Override
     public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + user.hashCode();
-        result = 31 * result + (int) (roomID ^ (roomID >>> 32));
-        result = 31 * result + checkIn.hashCode();
-        result = 31 * result + checkOut.hashCode();
-        return result;
+        return Objects.hash(id);
     }
 
     public long getId() {

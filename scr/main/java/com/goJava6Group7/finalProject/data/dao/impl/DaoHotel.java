@@ -1,6 +1,7 @@
 package com.goJava6Group7.finalProject.data.dao.impl;
 
 import com.goJava6Group7.finalProject.data.dao.Dao;
+import com.goJava6Group7.finalProject.data.dataBase.impl.DataBaseManagerFactory;
 import com.goJava6Group7.finalProject.entities.Hotel;
 import com.goJava6Group7.finalProject.entities.Room;
 
@@ -28,8 +29,10 @@ public class DaoHotel implements Dao<Hotel> {
     public boolean delete(Hotel hotel) {
         Optional<Hotel> optional = hotels.stream().filter(i -> i.equals(hotel)).findFirst();
         if (optional.isPresent()) {
+            List<Long> idList = new ArrayList<>();
+            optional.get().getRooms().forEach(i -> idList.add(i.getId()));
             hotels.remove(optional.get());
-            return true;
+            return DataBaseManagerFactory.getDataBaseManager().getDaoRoom().deleteRoomsByHotelId(idList);
         }
         return false;
     }
@@ -59,8 +62,12 @@ public class DaoHotel implements Dao<Hotel> {
         return hotels;
     }
 
-    public Hotel addRoom(Hotel hotel, Room room) {
-        Optional<Hotel> optional = hotels.stream().filter(i -> i.getId() == hotel.getId()).findFirst();
+    public Hotel addRoomToHotel(Hotel hotel, Room room) {
+
+        Optional<Hotel> optional = hotels.stream()
+                .filter(i -> i.getId() == hotel.getId())
+                .findFirst();
+
         if (optional.isPresent()) {
             Hotel existingHotel = optional.get();
             List<Room> rooms = existingHotel.getRooms();
@@ -69,16 +76,44 @@ public class DaoHotel implements Dao<Hotel> {
             existingHotel.setRooms(rooms);
             return existingHotel;
         }
-        return hotel;
+        return null;
+    }
+
+    public Hotel updateRoomInHotel(Hotel hotel, Room room) {
+//Проверки на наличие отеля, списка комнат отеля и самой комнаты нужны только,
+// если будем использовать этот метод еще где-нибудь. На данный момент в этот метод
+// передается уже существующий отель с существующей в нем комнатой
+        Optional<Hotel> optionalHotel = hotels.stream()
+                .filter(hotelInListOfHotels -> hotelInListOfHotels.getId() == hotel.getId())
+                .findFirst();
+        if (!optionalHotel.isPresent()) return null;
+
+        List<Room> rooms = hotel.getRooms();
+        if (rooms == null) return null;
+
+        Optional<Room> optional = rooms.stream()
+                .filter(roomInHotel -> roomInHotel.getId() == room.getId())
+                .findFirst();
+        if (optional.isPresent()) {
+            rooms.remove(optional.get());
+            rooms.add(room);
+            hotel.setRooms(rooms);
+            return hotel;
+        }
+        return null;
     }
 
     public boolean deleteRoom(Hotel hotel, Room room) {
-        Optional<Hotel> optional = hotels.stream().filter(i -> i.getId() == hotel.getId()).findFirst();
+
+        Optional<Hotel> optional = hotels.stream()
+                .filter(i -> i.getId() == hotel.getId())
+                .findFirst();
         if (optional.isPresent()) {
             Hotel existingHotel = optional.get();
             List<Room> rooms = existingHotel.getRooms();
-            if (rooms == null) return false;
-            return rooms.remove(room);
+//            if (rooms == null) return false;
+//            return rooms.remove(room);
+            return rooms != null && rooms.remove(room);
         }
         return false;
     }

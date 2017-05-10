@@ -23,6 +23,8 @@ public class Room extends Entity {
     @XmlElement
     private List<Reservation> bookings = new ArrayList<>();
 
+    public enum  RoomParameters{CAPACITY, ROOM_CLASS, PRICE}
+
     public Room() {
     }
 
@@ -61,12 +63,7 @@ public class Room extends Entity {
 
         Room room = (Room) o;
 
-        if (id != room.id) return false;
-        if (capacity != room.capacity) return false;
-        if (price != room.price) return false;
-        if (hotelID != room.hotelID) return false;
-        if (roomClass != room.roomClass) return false;
-        return bookings != null ? bookings.equals(room.bookings) : room.bookings == null;
+        return room.id == this.id;
     }
 
     @Override

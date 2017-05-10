@@ -1,11 +1,15 @@
 package com.goJava6Group7.finalProject.controllers;
 
 import com.goJava6Group7.finalProject.data.dao.Dao;
+import com.goJava6Group7.finalProject.data.dao.impl.DaoHotel;
 import com.goJava6Group7.finalProject.data.dataBase.DataBaseManager;
 import com.goJava6Group7.finalProject.entities.*;
 import com.goJava6Group7.finalProject.exceptions.frontend.*;
 import com.goJava6Group7.finalProject.main.Session;
 import com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil;
+import com.goJava6Group7.finalProject.entities.Room.RoomParameters;
+import com.goJava6Group7.finalProject.entities.Hotel.HotelParameters;
+import com.goJava6Group7.finalProject.entities.User.UserParameters;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -152,7 +156,7 @@ public class ProjectController {
             throw new RoomAlreadyExistsException("The " + room + "already exists in database "
                     + dbManager.getClass().getSimpleName());
         Hotel hotel = getHotelFromID(room.getHotelID());
-        dbManager.getDaoHotel().addRoom(hotel, room);
+        if (dbManager.getDaoHotel().addRoomToHotel(hotel, room) == null) return null;
 
         return daoRoom.create(room);
     }
@@ -166,7 +170,7 @@ public class ProjectController {
             switch (entry.getKey()) {
                 case ROOM_CLASS:
                     if (value != null)
-//                        room.setRoomClass(value); //TODO как из String получить enum (без if)
+                        room.setRoomClass(RoomClass.valueOf(entry.getValue()));
                         break;
                 case CAPACITY:
                     if (value != null)
@@ -178,7 +182,13 @@ public class ProjectController {
                     break;
             }
         }
-        return daoRoom.update(room);
+        //TODO один раз в коде выше вылетело RuntimeException и в комнате
+        // из списка комнат отеля изменения произошли, а просто в списке комнат - нет
+        // Это произошло из-за того, что я ловлю RuntimeException и вывожу сообщение после этого
+        //Что делать? Ловить и снова кидать, чтобі не произошла запись в БД?
+        daoRoom.update(room);
+        dbManager.getDaoHotel().updateRoomInHotel(getHotelFromID(room.getHotelID()),room);
+        return room;
     }
 
     /**
@@ -234,7 +244,7 @@ public class ProjectController {
             switch (entry.getKey()) {
                 case NAME:
                     if (value != null)
-                        user.setName(value); //TODO как из String получить enum (без if)
+                        user.setName(value);
                     break;
                 case LOGIN:
                     if (value != null)
