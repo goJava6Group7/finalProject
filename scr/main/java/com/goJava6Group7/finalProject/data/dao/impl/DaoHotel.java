@@ -1,6 +1,8 @@
 package com.goJava6Group7.finalProject.data.dao.impl;
 
 import com.goJava6Group7.finalProject.data.dao.Dao;
+import com.goJava6Group7.finalProject.data.dataBase.DataBaseManager;
+import com.goJava6Group7.finalProject.data.dataBase.impl.DataBaseManagerFactory;
 import com.goJava6Group7.finalProject.entities.Hotel;
 import com.goJava6Group7.finalProject.entities.Room;
 
@@ -28,8 +30,10 @@ public class DaoHotel implements Dao<Hotel> {
     public boolean delete(Hotel hotel) {
         Optional<Hotel> optional = hotels.stream().filter(i -> i.equals(hotel)).findFirst();
         if (optional.isPresent()){
+            List<Long> idList = new ArrayList<>();
+            optional.get().getRooms().forEach(i -> idList.add(i.getId()));
             hotels.remove(optional.get());
-            return true;
+            return DataBaseManagerFactory.getDataBaseManager().getDaoRoom().deleteRoomsByHotelId(idList);
         }
         return false;
     }

@@ -3,6 +3,7 @@ package com.goJava6Group7.finalProject.data.dao.impl;
 import com.goJava6Group7.finalProject.data.dao.Dao;
 import com.goJava6Group7.finalProject.entities.Room;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,6 +15,21 @@ public class DaoRoom implements Dao<Room> {
 
     public DaoRoom(List<Room> rooms) {
         this.rooms = rooms;
+    }
+
+    protected boolean deleteRoomsByHotelId(List<Long> idList){
+        if(idList == null){
+            return false;
+        }
+        Iterator<Room> iterator = rooms.iterator();
+        while (iterator.hasNext()){
+            for (Long id: idList){
+                if(iterator.next().getId() == id){
+                    iterator.remove();
+                }
+            }
+        }
+        return true;
     }
 
     @Override
