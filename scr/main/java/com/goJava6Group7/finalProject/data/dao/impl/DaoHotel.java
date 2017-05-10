@@ -27,17 +27,24 @@ public class DaoHotel implements Dao<Hotel> {
 
     @Override
     public boolean delete(Hotel hotel) {
-        Optional<Hotel> optional = hotels.stream().filter(i -> i.equals(hotel)).findFirst();
-        if (optional.isPresent()) {
-            List<Long> idList = new ArrayList<>();
-            optional.get().getRooms().forEach(i -> idList.add(i.getId()));
-            if (hotels.remove(optional.get())){
-                if (DataBaseManagerFactory.getDataBaseManager().getDaoRoom().deleteRoomsByHotelId(idList))
-                    return DataBaseManagerFactory.getDataBaseManager().getDaoReservation().deleteReservationsByHotelId(idList);
-            }
-//            return true;
+
+        Optional<Hotel> optional = hotels.stream()
+                .filter(i -> i.equals(hotel)).findFirst();
+        if (!optional.isPresent()) return false;
+
+        List<Long> idList = new ArrayList<>();
+
+        List<Room> rooms = optional.get().getRooms();
+        if (rooms != null) {
+
+            rooms.forEach(room -> idList.add(room.getId()));
+//оставить именно такую последовательность delete, иначе не сможет искать
+            if (DataBaseManagerFactory.getDataBaseManager().getDaoRoom()
+                    .deleteRoomsByHotelId(idList))
+                DataBaseManagerFactory.getDataBaseManager()
+                        .getDaoReservation().deleteReservationsByHotelId(idList);
         }
-        return false;
+        return hotels.remove(optional.get());
     }
 
     @Override
@@ -87,26 +94,26 @@ public class DaoHotel implements Dao<Hotel> {
 // если будем использовать этот метод еще где-нибудь. На данный момент в этот метод
 // передается уже существующий отель с существующей в нем комнатой
         Optional<Hotel> optionalHotel = hotels.stream()
-                .filter(hotelInListOfHotels -> hotelInListOfHotels.getId() == hotel.getId())
+                .filter(hotelInListOfHotels -> hotelInListOfHotels.equals(hotel)) //hotelInListOfHotels.getId() == hotel.getId())
                 .findFirst();
         if (!optionalHotel.isPresent()) return null;
 
-        List<Room> rooms = hotel.getRooms();
-        if (rooms == null) return null;
+        List<Room> rooms = optionalHotel.get().getRooms();
+        if (rooms.isEmpty()) return null;
 
-        Optional<Room> optional = rooms.stream()
-                .filter(roomInHotel -> roomInHotel.getId() == room.getId())
+        Optional<Room> optionalRoom = rooms.stream()
+                .filter(roomInHotel -> roomInHotel.equals(room)) //roomInHotel.getId() == room.getId())
                 .findFirst();
-        if (optional.isPresent()) {
-            rooms.remove(optional.get());
+        if (optionalRoom.isPresent()) {
+            rooms.remove(optionalRoom.get());
             rooms.add(room);
-            hotel.setRooms(rooms);
+//            hotel.setRooms(rooms);
             return hotel;
         }
         return null;
     }
 
-    public boolean deleteRoom(Hotel hotel, Room room) {
+    public boolean deleteRoomFromHotel(Hotel hotel, Room room) {
 
         Optional<Hotel> optional = hotels.stream()
                 .filter(i -> i.getId() == hotel.getId())
@@ -114,8 +121,6 @@ public class DaoHotel implements Dao<Hotel> {
         if (optional.isPresent()) {
             Hotel existingHotel = optional.get();
             List<Room> rooms = existingHotel.getRooms();
-//            if (rooms == null) return false;
-//            return rooms.remove(room);
             return rooms != null && rooms.remove(room);
         }
         return false;

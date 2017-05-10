@@ -22,14 +22,8 @@ public class DaoRoom implements Dao<Room> {
         if (idList == null) {
             return false;
         }
-        Iterator<Room> iterator = rooms.iterator();
-        while (iterator.hasNext()) {
-            for (Long id : idList) {
-                if (iterator.next().getId() == id) {
-                    iterator.remove();
-                }
-            }
-        }
+            for(Long id : idList) {
+                rooms.removeIf(room -> room.getId() == id);}
         return true;
     }
 

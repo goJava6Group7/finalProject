@@ -1,7 +1,6 @@
 package com.goJava6Group7.finalProject.controllers;
 
 import com.goJava6Group7.finalProject.data.dao.Dao;
-import com.goJava6Group7.finalProject.data.dao.impl.DaoHotel;
 import com.goJava6Group7.finalProject.data.dataBase.DataBaseManager;
 import com.goJava6Group7.finalProject.entities.*;
 import com.goJava6Group7.finalProject.exceptions.frontend.*;
@@ -208,7 +207,7 @@ public class ProjectController {
 
         if (daoRoom.delete(room)) {
             Hotel hotel = getHotelFromID(room.getHotelID());
-            return dbManager.getDaoHotel().deleteRoom(hotel, room);
+            return dbManager.getDaoHotel().deleteRoomFromHotel(hotel, room);
         } else return false;
     }
 

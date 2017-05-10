@@ -22,14 +22,16 @@ public class DaoReservation implements Dao<Reservation> {
         if (idList == null) {
             return false;
         }
-        Iterator<Reservation> iterator = reservations.iterator();
-        while (iterator.hasNext()) {
-            for (Long id : idList) {
-                if (iterator.next().getId() == id) {
-                    iterator.remove();
-                }
-            }
-        }
+//        Iterator<Reservation> iterator = reservations.iterator();
+//        while (iterator.hasNext()) {
+//            for (Long id : idList) {
+//                if (iterator.next().getRoomID() == id) {
+//                    iterator.remove();
+//                }
+//            }
+//        }
+        for(Long id : idList) {
+            reservations.removeIf(reservation -> reservation.getRoomID() == id);}
         return true;
     }
 

@@ -30,6 +30,13 @@
             <hotelID>1</hotelID>
         </room>
         <room>
+            <id>12</id>
+            <capacity>2</capacity>
+            <price>890</price>
+            <roomClass>Apartment</roomClass>
+            <hotelID>1</hotelID>
+        </room>
+        <room>
             <id>10</id>
             <capacity>2</capacity>
             <price>300</price>
@@ -42,13 +49,6 @@
             <price>550</price>
             <roomClass>Suite</roomClass>
             <hotelID>7</hotelID>
-        </room>
-        <room>
-            <id>12</id>
-            <capacity>2</capacity>
-            <price>890</price>
-            <roomClass>Apartment</roomClass>
-            <hotelID>1</hotelID>
         </room>
     </rooms>
     <users>
@@ -132,12 +132,6 @@
                 <roomClass>Business</roomClass>
                 <hotelID>5</hotelID>
             </rooms>
-        </hotel>
-        <hotel>
-            <id>6</id>
-            <name>Radisson</name>
-            <city>Toronto</city>
-            <rating>6</rating>
         </hotel>
         <hotel>
             <id>7</id>
