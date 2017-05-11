@@ -315,6 +315,16 @@ public class ProjectController {
 
         //TODO Проверять на наличие в БД НЕ НАДО (это сделано backend в функции delete(Reservation reservation) в DaoReservation)
         Dao<Reservation> daoReservation = dbManager.getDaoReservation();
+
+
+        // update room with new booking list:
+
+        Room myRoom = getRoomFromID(reservation.getRoomID());
+
+        List<Reservation> myBookings = myRoom.getBookings();
+        myBookings.remove(reservation);
+        myRoom.setBookings(myBookings);
+
         return daoReservation.delete(reservation);
     }
 
@@ -373,11 +383,17 @@ public class ProjectController {
         return results;
     }
 
-    public static boolean isBooked(Room room, LocalDate checkin, LocalDate checkout) {
-        boolean isBooked = false;
+    public boolean isBooked(Room room, LocalDate checkin, LocalDate checkout) {
         List<Reservation> bookings;
 
         bookings = room.getBookings();
+
+        return isBookedUpdate(bookings, checkin, checkout);
+    }
+
+    public boolean isBookedUpdate (List<Reservation> bookings, LocalDate checkin, LocalDate checkout){
+        // added this function for the updateBooking method.
+        boolean isBooked = false;
 
         if (bookings.size() == 0) {
             isBooked = false;
@@ -695,6 +711,148 @@ public class ProjectController {
         System.out.println("Your data has been successfully saved");
 
         return user;
+    }
+
+    public List<Reservation> getUsersBookings(User user){
+
+        Dao<Reservation> daoRes = dbManager.getDaoReservation();
+        List<Reservation> allRes = daoRes.getAll();
+
+        List<Reservation> myBookings = allRes.stream()
+                .filter((Reservation r) -> r.getUser().getId() == user.getId())
+                .collect(Collectors.toList());
+
+        return myBookings;
+    }
+
+    public Map<Integer, Reservation> createReservationMap (List<Reservation> myBookings){
+
+        Map<Integer, Reservation> mapOfEntities = new HashMap<>(myBookings.size());
+
+        int i = 0;
+        for (Reservation entity : myBookings) {
+            i = i + 1;
+            mapOfEntities.put(i, entity);
+        }
+
+        return mapOfEntities;
+    }
+
+    public void printUserBookings(Map<Integer, Reservation> mapOfBookings){
+
+        System.out.println("\t" + Reservation.getOutputHeader() + "    Hotel Name" + "    City");
+        mapOfBookings.forEach((key, value) -> System.out.println("[" + key + "]: " + value.getOutput() + "     " + getHotelNameFromBooking(value)+ "       " + getCityNameFromBooking(value) + "\n"));
+
+    }
+
+    public void updateBooking(Map<Integer, Reservation> mapOfBookings){
+
+        String yn;
+        boolean ok = false;
+
+        Reservation myBooking = chooseBookingFromList(mapOfBookings);
+        LocalDate checkIn = getCheckinDate();
+        LocalDate checkOut = getCheckoutDate(checkIn);
+
+        // get list of bookings for the room:
+        Dao<Reservation> daoR = dbManager.getDaoReservation();
+        List<Reservation> allBookings = daoR.getAll();
+
+        List<Reservation> bookings = allBookings.stream()
+                .filter(r -> r.getRoomID() == myBooking.getRoomID())
+                .collect(Collectors.toList());
+
+
+        boolean canUpdate = false;
+        if (bookings.size()==1){
+            canUpdate = true;
+        }
+        else {
+            Reservation oldBooking = bookings
+                    .stream()
+                    .filter(r -> r.getId() == myBooking.getId())
+                    .findFirst()
+                    .get();
+            bookings.remove(oldBooking);
+            if (!isBookedUpdate(bookings, checkIn, checkOut)) canUpdate = true;
+        }
+
+
+        // check availability of room with new checkin and checkout dates:
+
+        if (canUpdate)
+
+        {
+            System.out.println("We are about to change your booking. Your new check-in date will be" + checkIn
+                    + "and your new check-out date will be" + checkOut +". \n"+
+                    "If you want to proceed, please enter Y, else press any key");
+
+            while (true) {
+                yn = readStringFromConsole();
+                break;
+            }
+            if (yn.equalsIgnoreCase("Y")) ok = true;
+
+                if (ok){
+                    myBooking.setCheckIn(checkIn);
+                    myBooking.setCheckOut(checkOut);
+
+                    // add booking to room
+                    Room myRoom = getRoomFromID(myBooking.getRoomID());
+
+                    List<Reservation> roomBooking = myRoom.getBookings();
+
+                    Reservation oldBooking = roomBooking
+                            .stream()
+                            .filter(r -> r.getId() == myBooking.getId())
+                            .findFirst()
+                            .get();
+                    roomBooking.remove(oldBooking);
+
+                    roomBooking.add(myBooking);
+                    myRoom.setBookings(roomBooking);
+
+
+                    Hotel myHotel = getHotelFromID(myRoom.getHotelID());
+
+                    System.out.println("Congratulations, your booking has been updated");
+                    System.out.println("\nHere is a summary of your booking:");
+                    System.out.println("Booking name: " + myBooking.getUser().getName() + "\nHotel: " +
+                            myHotel.getName() + ";\nRoom: " + myRoom +
+                            "\nCheck-in Date: " + myBooking.getCheckIn() + "\nCheckout date:" + myBooking.getCheckOut() + ".");
+
+                    System.out.println("Thank you for using our services to book your stay!");
+                }
+
+        } else System.out.println("Unfortunately, the room is not available for your new dates");
+    }
+
+    public String getHotelNameFromBooking(Reservation booking) {
+
+        Room myRoom = getRoomFromID(booking.getRoomID());
+
+        Hotel myHotel = getHotelFromID(myRoom.getHotelID());
+
+        return myHotel.getName();
+    }
+
+
+    public String getCityNameFromBooking(Reservation booking) {
+
+        Room myRoom = getRoomFromID(booking.getRoomID());
+
+        Hotel myHotel = getHotelFromID(myRoom.getHotelID());
+
+        return myHotel.getCity();
+    }
+
+    public Reservation chooseBookingFromList(Map<Integer, Reservation> mapOfRes){
+
+        System.out.println("Please choose the number of the booking you want to change: ");
+        int resKey = readIntToMaxNum(mapOfRes.size());
+        Reservation myBooking = mapOfRes.get(resKey);
+
+        return myBooking;
     }
 
     public void updateDB() {

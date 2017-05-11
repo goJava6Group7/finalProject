@@ -9,6 +9,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 
@@ -45,7 +46,11 @@ public class Reservation extends Entity {
     @Override
     public String getOutput(){
 
-        String output = String.format("%-4d \t %ty:%tm:%td \t %ty:%tm:%td %n", this.getId(), this.getCheckIn(), this.getCheckOut());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String stringCheckin = this.getCheckIn().format(formatter);
+        String stringCheckout= this.getCheckOut().format(formatter);
+
+        String output = String.format("%-4s \t %-10s \t %-10s \t", this.getId(), stringCheckin, stringCheckout);
 
         return output;
 

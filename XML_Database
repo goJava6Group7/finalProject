@@ -50,6 +50,27 @@
             <roomClass>Suite</roomClass>
             <hotelID>7</hotelID>
         </room>
+        <room>
+            <id>13</id>
+            <capacity>2</capacity>
+            <price>100</price>
+            <roomClass>Standard</roomClass>
+            <hotelID>8</hotelID>
+        </room>
+        <room>
+            <id>14</id>
+            <capacity>4</capacity>
+            <price>200</price>
+            <roomClass>Suite</roomClass>
+            <hotelID>8</hotelID>
+        </room>
+        <room>
+            <id>15</id>
+            <capacity>6</capacity>
+            <price>1000</price>
+            <roomClass>President</roomClass>
+            <hotelID>8</hotelID>
+        </room>
     </rooms>
     <users>
         <user>
@@ -65,6 +86,13 @@
             <password>SOMEONE</password>
             <name>someone</name>
             <role>GUEST</role>
+        </user>
+        <user>
+            <id>3</id>
+            <login>ggingembre</login>
+            <password>test</password>
+            <name>Guillaume</name>
+            <role>ADMIN</role>
         </user>
     </users>
     <hotels>
@@ -166,6 +194,59 @@
                 <hotelID>1</hotelID>
             </rooms>
         </hotel>
+        <hotel>
+            <id>8</id>
+            <name>Vintage</name>
+            <city>Lvov</city>
+            <rating>6</rating>
+            <rooms>
+                <id>13</id>
+                <capacity>2</capacity>
+                <price>100</price>
+                <roomClass>Standard</roomClass>
+                <hotelID>8</hotelID>
+                <bookings>
+                    <id>2</id>
+                    <user>
+                        <id>3</id>
+                        <login>ggingembre</login>
+                        <password>test</password>
+                        <name>Guillaume</name>
+                        <role>ADMIN</role>
+                    </user>
+                    <roomID>13</roomID>
+                    <checkIn>2017-05-17</checkIn>
+                    <checkOut>2017-05-22</checkOut>
+                </bookings>
+                <bookings>
+                    <id>3</id>
+                    <user>
+                        <id>3</id>
+                        <login>ggingembre</login>
+                        <password>test</password>
+                        <name>Guillaume</name>
+                        <role>ADMIN</role>
+                    </user>
+                    <roomID>13</roomID>
+                    <checkIn>2017-05-25</checkIn>
+                    <checkOut>2017-05-30</checkOut>
+                </bookings>
+            </rooms>
+            <rooms>
+                <id>14</id>
+                <capacity>4</capacity>
+                <price>200</price>
+                <roomClass>Suite</roomClass>
+                <hotelID>8</hotelID>
+            </rooms>
+            <rooms>
+                <id>15</id>
+                <capacity>6</capacity>
+                <price>1000</price>
+                <roomClass>President</roomClass>
+                <hotelID>8</hotelID>
+            </rooms>
+        </hotel>
     </hotels>
     <reservations>
         <reservation>
@@ -180,6 +261,32 @@
             <roomID>8</roomID>
             <checkIn>2017-11-11</checkIn>
             <checkOut>2017-11-15</checkOut>
+        </reservation>
+        <reservation>
+            <id>2</id>
+            <user>
+                <id>3</id>
+                <login>ggingembre</login>
+                <password>test</password>
+                <name>Guillaume</name>
+                <role>ADMIN</role>
+            </user>
+            <roomID>13</roomID>
+            <checkIn>2017-05-17</checkIn>
+            <checkOut>2017-05-22</checkOut>
+        </reservation>
+        <reservation>
+            <id>3</id>
+            <user>
+                <id>3</id>
+                <login>ggingembre</login>
+                <password>test</password>
+                <name>Guillaume</name>
+                <role>ADMIN</role>
+            </user>
+            <roomID>13</roomID>
+            <checkIn>2017-05-25</checkIn>
+            <checkOut>2017-05-30</checkOut>
         </reservation>
     </reservations>
 </XML_Database>

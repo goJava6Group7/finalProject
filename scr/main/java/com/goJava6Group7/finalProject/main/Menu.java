@@ -60,7 +60,7 @@ public class Menu {
 
     private void printUserMainMenu() {
         System.out.println("\nPlease make a selection");
-        System.out.println("[1] Update your profile");
+        System.out.println("[1] See / update your profile and bookings");
         System.out.println("[2] Logout");
         System.out.println("[3] Search / book a room");
         System.out.println("[4] Search a hotel");
@@ -95,7 +95,6 @@ public class Menu {
         System.out.println("[2] Go back to hotel search");
         System.out.println("[3] Go back to main menu");
     }
-
 
     private void performActionGuestMainMenu(int choice) {
         switch (choice) {
@@ -142,9 +141,17 @@ public class Menu {
     private void performActionUserMainMenu(int choice) {
         switch (choice) {
             case 1:
-                controller.updateUser(session.getUser());
-                printUserMainMenu();
-                performActionUserMainMenu(getMenuInput(1, 6));
+                printUserBookingUpdateMenu();
+                int max;
+                if (!controller.getUsersBookings(session.getUser()).isEmpty()) {
+                    max = 4;
+                } else {
+                    max = 2;
+                }
+                performActionsUserBookingUpdateMenu(getMenuInput(1, max));
+                //controller.updateUser(session.getUser());
+                //printUserMainMenu();
+                //performActionUserMainMenu(getMenuInput(1, 6));
                 break;
             case 2:
                 controller.logout(session);
@@ -366,6 +373,74 @@ public class Menu {
             }
         }
     }
+
+    private void printUserBookingUpdateMenu(){
+        System.out.println("Your user information:");
+        System.out.println(User.getOutputHeader());
+        System.out.println(session.getUser().getOutput());
+        if (!controller.getUsersBookings(session.getUser()).isEmpty()){
+            System.out.println("Your bookings:");
+            controller.printUserBookings(controller.createReservationMap(
+                    controller.getUsersBookings(session.getUser())));
+            System.out.println("Please make a selection:");
+            System.out.println("[1] Update your profile"); // for admin / users
+            System.out.println("[2] Change the dates of a reservation");
+            System.out.println("[3] Delete a reservation");
+            System.out.println("[4] Go back to main menu");
+        } else{
+            System.out.println("Please make a selection:");
+            System.out.println("[1] Update your profile"); // for admin / users
+            System.out.println("[2] Go back to main menu");
+        }
+
+    }
+
+    private void performActionsUserBookingUpdateMenu(int choice){
+
+        if (!controller.getUsersBookings(session.getUser()).isEmpty()){
+
+            switch (choice){
+                case 1:
+                    controller.updateUser(session.getUser());
+                    printUserMainMenu();
+                    performActionUserMainMenu(getMenuInput(1, 6));
+                    break;
+                case 2:
+                    System.out.println("logic to update booking");
+                    controller.updateBooking(controller.createReservationMap(
+                            controller.getUsersBookings(session.getUser())));
+                    printUserMainMenu();
+                    performActionUserMainMenu(getMenuInput(1, 6));
+                    break;
+                case 3:
+                    controller.printUserBookings(controller.createReservationMap(
+                            controller.getUsersBookings(session.getUser())));
+                    if (controller.cancelRoomReservation(controller.chooseBookingFromList(controller.createReservationMap(
+                            controller.getUsersBookings(session.getUser())))))
+                        System.out.println("Your booking has been deleted succesfully");
+                    printUserMainMenu();
+                    performActionUserMainMenu(getMenuInput(1, 6));
+                    break;
+                case 4:
+                    printUserMainMenu();
+                    performActionUserMainMenu(getMenuInput(1, 6));
+                    break;
+            }
+        } else {
+            switch (choice){
+                case 1:
+                    controller.updateUser(session.getUser());
+                    printUserMainMenu();
+                    performActionUserMainMenu(getMenuInput(1, 6));
+                    break;
+                case 2:
+                    printUserMainMenu();
+                    performActionUserMainMenu(getMenuInput(1, 6));
+                    break;
+            }
+        }
+    }
+
 
     //***************************************MARYNA*************************************************
     // ************************************* ADMIN MENU ********************************************
