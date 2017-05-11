@@ -316,7 +316,6 @@ public class ProjectController {
         //TODO Проверять на наличие в БД НЕ НАДО (это сделано backend в функции delete(Reservation reservation) в DaoReservation)
         Dao<Reservation> daoReservation = dbManager.getDaoReservation();
 
-
         // update room with new booking list:
 
         Room myRoom = getRoomFromID(reservation.getRoomID());
@@ -560,9 +559,14 @@ public class ProjectController {
     }
 
     public void bookRoom(SearchResults results, Session session) {
+        if(results == null || session == null){
+            System.out.println("Room booking error");
+            return;
+        }
 
         LocalDate checkin = results.getCheckin();
         LocalDate checkout = results.getCheckout();
+
         List<Room> rooms = results.getRooms(); //КОМНАТЫ ИЗ ОТЕЛЕЙ
         int roomChoice;
 
@@ -825,6 +829,7 @@ public class ProjectController {
                     myBooking.setCheckOut(checkOut);
 
                     // add booking to room
+                    bookings.clear();
                     bookings.add(myBooking);
                     //myRoom = getRoomFromID(myBooking.getRoomID()); // this gets a room object
                     myRoom.setBookings(bookings);
