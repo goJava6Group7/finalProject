@@ -563,7 +563,7 @@ public class ProjectController {
 
         LocalDate checkin = results.getCheckin();
         LocalDate checkout = results.getCheckout();
-        List<Room> rooms = results.getRooms();
+        List<Room> rooms = results.getRooms(); //КОМНАТЫ ИЗ ОТЕЛЕЙ
         int roomChoice;
 
         System.out.println("Please enter the number of the room you would like to book from the list:");
@@ -587,6 +587,17 @@ public class ProjectController {
         room.setBookings(roomBooking);
 
         Hotel hotel = getHotelFromID(room.getHotelID());
+
+        /***************/
+        Dao<Room> daoRoom = dbManager.getDaoRoom();
+        List <Room> listRooms = daoRoom.getAll();
+        Optional<Room> optional = listRooms.stream().filter(i -> room.getId() == i.getId()).findFirst();
+        Room roomInListOfRooms = null;
+        if (optional.isPresent())
+            roomInListOfRooms = optional.get();
+        roomInListOfRooms.getBookings().add(newBook);
+        /***************/
+
 
         System.out.println("Congratulations, your room is booked!");
         System.out.println("\nHere is a summary of your booking:");

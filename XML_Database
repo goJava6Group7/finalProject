@@ -99,30 +99,17 @@
             <city>Toronto</city>
             <rating>6</rating>
             <rooms>
-                <id>8</id>
-                <capacity>4</capacity>
-                <price>1677</price>
-                <roomClass>President</roomClass>
-                <hotelID>5</hotelID>
-                <bookings>
-                    <id>1</id>
-                    <user>
-                        <id>1</id>
-                        <login>Maryna</login>
-                        <password>maryna</password>
-                        <name>maryna</name>
-                        <role>ADMIN</role>
-                    </user>
-                    <roomID>8</roomID>
-                    <checkIn>2017-11-11</checkIn>
-                    <checkOut>2017-11-15</checkOut>
-                </bookings>
-            </rooms>
-            <rooms>
                 <id>9</id>
                 <capacity>3</capacity>
                 <price>599</price>
                 <roomClass>Business</roomClass>
+                <hotelID>5</hotelID>
+            </rooms>
+            <rooms>
+                <id>8</id>
+                <capacity>4</capacity>
+                <price>1677</price>
+                <roomClass>President</roomClass>
                 <hotelID>5</hotelID>
             </rooms>
         </hotel>
@@ -167,19 +154,5 @@
             </rooms>
         </hotel>
     </hotels>
-    <reservations>
-        <reservation>
-            <id>1</id>
-            <user>
-                <id>1</id>
-                <login>Maryna</login>
-                <password>maryna</password>
-                <name>maryna</name>
-                <role>ADMIN</role>
-            </user>
-            <roomID>8</roomID>
-            <checkIn>2017-11-11</checkIn>
-            <checkOut>2017-11-15</checkOut>
-        </reservation>
-    </reservations>
+    <reservations/>
 </XML_Database>
