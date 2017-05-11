@@ -23,6 +23,8 @@ public class Hotel extends Entity {
     @XmlElement
     private List<Room> rooms;
 
+    public enum  HotelParameters{NAME, CITY, RATING}
+
     public Hotel() {
     }
 

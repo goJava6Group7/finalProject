@@ -1,12 +1,15 @@
 package com.goJava6Group7.finalProject.data.dataBase.impl;
 
+import com.goJava6Group7.finalProject.LocalDateAdapter;
 import com.goJava6Group7.finalProject.data.dataBase.DataBaseManager;
 
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.util.Properties;
 
+@XmlJavaTypeAdapter(value = LocalDateAdapter.class)
 /**
  * Created by Igor on 14.04.2017.
  */
@@ -16,6 +19,7 @@ public final class DataBaseManagerFactory {
     public static DataBaseManager getDataBaseManager() {
         return dataBaseManager;
     }
+
 
     public static DataBaseManager getInstance(){
         if (Files.exists(FileSystems.getDefault().getPath("application.properties"))) {

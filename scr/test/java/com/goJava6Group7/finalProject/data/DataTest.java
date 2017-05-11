@@ -33,13 +33,13 @@ public class DataTest {
     public void init(){
         DataBaseManager dataBaseManager = DataBaseManagerFactory.getInstance();
         IdUtil.getInstance(dataBaseManager);
-        Room room = new Room(5,5, RoomClass.Business);
         Hotel hotel = new Hotel("Live Hostel","Kiev", 2);
+        Room room = new Room(5,5, RoomClass.Business, hotel.getId());
         User user = new User("John","Handsome","pswd");
         User user2 = new User("Jone","Handsome","pswd");
         LocalDate checkIn = LocalDate.now();
         LocalDate checkOut = LocalDate.now();
-        Reservation reservation = new Reservation(user, room, checkIn, checkOut);
+//        Reservation reservation = new Reservation(user, room, checkIn, checkOut);
         switch (dataBaseManager.getClass().getSimpleName()){
             case "DataBaseManagerBinary" : {
 
@@ -51,7 +51,7 @@ public class DataTest {
                     dataBaseManager.getDaoHotel().create(hotel);
                     dataBaseManager.getDaoUser().create(user);
                     dataBaseManager.getDaoUser().create(user2);
-                    dataBaseManager.getDaoReservation().create(reservation);
+//                    dataBaseManager.getDaoReservation().create(reservation);
 
                     FileOutputStream fos = new FileOutputStream("Binary_Database.dat");
                     ObjectOutputStream oos = new ObjectOutputStream(fos);
