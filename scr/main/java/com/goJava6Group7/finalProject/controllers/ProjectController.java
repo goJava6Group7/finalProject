@@ -519,6 +519,17 @@ public class ProjectController {
 
     public void printRoomResults(List<Room> rooms, LocalDate checkin, LocalDate checkout) {
 
+        // create map of rooms
+
+        Map<Integer, Room> mapOfRooms = new HashMap<>(rooms.size());
+
+        int i = 0;
+        for (Room room : rooms) {
+            i = i + 1;
+            mapOfRooms.put(i, room);
+        }
+
+
         // create array of hotels with available rooms from the room array
         List<Hotel> hotelDuplicates = new ArrayList<>();
         Hotel myHotel;
@@ -528,31 +539,25 @@ public class ProjectController {
         }
 
         // removing duplicates
-        Set<Hotel> hotelsNoD = new HashSet<Hotel>();
+        Set<Hotel> hotelsNoD = new HashSet<>();
         hotelsNoD.addAll(hotelDuplicates);
 
         List<Hotel> hotelsByCityByDate = new ArrayList<>();
         hotelsByCityByDate.addAll(hotelsNoD);
 
-        // here it would be good to print the hotels without the rooms, do this later
         System.out.println("\nHere is a list of hotels with rooms available from "
                 + checkin + " to " + checkout + ":");
-
-
         // printing results in a clean way, showing only available rooms
         // i is used to as a reference number for booking function, in case they want to book a room
-        final int[] i = {1};
         final Hotel[] roomHotel = new Hotel[1];
         hotelsByCityByDate.forEach(hotel -> {
             System.out.println("\n" + hotel.getName() + ", " + hotel.getCity() + ":");
             System.out.println("#" + "   " + Room.getOutputHeader());
-            rooms.forEach(room -> {
-                roomHotel[0] = getHotelFromID(room.getHotelID());
+
+            mapOfRooms.forEach((key, value) -> {
+                roomHotel[0] = getHotelFromID(value.getHotelID());
                 if ((roomHotel[0].getId() == hotel.getId())) {
-                    System.out.println(i[0] + "    " + room.getOutput());
-                    //System.out.println("   " + i[0] + ": Room name: " + room.getRoomClass() + "; # of guests: " +
-                    //        room.getCapacity() + "; Price per night: " + room.getPrice() + ".");
-                    i[0]++;
+                System.out.println("[" + key + "]: " + value.getOutput());
                 }
             });
         });
@@ -605,17 +610,14 @@ public class ProjectController {
 
         System.out.println("Congratulations, your room is booked!");
         System.out.println("\nHere is a summary of your booking:");
-        System.out.println("Booking name: " + newBook.getUser().getName() + "\nHotel: " +
-                hotel.getName() + ";\nRoom: " + room +
-                "\nCheck-in Date: " + newBook.getCheckIn() + "\nCheckout date:" + newBook.getCheckOut() + ".");
+        System.out.println("\nBooking name: " + newBook.getUser().getName() + "\nHotel: " +
+                hotel.getName() + "\nCheck-in Date: " + newBook.getCheckIn() +
+                "\nCheckout date:" + newBook.getCheckOut() + ".");
+        System.out.println("\nRoom information:");
+        System.out.println(Room.getOutputHeader());
+        System.out.println(room.getOutput());
 
-        System.out.println("Thank you for using our services to book your stay!");
-    }
-
-    public List<Room> findRoomsInHotel(Hotel hotel) {
-
-        return hotel.getRooms();
-
+        System.out.println("\nThank you for using our services to book your stay!");
     }
 
     public Session login(Session session) {
