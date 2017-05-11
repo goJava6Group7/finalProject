@@ -798,21 +798,11 @@ public class ProjectController {
                     myBooking.setCheckOut(checkOut);
 
                     // add booking to room
-                    Room myRoom = getRoomFromID(myBooking.getRoomID());
-
-                    List<Reservation> roomBooking = myRoom.getBookings();
-
-                    Reservation oldBooking = roomBooking
-                            .stream()
-                            .filter(r -> r.getId() == myBooking.getId())
-                            .findFirst()
-                            .get();
-                    roomBooking.remove(oldBooking);
-
-                    roomBooking.add(myBooking);
-                    myRoom.setBookings(roomBooking);
-
-
+                    bookings.add(myBooking);
+                    Room myRoom = getRoomFromID(myBooking.getRoomID()); // this gets a room object
+                    myRoom.setBookings(bookings); // but this set method works but is not written in DB...
+                    updateDB(); // the update DB function gets the right room info with right bookings, but the DB is not updated
+                    
                     Hotel myHotel = getHotelFromID(myRoom.getHotelID());
 
                     System.out.println("Congratulations, your booking has been updated");
