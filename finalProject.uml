@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>com.goJava6Group7.finalProject</OriginalElement>
+  <nodes>
+    <node x="42.0" y="484.0">com.goJava6Group7.finalProject.controllers.ProjectController</node>
+    <node x="0.0" y="85.0">com.goJava6Group7.finalProject.data.dao.impl.DaoRoom</node>
+    <node x="221.0" y="250.0">com.goJava6Group7.finalProject.data.dataBase.impl.DataBaseManagerXml</node>
+    <node x="247.0" y="485.0">com.goJava6Group7.finalProject.main.Session</node>
+    <node x="417.0" y="171.0">com.goJava6Group7.finalProject.data.dataBase.impl.DataBaseManagerFactory</node>
+    <node x="126.0" y="85.0">com.goJava6Group7.finalProject.data.dao.impl.DaoHotel</node>
+    <node x="0.0" y="415.0">com.goJava6Group7.finalProject.entities.Room</node>
+    <node x="249.0" y="85.0">com.goJava6Group7.finalProject.data.dao.impl.DaoUser</node>
+    <node x="176.0" y="540.0">com.goJava6Group7.finalProject.main.Menu</node>
+    <node x="98.0" y="415.0">com.goJava6Group7.finalProject.entities.Hotel</node>
+    <node x="0.0" y="250.0">com.goJava6Group7.finalProject.data.dataBase.impl.DataBaseManagerBinary</node>
+    <node x="364.0" y="85.0">com.goJava6Group7.finalProject.data.dao.impl.DaoReservation</node>
+    <node x="178.0" y="610.0">com.goJava6Group7.finalProject.main.Main</node>
+    <node x="193.0" y="415.0">com.goJava6Group7.finalProject.entities.User</node>
+    <node x="280.0" y="415.0">com.goJava6Group7.finalProject.entities.Reservation</node>
+    <node x="-223.0" y="155.0">com.goJava6Group7.finalProject.utils</node>
+    <node x="127.25" y="165.0">com.goJava6Group7.finalProject.data.dataBase.DataBaseManager</node>
+    <node x="143.5" y="330.0">com.goJava6Group7.finalProject.entities.Entity</node>
+    <node x="204.0" y="0.0">com.goJava6Group7.finalProject.data.dao.Dao</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="com.goJava6Group7.finalProject.data.dao.impl.DaoRoom" target="com.goJava6Group7.finalProject.data.dao.Dao">
+      <point x="0.0" y="-17.5" />
+      <point x="53.0" y="55.0" />
+      <point x="212.25" y="55.0" />
+      <point x="-24.75" y="17.5" />
+    </edge>
+    <edge source="com.goJava6Group7.finalProject.data.dataBase.impl.DataBaseManagerBinary" target="com.goJava6Group7.finalProject.data.dataBase.DataBaseManager">
+      <point x="0.0" y="-17.5" />
+      <point x="100.5" y="225.0" />
+      <point x="167.25" y="225.0" />
+      <point x="-40.0" y="17.5" />
+    </edge>
+    <edge source="com.goJava6Group7.finalProject.data.dao.impl.DaoReservation" target="com.goJava6Group7.finalProject.data.dao.Dao">
+      <point x="0.0" y="-17.5" />
+      <point x="435.5" y="55.0" />
+      <point x="261.75" y="55.0" />
+      <point x="24.75" y="17.5" />
+    </edge>
+    <edge source="com.goJava6Group7.finalProject.data.dao.impl.DaoHotel" target="com.goJava6Group7.finalProject.data.dao.Dao">
+      <point x="0.0" y="-17.5" />
+      <point x="177.5" y="65.0" />
+      <point x="228.75" y="65.0" />
+      <point x="-8.25" y="17.5" />
+    </edge>
+    <edge source="com.goJava6Group7.finalProject.entities.User" target="com.goJava6Group7.finalProject.entities.Entity">
+      <point x="0.0" y="-17.5" />
+      <point x="226.5" y="395.0" />
+      <point x="190.375" y="395.0" />
+      <point x="9.375" y="17.5" />
+    </edge>
+    <edge source="com.goJava6Group7.finalProject.entities.Reservation" target="com.goJava6Group7.finalProject.entities.Entity">
+      <point x="0.0" y="-17.5" />
+      <point x="337.5" y="385.0" />
+      <point x="209.125" y="385.0" />
+      <point x="28.125" y="17.5" />
+    </edge>
+    <edge source="com.goJava6Group7.finalProject.entities.Room" target="com.goJava6Group7.finalProject.entities.Entity">
+      <point x="0.0" y="-17.5" />
+      <point x="39.0" y="385.0" />
+      <point x="152.875" y="385.0" />
+      <point x="-28.125" y="17.5" />
+    </edge>
+    <edge source="com.goJava6Group7.finalProject.entities.Hotel" target="com.goJava6Group7.finalProject.entities.Entity">
+      <point x="0.0" y="-17.5" />
+      <point x="135.5" y="395.0" />
+      <point x="171.625" y="395.0" />
+      <point x="-9.375" y="17.5" />
+    </edge>
+    <edge source="com.goJava6Group7.finalProject.data.dataBase.impl.DataBaseManagerXml" target="com.goJava6Group7.finalProject.data.dataBase.DataBaseManager">
+      <point x="0.0" y="-17.5" />
+      <point x="314.0" y="225.0" />
+      <point x="247.25" y="225.0" />
+      <point x="40.0" y="17.5" />
+    </edge>
+    <edge source="com.goJava6Group7.finalProject.data.dao.impl.DaoUser" target="com.goJava6Group7.finalProject.data.dao.Dao">
+      <point x="0.0" y="-17.5" />
+      <point x="296.5" y="65.0" />
+      <point x="245.25" y="65.0" />
+      <point x="8.25" y="17.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="174.5" y="395.0" />
+  <SelectedNodes />
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
