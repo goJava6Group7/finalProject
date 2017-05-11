@@ -320,12 +320,17 @@ public class ProjectController {
         // update room with new booking list:
 
         Room myRoom = getRoomFromID(reservation.getRoomID());
+        Hotel myHotel = getHotelFromID(myRoom.getHotelID());
 
         List<Reservation> myBookings = myRoom.getBookings();
         myBookings.remove(reservation);
         myRoom.setBookings(myBookings);
 
-        return daoReservation.delete(reservation);
+        //myRoom = getRoomFromID(myBooking.getRoomID()); // this gets a room object
+        if (dbManager.getDaoHotel().updateRoomInHotel(myHotel, myRoom) != null){
+            return daoReservation.delete(reservation);
+        }
+         else return false;
     }
 
 
@@ -758,6 +763,8 @@ public class ProjectController {
         Dao<Reservation> daoR = dbManager.getDaoReservation();
         List<Reservation> allBookings = daoR.getAll();
 
+        Dao<Hotel> daoMyHotels = dbManager.getDaoHotel();
+
         List<Reservation> bookings = allBookings.stream()
                 .filter(r -> r.getRoomID() == myBooking.getRoomID())
                 .collect(Collectors.toList());
@@ -794,16 +801,27 @@ public class ProjectController {
             if (yn.equalsIgnoreCase("Y")) ok = true;
 
                 if (ok){
+
+                    //delete existing booking and updateDB
+                    Room myRoom = getRoomFromID(myBooking.getRoomID()); // this gets a room object
+                    Hotel myHotel = getHotelFromID(myRoom.getHotelID());
+
+
+                    //myRoom.setBookings(bookings); // but this set method works but is not written in DB...
+                    //updateDB();
+
                     myBooking.setCheckIn(checkIn);
                     myBooking.setCheckOut(checkOut);
 
                     // add booking to room
                     bookings.add(myBooking);
-                    Room myRoom = getRoomFromID(myBooking.getRoomID()); // this gets a room object
-                    myRoom.setBookings(bookings); // but this set method works but is not written in DB...
+                    //myRoom = getRoomFromID(myBooking.getRoomID()); // this gets a room object
+                    myRoom.setBookings(bookings);
+                    myHotel = dbManager.getDaoHotel().updateRoomInHotel(myHotel, myRoom);
+
+
+                    // but this set method works but is not written in DB...
                     updateDB(); // the update DB function gets the right room info with right bookings, but the DB is not updated
-                    
-                    Hotel myHotel = getHotelFromID(myRoom.getHotelID());
 
                     System.out.println("Congratulations, your booking has been updated");
                     System.out.println("\nHere is a summary of your booking:");
