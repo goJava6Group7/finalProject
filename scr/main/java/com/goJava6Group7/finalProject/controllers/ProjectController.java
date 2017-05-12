@@ -1,6 +1,7 @@
 package com.goJava6Group7.finalProject.controllers;
 
 import com.goJava6Group7.finalProject.data.dao.Dao;
+import com.goJava6Group7.finalProject.data.dao.impl.DaoRoom;
 import com.goJava6Group7.finalProject.data.dataBase.DataBaseManager;
 import com.goJava6Group7.finalProject.entities.*;
 import com.goJava6Group7.finalProject.exceptions.frontend.*;
@@ -172,7 +173,7 @@ public class ProjectController {
         // из списка комнат отеля изменения произошли, а просто в списке комнат - нет
         // Это произошло из-за того, что я ловлю RuntimeException и вывожу сообщение после этого
         //Что делать? Ловить и снова кидать, чтобі не произошла запись в БД?
-        if (daoRoom.update(room) != null){
+        if (daoRoom.update(room) != null) {
             if (dbManager.getDaoHotel()
                     .updateRoomInHotel(getHotelFromID(room.getHotelID()), room) != null)
                 return room;
@@ -242,7 +243,25 @@ public class ProjectController {
                     break;
             }
         }
-        return daoUser.update(user);
+
+        User updatedUser = daoUser.update(user);
+        List<Reservation> userReservation = userReservations(updatedUser);
+        userReservation.forEach(reservation -> updateReservationToUpdateUser(reservation, updatedUser));
+        return updatedUser;
+    }
+
+    private Reservation updateReservationToUpdateUser(Reservation reservation, User user) {
+
+        reservation.setUser(user);
+        Room room = getRoomFromID(reservation.getRoomID());
+        room.getBookings().removeIf(res -> res.getId() == reservation.getId());
+        room.getBookings().add(reservation);
+
+        if (dbManager.getDaoHotel()
+                .updateRoomInHotel(getHotelFromID(room.getHotelID()), room) != null)
+            return reservation;
+
+        return null;
     }
 
     /**
@@ -256,7 +275,21 @@ public class ProjectController {
     public boolean deleteUser(User user) {
 
         Dao<User> daoUser = dbManager.getDaoUser();
+        List<Reservation> userReservation = userReservations(user);
+        userReservation.forEach(reservation -> cancelRoomReservation(reservation));//будут проблемы, если cancelRoomReservation будет false. Продумать проверку
         return daoUser.delete(user);
+    }
+
+    private List<Reservation> userReservations(User user) {
+
+        Dao<Reservation> daoReservation = dbManager.getDaoReservation();
+        List<Reservation> listReservation = daoReservation.getAll();
+
+        if (listReservation.isEmpty()) return null;
+
+        return listReservation.stream()
+                .filter(reservation -> reservation.getUser().getId() == user.getId())
+                .collect(Collectors.toList());
     }
 
     public User findUserByLogin(String login) {
@@ -303,9 +336,6 @@ public class ProjectController {
     }*/
 
     /**
-     * TODO Эта функция написана мной, п.ч. изначально так поделили задания с Гийомом,
-     * TODO но потом мне надо было реализовывать админ меню, а функции остались
-     * Kontar Maryna:
      * The method delete room reservation
      *
      * @param reservation
@@ -326,10 +356,9 @@ public class ProjectController {
         myRoom.setBookings(myBookings);
 
         //myRoom = getRoomFromID(myBooking.getRoomID()); // this gets a room object
-        if (dbManager.getDaoHotel().updateRoomInHotel(myHotel, myRoom) != null){
+        if (dbManager.getDaoHotel().updateRoomInHotel(myHotel, myRoom) != null) {
             return daoReservation.delete(reservation);
-        }
-         else return false;
+        } else return false;
     }
 
 
@@ -395,7 +424,7 @@ public class ProjectController {
         return isBookedUpdate(bookings, checkin, checkout);
     }
 
-    public boolean isBookedUpdate (List<Reservation> bookings, LocalDate checkin, LocalDate checkout){
+    public boolean isBookedUpdate(List<Reservation> bookings, LocalDate checkin, LocalDate checkout) {
         // added this function for the updateBooking method.
         boolean isBooked = false;
 
@@ -557,14 +586,14 @@ public class ProjectController {
             mapOfRooms.forEach((key, value) -> {
                 roomHotel[0] = getHotelFromID(value.getHotelID());
                 if ((roomHotel[0].getId() == hotel.getId())) {
-                System.out.println("[" + key + "]: " + value.getOutput());
+                    System.out.println("[" + key + "]: " + value.getOutput());
                 }
             });
         });
     }
 
     public void bookRoom(SearchResults results, Session session) {
-        if(results == null || session == null){
+        if (results == null || session == null) {
             System.out.println("Room booking error");
             return;
         }
@@ -599,7 +628,7 @@ public class ProjectController {
 
         /***************/
         Dao<Room> daoRoom = dbManager.getDaoRoom();
-        List <Room> listRooms = daoRoom.getAll();
+        List<Room> listRooms = daoRoom.getAll();
         Optional<Room> optional = listRooms.stream().filter(i -> room.getId() == i.getId()).findFirst();
         Room roomInListOfRooms = null;
         if (optional.isPresent())
@@ -735,7 +764,7 @@ public class ProjectController {
         return user;
     }
 
-    public List<Reservation> getUsersBookings(User user){
+    public List<Reservation> getUsersBookings(User user) {
 
         Dao<Reservation> daoRes = dbManager.getDaoReservation();
         List<Reservation> allRes = daoRes.getAll();
@@ -747,7 +776,7 @@ public class ProjectController {
         return myBookings;
     }
 
-    public Map<Integer, Reservation> createReservationMap (List<Reservation> myBookings){
+    public Map<Integer, Reservation> createReservationMap(List<Reservation> myBookings) {
 
         Map<Integer, Reservation> mapOfEntities = new HashMap<>(myBookings.size());
 
@@ -760,14 +789,14 @@ public class ProjectController {
         return mapOfEntities;
     }
 
-    public void printUserBookings(Map<Integer, Reservation> mapOfBookings){
+    public void printUserBookings(Map<Integer, Reservation> mapOfBookings) {
 
         System.out.println("\t" + Reservation.getOutputHeader() + "    Hotel Name" + "    City");
-        mapOfBookings.forEach((key, value) -> System.out.println("[" + key + "]: " + value.getOutput() + "     " + getHotelNameFromBooking(value)+ "       " + getCityNameFromBooking(value) + "\n"));
+        mapOfBookings.forEach((key, value) -> System.out.println("[" + key + "]: " + value.getOutput() + "     " + getHotelNameFromBooking(value) + "       " + getCityNameFromBooking(value) + "\n"));
 
     }
 
-    public void updateBooking(Map<Integer, Reservation> mapOfBookings){
+    public void updateBooking(Map<Integer, Reservation> mapOfBookings) {
 
         String yn;
         boolean ok = false;
@@ -788,10 +817,9 @@ public class ProjectController {
 
 
         boolean canUpdate = false;
-        if (bookings.size()==1){
+        if (bookings.size() == 1) {
             canUpdate = true;
-        }
-        else {
+        } else {
             Reservation oldBooking = bookings
                     .stream()
                     .filter(r -> r.getId() == myBooking.getId())
@@ -808,7 +836,7 @@ public class ProjectController {
 
         {
             System.out.println("We are about to change your booking. Your new check-in date will be" + checkIn
-                    + "and your new check-out date will be" + checkOut +". \n"+
+                    + "and your new check-out date will be" + checkOut + ". \n" +
                     "If you want to proceed, please enter Y, else press any key");
 
             while (true) {
@@ -817,38 +845,38 @@ public class ProjectController {
             }
             if (yn.equalsIgnoreCase("Y")) ok = true;
 
-                if (ok){
+            if (ok) {
 
-                    //delete existing booking and updateDB
-                    Room myRoom = getRoomFromID(myBooking.getRoomID()); // this gets a room object
-                    Hotel myHotel = getHotelFromID(myRoom.getHotelID());
-
-
-                    //myRoom.setBookings(bookings); // but this set method works but is not written in DB...
-                    //updateDB();
-
-                    myBooking.setCheckIn(checkIn);
-                    myBooking.setCheckOut(checkOut);
-
-                    // add booking to room
-                    bookings.clear();
-                    bookings.add(myBooking);
-                    //myRoom = getRoomFromID(myBooking.getRoomID()); // this gets a room object
-                    myRoom.setBookings(bookings);
-                    myHotel = dbManager.getDaoHotel().updateRoomInHotel(myHotel, myRoom);
+                //delete existing booking and updateDB
+                Room myRoom = getRoomFromID(myBooking.getRoomID()); // this gets a room object
+                Hotel myHotel = getHotelFromID(myRoom.getHotelID());
 
 
-                    // but this set method works but is not written in DB...
-                    updateDB(); // the update DB function gets the right room info with right bookings, but the DB is not updated
+                //myRoom.setBookings(bookings); // but this set method works but is not written in DB...
+                //updateDB();
 
-                    System.out.println("Congratulations, your booking has been updated");
-                    System.out.println("\nHere is a summary of your booking:");
-                    System.out.println("Booking name: " + myBooking.getUser().getName() + "\nHotel: " +
-                            myHotel.getName() + ";\nRoom: " + myRoom +
-                            "\nCheck-in Date: " + myBooking.getCheckIn() + "\nCheckout date:" + myBooking.getCheckOut() + ".");
+                myBooking.setCheckIn(checkIn);
+                myBooking.setCheckOut(checkOut);
 
-                    System.out.println("Thank you for using our services to book your stay!");
-                }
+                // add booking to room
+                bookings.clear();
+                bookings.add(myBooking);
+                //myRoom = getRoomFromID(myBooking.getRoomID()); // this gets a room object
+                myRoom.setBookings(bookings);
+                myHotel = dbManager.getDaoHotel().updateRoomInHotel(myHotel, myRoom);
+
+
+                // but this set method works but is not written in DB...
+                updateDB(); // the update DB function gets the right room info with right bookings, but the DB is not updated
+
+                System.out.println("Congratulations, your booking has been updated");
+                System.out.println("\nHere is a summary of your booking:");
+                System.out.println("Booking name: " + myBooking.getUser().getName() + "\nHotel: " +
+                        myHotel.getName() + ";\nRoom: " + myRoom +
+                        "\nCheck-in Date: " + myBooking.getCheckIn() + "\nCheckout date:" + myBooking.getCheckOut() + ".");
+
+                System.out.println("Thank you for using our services to book your stay!");
+            }
 
         } else System.out.println("Unfortunately, the room is not available for your new dates");
     }
@@ -872,7 +900,7 @@ public class ProjectController {
         return myHotel.getCity();
     }
 
-    public Reservation chooseBookingFromList(Map<Integer, Reservation> mapOfRes){
+    public Reservation chooseBookingFromList(Map<Integer, Reservation> mapOfRes) {
 
         System.out.println("Please choose the number of the booking you want to change: ");
         int resKey = readIntToMaxNum(mapOfRes.size());

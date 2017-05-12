@@ -999,7 +999,7 @@ public class Menu {
 
     private void updateUser(User user) {
 
-        //дополнительная проверка на случай, если єту функции используют
+        //дополнительная проверка на случай, если эту функции используют
         // еще где-нибудь кроме updateOrDeleteUser()
         if (user.getRole().equals(ADMIN)){
             System.out.println("YOU CANNOT UPDATE ADMINS.");
@@ -1050,7 +1050,7 @@ public class Menu {
 
     private void deleteUser(User user) {
 
-        //дополнительная проверка на случай, если єту функции используют
+        //дополнительная проверка на случай, если эту функции используют
         // еще где-нибудь кроме updateOrDeleteUser()
         if (user.getRole().equals(ADMIN)){
             System.out.println("YOU CANNOT DELETE ADMINS.");
