@@ -1,5 +1,6 @@
 package com.goJava6Group7.finalProject.data.dataBase.impl;
 
+import com.goJava6Group7.finalProject.LocalDateAdapter;
 import com.goJava6Group7.finalProject.data.dao.impl.DaoHotel;
 import com.goJava6Group7.finalProject.data.dao.impl.DaoReservation;
 import com.goJava6Group7.finalProject.data.dao.impl.DaoRoom;
@@ -16,10 +17,12 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+@XmlJavaTypeAdapter(value = LocalDateAdapter.class)
 @XmlRootElement(name = "XML_Database")
 @XmlAccessorType(XmlAccessType.FIELD)
 public final class DataBaseManagerXml implements DataBaseManager {

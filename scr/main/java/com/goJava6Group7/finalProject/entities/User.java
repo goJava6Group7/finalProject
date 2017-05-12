@@ -28,6 +28,8 @@ public class User extends Entity {
         ADMIN, USER, GUEST
     }
 
+    public enum  UserParameters{NAME, LOGIN, PASSWORD}
+
     public User(){
     }
 

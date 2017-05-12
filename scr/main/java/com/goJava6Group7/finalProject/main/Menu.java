@@ -3,14 +3,17 @@ package com.goJava6Group7.finalProject.main;
 import com.goJava6Group7.finalProject.controllers.ProjectController;
 import com.goJava6Group7.finalProject.entities.*;
 import com.goJava6Group7.finalProject.exceptions.frontend.*;
+import com.goJava6Group7.finalProject.entities.Room.RoomParameters;
+import com.goJava6Group7.finalProject.entities.Hotel.HotelParameters;
+import com.goJava6Group7.finalProject.entities.User.UserParameters;
 
 import java.util.*;
 
+import static com.goJava6Group7.finalProject.entities.Hotel.HotelParameters.*;
+import static com.goJava6Group7.finalProject.entities.Room.RoomParameters.*;
+import static com.goJava6Group7.finalProject.entities.User.UserParameters.*;
 import static com.goJava6Group7.finalProject.entities.User.Role.*;
 import static com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil.*;
-import static com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil.HotelParameters.*;
-import static com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil.RoomParameters.*;
-import static com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil.UserParameters.*;
 
 /**
  * Created by Igor on 13.04.2017.
@@ -57,7 +60,7 @@ public class Menu {
 
     private void printUserMainMenu() {
         System.out.println("\nPlease make a selection");
-        System.out.println("[1] Update your profile");
+        System.out.println("[1] See / update your profile and bookings");
         System.out.println("[2] Logout");
         System.out.println("[3] Search / book a room");
         System.out.println("[4] Search a hotel");
@@ -92,7 +95,6 @@ public class Menu {
         System.out.println("[2] Go back to hotel search");
         System.out.println("[3] Go back to main menu");
     }
-
 
     private void performActionGuestMainMenu(int choice) {
         switch (choice) {
@@ -139,9 +141,17 @@ public class Menu {
     private void performActionUserMainMenu(int choice) {
         switch (choice) {
             case 1:
-                controller.updateUser(session.getUser());
-                printUserMainMenu();
-                performActionUserMainMenu(getMenuInput(1, 6));
+                printUserBookingUpdateMenu();
+                int max;
+                if (!controller.getUsersBookings(session.getUser()).isEmpty()) {
+                    max = 4;
+                } else {
+                    max = 2;
+                }
+                performActionsUserBookingUpdateMenu(getMenuInput(1, max));
+                //controller.updateUser(session.getUser());
+                //printUserMainMenu();
+                //performActionUserMainMenu(getMenuInput(1, 6));
                 break;
             case 2:
                 controller.logout(session);
@@ -169,6 +179,7 @@ public class Menu {
             case 6:
                 controller.updateDB();
                 exit = true;
+                controller.updateDB();
                 System.out.println("Thank you for using our application");
                 // default:
                 //     System.out.println("An unknown error has occurred");
@@ -182,16 +193,20 @@ public class Menu {
             case 1:
                 try {
                     results = controller.findRoomByHotelDate();
-                    if (results == null) throw new NullSearchResultsException("");
+                    if (results == null | results.getRooms().size() == 0) throw new NullSearchResultsException("");
                 } catch (NullSearchResultsException | NullPointerException e) {
                     System.out.println("There is no room matching your criteria");
                 }
-                if (results == null) {
+                if (results == null ) {
                     if (!session.isGuest()) {
                         printUserMainMenu();
                         performActionUserMainMenu(getMenuInput(1, 6));
                         break;
                     } else break;
+                } else if(results.getRooms().size() == 0){
+                        printUserMainMenu();
+                        performActionUserMainMenu(getMenuInput(1, 6));
+                        break;
                 } else {
                     printUserRoomResultsMenu();
                     performActionUserRoomResultsMenu(results, getMenuInput(1, 3));
@@ -200,7 +215,7 @@ public class Menu {
             case 2:
                 try {
                     results = controller.findRoomByCityDate();
-                    if (results == null) throw new NullSearchResultsException("");
+                    if (results == null | results.getRooms().size() == 0) throw new NullSearchResultsException("");
                 } catch (NullSearchResultsException | NullPointerException e) {
                     System.out.println("There is no room matching your criteria");
                 }
@@ -210,7 +225,14 @@ public class Menu {
                         performActionUserMainMenu(getMenuInput(1, 6));
                         break;
                     } else break;
-                } else {
+                } else if ( results.getRooms().size() == 0){
+                    if (!session.isGuest()) {
+                        printUserMainMenu();
+                        performActionUserMainMenu(getMenuInput(1, 6));
+                        break;
+                    } else break;
+                }
+                else {
                     printUserRoomResultsMenu();
                     performActionUserRoomResultsMenu(results, getMenuInput(1, 3));
                     break;
@@ -219,6 +241,7 @@ public class Menu {
                 if (!session.isGuest()) {
                     printUserMainMenu();
                     performActionUserMainMenu(getMenuInput(1, 6));
+                    break;
                 } else break;
         }
     }
@@ -239,6 +262,7 @@ public class Menu {
                 if (!session.isGuest()) {
                     printUserMainMenu();
                     performActionUserMainMenu(getMenuInput(1, 6));
+                    break;
                 } else break;
         }
     }
@@ -248,15 +272,20 @@ public class Menu {
         switch (choice) {
             case 1:
                 controller.findHotelByHotelName();
-                break;
+                if (!session.isGuest()) {
+                    printUserMainMenu();
+                    performActionUserMainMenu(getMenuInput(1, 6));
+                    break;
+                } else break;
             case 2:
                 try {
-                    controller.findHotelByCityDate();
+                    results = controller.findHotelByCityDate();
+                    if (results.getRooms().size() == 0) throw new NullSearchResultsException("");
                     if (results == null) throw new NullSearchResultsException("");
                 } catch (NullSearchResultsException | NullPointerException e) {
                     System.out.println("There is no hotel matching your criteria");
                 }
-                if (results == null) {
+                if (results == null | results.getRooms().size() == 0 ) {
                     if (!session.isGuest()) {
                         printUserMainMenu();
                         performActionUserMainMenu(getMenuInput(1, 6));
@@ -271,6 +300,7 @@ public class Menu {
                 if (!session.isGuest()) {
                     printUserMainMenu();
                     performActionUserMainMenu(getMenuInput(1, 6));
+                    break;
                 } else break;
         }
     }
@@ -291,6 +321,7 @@ public class Menu {
                 if (!session.isGuest()) {
                     printUserMainMenu();
                     performActionUserMainMenu(getMenuInput(1, 6));
+                    break;
                 } else break;
         }
     }
@@ -328,7 +359,9 @@ public class Menu {
                 break;
             case 2:
                 System.out.println("Thank you for using our application, we hope to see you again soon!");
-                System.exit(0);
+                controller.updateDB();
+                exit = true;
+                break;
         }
     }
 
@@ -341,6 +374,74 @@ public class Menu {
             }
         }
     }
+
+    private void printUserBookingUpdateMenu(){
+        System.out.println("Your user information:");
+        System.out.println(User.getOutputHeader());
+        System.out.println(session.getUser().getOutput());
+        if (!controller.getUsersBookings(session.getUser()).isEmpty()){
+            System.out.println("Your bookings:");
+            controller.printUserBookings(controller.createReservationMap(
+                    controller.getUsersBookings(session.getUser())));
+            System.out.println("Please make a selection:");
+            System.out.println("[1] Update your profile"); // for admin / users
+            System.out.println("[2] Change the dates of a reservation");
+            System.out.println("[3] Delete a reservation");
+            System.out.println("[4] Go back to main menu");
+        } else{
+            System.out.println("Please make a selection:");
+            System.out.println("[1] Update your profile"); // for admin / users
+            System.out.println("[2] Go back to main menu");
+        }
+
+    }
+
+    private void performActionsUserBookingUpdateMenu(int choice){
+
+        if (!controller.getUsersBookings(session.getUser()).isEmpty()){
+
+            switch (choice){
+                case 1:
+                    updateUser(session.getUser());
+                    printUserMainMenu();
+                    performActionUserMainMenu(getMenuInput(1, 6));
+                    break;
+                case 2:
+                    System.out.println("logic to update booking");
+                    controller.updateBooking(controller.createReservationMap(
+                            controller.getUsersBookings(session.getUser())));
+                    printUserMainMenu();
+                    performActionUserMainMenu(getMenuInput(1, 6));
+                    break;
+                case 3:
+                    controller.printUserBookings(controller.createReservationMap(
+                            controller.getUsersBookings(session.getUser())));
+                    if (controller.cancelRoomReservation(controller.chooseBookingFromList(controller.createReservationMap(
+                            controller.getUsersBookings(session.getUser())))))
+                        System.out.println("Your booking has been deleted succesfully");
+                    printUserMainMenu();
+                    performActionUserMainMenu(getMenuInput(1, 6));
+                    break;
+                case 4:
+                    printUserMainMenu();
+                    performActionUserMainMenu(getMenuInput(1, 6));
+                    break;
+            }
+        } else {
+            switch (choice){
+                case 1:
+                    updateUser(session.getUser());
+                    printUserMainMenu();
+                    performActionUserMainMenu(getMenuInput(1, 6));
+                    break;
+                case 2:
+                    printUserMainMenu();
+                    performActionUserMainMenu(getMenuInput(1, 6));
+                    break;
+            }
+        }
+    }
+
 
     //***************************************MARYNA*************************************************
     // ************************************* ADMIN MENU ********************************************
@@ -543,8 +644,8 @@ public class Menu {
     private void addRoom() {
 
         Hotel hotel;
-        System.out.println("Please enter the name of the hotel in which you want to add a room");
-        String hotelName = readStringFromConsole();
+        //System.out.println("Please enter the name of the hotel in which you want to add a room");
+        String hotelName = readNameFromConsole(" the hotel in which you want to add a room");
         try {
             hotel = chooseHotelFromListOfHotelsWithSameHotelName(hotelName);
         } catch (NoOneHotelInDatabaseException e) {
@@ -561,13 +662,21 @@ public class Menu {
         System.out.println("Please enter the price per room:");
         int price = readPositiveInt();
 
-        Room room = new Room(numberOfPerson, price, roomClass);
-        room.setHotel(hotel);//ПОКА НЕ ПРОВЕРЯЮ hotel НА null.hotel не должен быть равен null
+//        System.out.println(hotel);
+
+        Room room = new Room(numberOfPerson, price, roomClass, hotel.getId());
+        room.setHotelID(hotel.getId());//ПОКА НЕ ПРОВЕРЯЮ hotel НА null.hotel не должен быть равен null
         // т.к. в chooseHotelFromListOfHotelsWithSameHotelName это не допускается, но при другой реализации может и быть равным null
 
         try {
-            controller.createRoom(room);
+            if (controller.createRoom(room) == null)
+                throw new RuntimeException();
             System.out.println("Your room was successfully created: " + room);
+//            hotel.getRooms().forEach(System.out::println);
+            System.out.println(hotel);
+//            System.out.println(Room.getOutputHeader());
+//            System.out.println(room.getOutput());
+//            System.out.println("Room hotel: " + room.getId());
         } catch (RoomAlreadyExistsException e) {
             System.out.println(e.getMessage());
         } catch (RuntimeException e) {
@@ -580,7 +689,7 @@ public class Menu {
 
         List<Hotel> listOfHotels = controller.findHotelByHotelName(hotelName);
 
-        if (listOfHotels != null) {
+        if (!listOfHotels.isEmpty()) {
 
             Map<Integer, Hotel> mapOfHotels = createEntityMap(listOfHotels);
             System.out.println("Please choose the number of the hotel you want to change: ");
@@ -592,7 +701,7 @@ public class Menu {
             return mapOfHotels.get(hotelKey);
 
         } else {
-            throw new NoOneHotelInDatabaseException("There isn't hotel " + hotelName + "  in database.");
+            throw new NoOneHotelInDatabaseException("There isn't hotel " + hotelName + " in database.");
         }
     }
 
@@ -623,7 +732,7 @@ public class Menu {
 
         switch (classRoomNumber) {
             case 1:
-                return RoomClass.Standart;
+                return RoomClass.Standard;
             case 2:
                 return RoomClass.Suite;
             case 3:
@@ -633,7 +742,7 @@ public class Menu {
             case 5:
                 return RoomClass.President;
             default:
-                return RoomClass.Standart; // Never should happen
+                return RoomClass.Standard; // Never should happen
         }
     }
 
@@ -836,7 +945,7 @@ public class Menu {
 
         Map<RoomParameters, String> newRoomParametersMap = new HashMap<>();
 
-        newRoomParametersMap.put(ROOM_CLASS, newRoomClass.toString());
+        newRoomParametersMap.put(ROOM_CLASS, (newRoomClass == null) ? null : newRoomClass.toString());
         newRoomParametersMap.put(CAPACITY, (newRoomCapacity == null) ? null : String.valueOf(newRoomCapacity));
         newRoomParametersMap.put(PRICE, (newHotelRating == null) ? null : String.valueOf(newHotelRating));
 
@@ -891,7 +1000,7 @@ public class Menu {
 
     private void updateUser(User user) {
 
-        //дополнительная проверка на случай, если єту функции используют
+        //дополнительная проверка на случай, если эту функции используют
         // еще где-нибудь кроме updateOrDeleteUser()
         if (user.getRole().equals(ADMIN)){
             System.out.println("YOU CANNOT UPDATE ADMINS.");
@@ -942,7 +1051,7 @@ public class Menu {
 
     private void deleteUser(User user) {
 
-        //дополнительная проверка на случай, если єту функции используют
+        //дополнительная проверка на случай, если эту функции используют
         // еще где-нибудь кроме updateOrDeleteUser()
         if (user.getRole().equals(ADMIN)){
             System.out.println("YOU CANNOT DELETE ADMINS.");

@@ -4,6 +4,7 @@ import com.goJava6Group7.finalProject.data.dao.Dao;
 import com.goJava6Group7.finalProject.data.dataBase.impl.DataBaseManagerFactory;
 import com.goJava6Group7.finalProject.entities.Reservation;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +17,31 @@ public class DaoReservation implements Dao<Reservation> {
     public DaoReservation(List<Reservation> reservations) {
         this.reservations = reservations;
     }
+
+    protected boolean deleteReservationsByHotelId(List<Long> idList) {
+        if (idList == null) {
+            return false;
+        }
+//        Iterator<Reservation> iterator = reservations.iterator();
+//        while (iterator.hasNext()) {
+//            for (Long id : idList) {
+//                if (iterator.next().getRoomID() == id) {
+//                    iterator.remove();
+//                }
+//            }
+//        }
+        for(Long id : idList) {
+            reservations.removeIf(reservation -> reservation.getRoomID() == id);}
+        return true;
+    }
+
+    protected boolean deleteReservationsByRoomId(List<Long> idList) {
+        if (idList == null) return false;
+        for(Long id : idList) {
+            reservations.removeIf(reservation -> reservation.getId() == id);}
+        return true;
+    }
+
 
     @Override
     public Reservation create(Reservation reservation) {
@@ -47,7 +73,7 @@ public class DaoReservation implements Dao<Reservation> {
     @Override
     public Reservation get(Reservation reservation) {
         Optional<Reservation> optional = reservations.stream().filter(i -> i.equals(reservation)).findFirst();
-        if (optional.isPresent()){
+        if (optional.isPresent()) {
             return optional.get();
         }
         return null;

@@ -21,11 +21,6 @@ public class ConsoleWorkerUtil {
     }
 //*****************************MARYNA***************************************
 
-    public enum  HotelParameters{NAME, CITY, RATING}
-
-    public enum  RoomParameters{CAPACITY, ROOM_CLASS, PRICE}
-
-    public enum  UserParameters{NAME, LOGIN, PASSWORD}
     /**
      * Kontar Maryna:
      * Method read integer from console
@@ -182,7 +177,7 @@ public class ConsoleWorkerUtil {
 
         while (choice < min || choice > max) {
             try {
-                System.out.print("\nEnter your selection");
+                System.out.print("\nEnter your selection:  \n");
                 choice = Integer.parseInt(br.readLine());
                 if (choice < min || choice > max) throw new OutOfMenuRangeException();
 
@@ -250,38 +245,4 @@ public class ConsoleWorkerUtil {
         return checkout;
     }
 
-    public static void printRoomResults(List<Room> rooms, LocalDate checkin, LocalDate checkout) {
-
-        // create array of hotels with available rooms from the room array
-        List<Hotel> hotelDuplicates = new ArrayList<>();
-        for (Room room : rooms) {
-            hotelDuplicates.add(room.getHotel());
-        }
-
-        // removing duplicates
-        Set<Hotel> hotelsNoD = new HashSet<Hotel>();
-        hotelsNoD.addAll(hotelDuplicates);
-
-        List<Hotel> hotelsByCityByDate = new ArrayList<>();
-        hotelsByCityByDate.addAll(hotelsNoD);
-
-        // here it would be good to print the hotels without the rooms, do this later
-        System.out.println("\nHere is a list of hotels with rooms available from "
-                + checkin + " to " + checkout + ":");
-
-
-        // printing results in a clean way, showing only available rooms
-        // i is used to as a reference number for booking function, in case they want to book a room
-        final int[] i = {1};
-        hotelsByCityByDate.forEach(hotel -> {
-            System.out.println("\n" + hotel.getName() + ":");
-            rooms.forEach(room -> {
-                if ((room.getHotel().getName()).equalsIgnoreCase(hotel.getName())) {
-                    System.out.println("   " + i[0] + ": Room name: " + room.getRoomClass() + "; # of guests: " +
-                            room.getCapacity() + "; Price per night: " + room.getPrice() + ".");
-                    i[0]++;
-                }
-            });
-        });
-    }
 }

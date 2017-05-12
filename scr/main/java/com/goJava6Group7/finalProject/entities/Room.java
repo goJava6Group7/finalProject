@@ -3,6 +3,7 @@ package com.goJava6Group7.finalProject.entities;
 import com.goJava6Group7.finalProject.utils.IdUtil;
 
 import javax.xml.bind.annotation.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -17,25 +18,30 @@ public class Room extends Entity {
     private int price;
     @XmlElement
     private RoomClass roomClass;
-    @XmlTransient
-    private Hotel hotel;
+    @XmlElement
+    private long hotelID;
+    @XmlElement
+    private List<Reservation> bookings = new ArrayList<>();
 
-    private List<Reservation> bookings;
+    public enum  RoomParameters{CAPACITY, ROOM_CLASS, PRICE}
 
     public Room() {
     }
 
-    public Room(int capacity, int price, RoomClass roomClass) {
+
+
+    public Room(int capacity, int price, RoomClass roomClass, long hotelID) {
         this.id = IdUtil.getRoomId();
         this.capacity = capacity;
         this.price = price;
         this.roomClass = roomClass;
+        this.hotelID = hotelID;
     }
 
     @Override
     public String getOutput(){
 
-        String output = String.format("%-4d \t %-6d \t %-4d \t %-20s %n", this.getId(), this.getCapacity(), this.getPrice(), this.getRoomClass());
+        String output = String.format("%-4d \t %-6d \t %-4d \t %-20s", this.getId(), this.getCapacity(), this.getPrice(), this.getRoomClass());
 
         return output;
 
@@ -53,11 +59,11 @@ public class Room extends Entity {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || !(o instanceof Room)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
 
         Room room = (Room) o;
-        return  room.id == this.id ;//&& room.capacity == this.capacity
-//                && room.price == this.price && room.roomClass.equals(this.roomClass);
+
+        return room.id == this.id;
     }
 
     @Override
@@ -93,20 +99,20 @@ public class Room extends Entity {
         this.roomClass = roomClass;
     }
 
-    public Hotel getHotel() {
-        return hotel;
-    }
-
-    public void setHotel(Hotel hotel) {
-        this.hotel = hotel;
-    }
-
     public List<Reservation> getBookings() {
         return bookings;
     }
 
     public void setBookings(List<Reservation> bookings) {
         this.bookings = bookings;
+    }
+
+    public long getHotelID() {
+        return hotelID;
+    }
+
+    public void setHotelID(long hotelID) {
+        this.hotelID = hotelID;
     }
 
     @Override
@@ -116,6 +122,7 @@ public class Room extends Entity {
                 ", capacity=" + capacity +
                 ", price=" + price +
                 ", roomClass=" + roomClass +
+                ", HotelID= " + hotelID +
                 '}';
     }
 }
