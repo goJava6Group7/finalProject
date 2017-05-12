@@ -451,7 +451,7 @@ public class Menu {
         adminExit = false;
         while (!adminExit) {
             printAdminMainMenu();
-            performActionAdminMainMenu(readIntToMaxNum(7));
+            performActionAdminMainMenu(readIntToMaxNum(6));
         }
 
 //        TODO Вынести это туда, где будет вызываться админ меню
@@ -513,37 +513,33 @@ public class Menu {
         System.out.println("");
         System.out.println("\tADMIN MENU");
         System.out.println("Please make a selection");
-        System.out.println("[1] Choose database");
-        System.out.println("[2] Add a hotel");
-        System.out.println("[3] Add a room");
-        System.out.println("[4] Update or delete a hotel");
-        System.out.println("[5] Update or delete a room");
-        System.out.println("[6] Update or delete a user");
-        System.out.println("[7] Back to main menu");
+        System.out.println("[1] Add a hotel");
+        System.out.println("[2] Add a room");
+        System.out.println("[3] Update or delete a hotel");
+        System.out.println("[4] Update or delete a room");
+        System.out.println("[5] Update or delete a user");
+        System.out.println("[6] Back to main menu");
     }
 
     private void performActionAdminMainMenu(int choice) {
 
         switch (choice) {
             case 1:
-                changeTheDatabase();
-                break;
-            case 2:
                 addHotel();
                 break;
-            case 3:
+            case 2:
                 addRoom();
                 break;
-            case 4:
+            case 3:
                 updateOrDeleteAHotel();
                 break;
-            case 5:
+            case 4:
                 updateOrDeleteARoom();
                 break;
-            case 6:
+            case 5:
                 updateOrDeleteUser();
                 break;
-            case 7:
+            case 6:
                 adminExit = true;
                 printUserMainMenu();
                 performActionUserMainMenu(readIntToMaxNum(6));
@@ -552,62 +548,7 @@ public class Menu {
         }
 
     }
-
-
-    //********************************Choose database*********************************
-
-    /**
-     * TODO Достаточно просто сменить БД? Вся перезагрузка произойдет сама (в функциях backend)?
-     * Kontar Maryna:
-     * The method iInitializes the selected database
-     */
-    private void changeTheDatabase() {
-
-        printAdminChooseDBMenu();
-
-        int choiceDB = readIntToMaxNum(3);
-        try {
-            switch (choiceDB) {
-                case 1:
-                    printConfirmChangeDB();
-                    if (confirm()) {
-//                        getDataBaseManager(XML).initDB();
-                        System.out.println("Now you work with XML database.");
-                        System.exit(0);//Пока что просто выходим
-                    } else {
-                        System.out.println("DATABASE WAS NOT CHANGED.");
-                        return;// adminMenu()
-                    }
-                case 2:
-                    printConfirmChangeDB();
-                    if (confirm()) {
-//                        getDataBaseManager(BINARY).initDB();
-                        System.out.println("Now you work with BINARY database.");
-                        System.exit(0);//Пока что просто выходим
-                    } else {
-                        System.out.println("DATABASE WAS NOT CHANGED.");
-                        return;// adminMenu()
-                    }
-                case 3:
-                    return;//adminMenu()
-            }
-        } finally {
-            //nothing here
-        }/*catch (BackendException e) {
-            e.printStackTrace();
-            //TODO Подумать, что делать, если не поменяется база. Сообщение выдать (его пока нет в backend) и вернуться в админ меню?
-//                    System.out.println(e.getMessage());
-//                    return;// adminMenu()
-        }*/
-    }
-
-    private void printAdminChooseDBMenu() {
-        System.out.println("Please choose the database you want to work with");
-        System.out.println("[1] XML database");
-        System.out.println("[2] Binary database");
-        System.out.println("[3] Back to admin menu");
-    }
-
+    
 
     //********************************Add hotel***************************************
     //TODO Определиться что считать одинаковыми отелями и где "ловить" одинаковый отель.

@@ -264,6 +264,12 @@
                 </bookings>
             </rooms>
         </hotel>
+        <hotel>
+            <id>8</id>
+            <name>Kyiv</name>
+            <city>Kyiv</city>
+            <rating>4</rating>
+        </hotel>
     </hotels>
     <reservations>
         <reservation>
