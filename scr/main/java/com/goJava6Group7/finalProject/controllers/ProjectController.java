@@ -835,8 +835,8 @@ public class ProjectController {
         if (canUpdate)
 
         {
-            System.out.println("We are about to change your booking. Your new check-in date will be" + checkIn
-                    + "and your new check-out date will be" + checkOut + ". \n" +
+            System.out.println("We are about to change your booking. Your new check-in date will be " + checkIn
+                    + "and your new check-out date will be " + checkOut + ". \n" +
                     "If you want to proceed, please enter Y, else press any key");
 
             while (true) {

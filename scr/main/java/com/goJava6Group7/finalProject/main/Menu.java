@@ -401,7 +401,7 @@ public class Menu {
 
             switch (choice){
                 case 1:
-                    controller.updateUser(session.getUser());
+                    updateUser(session.getUser());
                     printUserMainMenu();
                     performActionUserMainMenu(getMenuInput(1, 6));
                     break;
@@ -429,7 +429,7 @@ public class Menu {
         } else {
             switch (choice){
                 case 1:
-                    controller.updateUser(session.getUser());
+                    updateUser(session.getUser());
                     printUserMainMenu();
                     performActionUserMainMenu(getMenuInput(1, 6));
                     break;

@@ -16,18 +16,24 @@
             <hotelID>5</hotelID>
         </room>
         <room>
-            <id>10</id>
-            <capacity>2</capacity>
-            <price>300</price>
-            <roomClass>Standard</roomClass>
-            <hotelID>7</hotelID>
-        </room>
-        <room>
-            <id>11</id>
-            <capacity>2</capacity>
-            <price>550</price>
-            <roomClass>Suite</roomClass>
-            <hotelID>7</hotelID>
+            <id>5</id>
+            <capacity>8</capacity>
+            <price>8888</price>
+            <roomClass>Business</roomClass>
+            <hotelID>2</hotelID>
+            <bookings>
+                <id>2</id>
+                <user>
+                    <id>3</id>
+                    <login>ggingembre</login>
+                    <password>test</password>
+                    <name>Guillaume</name>
+                    <role>GUEST</role>
+                </user>
+                <roomID>5</roomID>
+                <checkIn>2017-09-01</checkIn>
+                <checkOut>2017-09-05</checkOut>
+            </bookings>
         </room>
         <room>
             <id>6</id>
@@ -41,32 +47,12 @@
                     <id>3</id>
                     <login>ggingembre</login>
                     <password>test</password>
-                    <name>Guilaume</name>
+                    <name>Guillaume</name>
                     <role>GUEST</role>
                 </user>
                 <roomID>6</roomID>
                 <checkIn>2018-10-25</checkIn>
                 <checkOut>2018-10-28</checkOut>
-            </bookings>
-        </room>
-        <room>
-            <id>5</id>
-            <capacity>8</capacity>
-            <price>8888</price>
-            <roomClass>Business</roomClass>
-            <hotelID>2</hotelID>
-            <bookings>
-                <id>2</id>
-                <user>
-                    <id>3</id>
-                    <login>ggingembre</login>
-                    <password>test</password>
-                    <name>Guilaume</name>
-                    <role>GUEST</role>
-                </user>
-                <roomID>5</roomID>
-                <checkIn>2017-12-20</checkIn>
-                <checkOut>2017-12-22</checkOut>
             </bookings>
         </room>
         <room>
@@ -81,7 +67,7 @@
                     <id>3</id>
                     <login>ggingembre</login>
                     <password>test</password>
-                    <name>Guilaume</name>
+                    <name>Guillaume</name>
                     <role>GUEST</role>
                 </user>
                 <roomID>12</roomID>
@@ -94,7 +80,7 @@
                     <id>3</id>
                     <login>ggingembre</login>
                     <password>test</password>
-                    <name>Guilaume</name>
+                    <name>Guillaume</name>
                     <role>GUEST</role>
                 </user>
                 <roomID>12</roomID>
@@ -102,15 +88,22 @@
                 <checkOut>2018-04-05</checkOut>
             </bookings>
         </room>
+        <room>
+            <id>10</id>
+            <capacity>2</capacity>
+            <price>300</price>
+            <roomClass>Standard</roomClass>
+            <hotelID>7</hotelID>
+        </room>
+        <room>
+            <id>11</id>
+            <capacity>2</capacity>
+            <price>550</price>
+            <roomClass>Suite</roomClass>
+            <hotelID>7</hotelID>
+        </room>
     </rooms>
     <users>
-        <user>
-            <id>1</id>
-            <login>Maryna</login>
-            <password>maryna</password>
-            <name>maryna</name>
-            <role>ADMIN</role>
-        </user>
         <user>
             <id>2</id>
             <login>Someone</login>
@@ -122,8 +115,15 @@
             <id>3</id>
             <login>ggingembre</login>
             <password>test</password>
-            <name>Guilaume</name>
+            <name>Guillaume</name>
             <role>GUEST</role>
+        </user>
+        <user>
+            <id>1</id>
+            <login>Maryna</login>
+            <password>maryna</password>
+            <name>maryna</name>
+            <role>ADMIN</role>
         </user>
     </users>
     <hotels>
@@ -144,12 +144,12 @@
                         <id>3</id>
                         <login>ggingembre</login>
                         <password>test</password>
-                        <name>Guilaume</name>
+                        <name>Guillaume</name>
                         <role>GUEST</role>
                     </user>
                     <roomID>5</roomID>
-                    <checkIn>2017-12-20</checkIn>
-                    <checkOut>2017-12-22</checkOut>
+                    <checkIn>2017-09-01</checkIn>
+                    <checkOut>2017-09-05</checkOut>
                 </bookings>
             </rooms>
         </hotel>
@@ -222,7 +222,7 @@
                         <id>3</id>
                         <login>ggingembre</login>
                         <password>test</password>
-                        <name>Guilaume</name>
+                        <name>Guillaume</name>
                         <role>GUEST</role>
                     </user>
                     <roomID>6</roomID>
@@ -242,7 +242,7 @@
                         <id>3</id>
                         <login>ggingembre</login>
                         <password>test</password>
-                        <name>Guilaume</name>
+                        <name>Guillaume</name>
                         <role>GUEST</role>
                     </user>
                     <roomID>12</roomID>
@@ -255,7 +255,7 @@
                         <id>3</id>
                         <login>ggingembre</login>
                         <password>test</password>
-                        <name>Guilaume</name>
+                        <name>Guillaume</name>
                         <role>GUEST</role>
                     </user>
                     <roomID>12</roomID>
@@ -272,7 +272,7 @@
                 <id>3</id>
                 <login>ggingembre</login>
                 <password>test</password>
-                <name>Guilaume</name>
+                <name>Guillaume</name>
                 <role>GUEST</role>
             </user>
             <roomID>6</roomID>
@@ -285,12 +285,12 @@
                 <id>3</id>
                 <login>ggingembre</login>
                 <password>test</password>
-                <name>Guilaume</name>
+                <name>Guillaume</name>
                 <role>GUEST</role>
             </user>
             <roomID>5</roomID>
-            <checkIn>2017-12-20</checkIn>
-            <checkOut>2017-12-22</checkOut>
+            <checkIn>2017-09-01</checkIn>
+            <checkOut>2017-09-05</checkOut>
         </reservation>
         <reservation>
             <id>3</id>
@@ -298,7 +298,7 @@
                 <id>3</id>
                 <login>ggingembre</login>
                 <password>test</password>
-                <name>Guilaume</name>
+                <name>Guillaume</name>
                 <role>GUEST</role>
             </user>
             <roomID>12</roomID>
@@ -311,7 +311,7 @@
                 <id>3</id>
                 <login>ggingembre</login>
                 <password>test</password>
-                <name>Guilaume</name>
+                <name>Guillaume</name>
                 <role>GUEST</role>
             </user>
             <roomID>12</roomID>
