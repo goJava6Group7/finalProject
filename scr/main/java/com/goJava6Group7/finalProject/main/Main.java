@@ -5,9 +5,6 @@ import com.goJava6Group7.finalProject.data.dataBase.DataBaseManager;
 import com.goJava6Group7.finalProject.data.dataBase.impl.DataBaseManagerFactory;
 
 
-/**
- * Created by Igor on 13.04.2017.
- */
 public class Main {
     private static DataBaseManager dataBaseManager;
 

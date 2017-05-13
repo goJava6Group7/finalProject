@@ -194,7 +194,8 @@ public class Menu {
     }
 
     /**
-     * Processes the selection made by user in User Main Menu, calling the respective methods required to perform action selected by user. .
+     * Processes the selection made by user in User Main Menu,
+     * calling the respective methods required to perform action selected by user.
      *
      * @see #printUserBookingUpdateMenu()
      * @see ProjectController#getUsersBookings(User)
@@ -254,7 +255,21 @@ public class Menu {
         }
     }
 
-
+    /**
+     * Processes the selection made by user in User Menu for rooms search,
+     * calling the respective methods required to perform action selected by user.
+     *
+     * @param choice <code>int</code> value inserted by the user to select a specific option from the list;
+     * @see #printUserBookingUpdateMenu()
+     * @see ProjectController#findRoomByHotelDate()
+     * @see ProjectController#findHotelByCityDate()
+     * @see Session#isGuest()
+     * @see #printUserRoomMenu()
+     * @see #printUserHotelMenu()
+     * @see #performActionUserRoomMenu(int)
+     * @see #performActionUserHotelMenu(int)
+     * @see ProjectController#updateDB()
+     */
     private void performActionUserRoomMenu(int choice) {
         SearchResults results = null;
         switch (choice) {
@@ -312,7 +327,22 @@ public class Menu {
                 } else break;
         }
     }
-
+    /**
+     * Processes the selection made by user in User Menu for displaying the results of the rooms search,
+     * calling the respective methods required to perform action selected by user.
+     *
+     * @param choice <code>int</code> value inserted by the user to select a specific option from the list;
+     * @see #checkLoginStatus()
+     * @see ProjectController#bookRoom(SearchResults, Session)
+     * @see #printBookingResultsMenu();
+     * @see #performActionBookingResultsMenu
+     * @see Session#isGuest()
+     * @see #printUserRoomMenu()
+     * @see #performActionUserRoomMenu(int)
+     * @see Session#isGuest()
+     * @see #printUserMainMenu()
+     * @see #performActionUserMainMenu(int)
+     */
     private void performActionUserRoomResultsMenu(SearchResults results, int choice) {
         switch (choice) {
             case 1:
@@ -333,7 +363,20 @@ public class Menu {
                 } else break;
         }
     }
-
+    /**
+     * Processes the selection made by user in User Menu for hotels search,
+     * calling the respective methods required to perform action selected by user.
+     *
+     * @param choice <code>int</code> value inserted by the user to select a specific option from the list;
+     * @see ProjectController#findHotelByHotelName()
+     * @see #printUserMainMenu()
+     * @see #performActionUserMainMenu(int)
+     * @see ProjectController#findHotelByCityDate()
+     * @see Session#isGuest()
+     * @see #printUserHotelResultsMenu()
+     * @see #performActionUserHotelResultsMenu(SearchResults, int)
+     * @see #performActionUserHotelResultsMenu(SearchResults, int)
+     */
     private void performActionUserHotelMenu(int choice) {
         SearchResults results = null;
         switch (choice) {
@@ -371,7 +414,21 @@ public class Menu {
                 } else break;
         }
     }
-
+    /**
+     * Processes the selection made by user in User Menu for displaying the results of the hotels search,
+     * calling the respective methods required to perform action selected by user.
+     *
+     * @param choice <code>int</code> value inserted by the user to select a specific option from the list;
+     * @see #checkLoginStatus()
+     * @see ProjectController#bookRoom(SearchResults, Session)
+     * @see #printBookingResultsMenu();
+     * @see #performActionBookingResultsMenu(int)
+     * @see #printUserHotelMenu()
+     * @see #performActionUserHotelMenu(int)
+     * @see Session#isGuest()
+     * @see #printUserMainMenu()
+     * @see #performActionUserMainMenu(int)
+     */
     private void performActionUserHotelResultsMenu(SearchResults results, int choice) {
         switch (choice) {
             case 1:
@@ -402,6 +459,17 @@ public class Menu {
         System.out.println("[2] Register");
     }
 
+    /**
+     * Processes the selection made by user in Login Menu,
+     * calling the respective methods required to perform action selected by user.
+     *
+     * @param choice <code>int</code> value inserted by the user to select a specific option from the list;
+     * @see ProjectController#login(Session)
+     * @see ProjectController#createUser()
+     * @see Session#setUser(User)
+     * @see Session#setGuest(boolean)
+     * @see Session#setAdmin(boolean)
+     */
     private void performActionPrintLoginMenu(int choice) {
         switch (choice) {
             case 1:
@@ -415,12 +483,25 @@ public class Menu {
         }
     }
 
+    /**
+     * Prints out a Booking Results Menu,
+     * prompting the user to select one of the options.
+     */
     private void printBookingResultsMenu() {
         System.out.println("\nPlease make a selection");
         System.out.println("[1] Go back to main menu");
         System.out.println("[2] Exit");
     }
 
+    /**
+     * Processes the selection made by user in Booking Results Menu,
+     * calling the respective methods required to perform action selected by user.
+     *
+     * @param choice <code>int</code> value inserted by the user to select a specific option from the list;
+     * @see #printUserMainMenu()
+     * @see #performActionUserMainMenu(int)
+     * @see ProjectController#updateDB()
+     */
     private void performActionBookingResultsMenu(int choice) {
         switch (choice) {
             case 1:
@@ -450,7 +531,10 @@ public class Menu {
             }
         }
     }
-
+    /**
+     * Prints out a User Information Menu,
+     * enabling the user to change profile information or change/cancel reservations.
+     */
     private void printUserBookingUpdateMenu() {
         System.out.println("Your user information:");
         System.out.println(User.getOutputHeader());
@@ -471,7 +555,21 @@ public class Menu {
         }
 
     }
-
+    /**
+     * Processes the selection made by user in the User Information Menu,
+     * calling the respective methods required to perform action selected by user.
+     *
+     * @param choice <code>int</code> value inserted by the user to select a specific option from the list;
+     * @see #printUserMainMenu()
+     * @see #performActionUserMainMenu(int)
+     * @see #updateUser(User)
+     * @see Session#getUser()
+     * @see ProjectController#createReservationMap(List)
+     * @see ProjectController#updateBooking(Map)
+     * @see ProjectController#getUsersBookings(User)
+     * @see ProjectController#cancelRoomReservation(Reservation)
+     * @see ProjectController#chooseBookingFromList(Map)
+     */
     private void performActionsUserBookingUpdateMenu(int choice) {
 
         if (!controller.getUsersBookings(session.getUser()).isEmpty()) {
@@ -762,7 +860,7 @@ public class Menu {
     }
 
     /**
-     * Creats map of entities from list of entities with keys - number from 1
+     * Creates map of entities from list of entities with keys - number from 1
      * and values - elements of list entities
      * @param listOfEntities
      * @param <T> inherits <tt>Entity</tt>

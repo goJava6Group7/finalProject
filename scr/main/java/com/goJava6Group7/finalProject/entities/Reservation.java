@@ -14,9 +14,6 @@ import java.util.Objects;
 
 
 
-/**
- * Created by Igor on 13.04.2017.
- */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 

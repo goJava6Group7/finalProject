@@ -24,9 +24,7 @@ import java.time.LocalDate;
 import static org.junit.Assert.assertEquals;
 
 
-/**
- * Created by Igor on 13.04.2017.
- */
+
 public class DataTest {
 
     @Test

@@ -18,9 +18,6 @@ import static com.goJava6Group7.finalProject.entities.User.Role.ADMIN;
 import static com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil.*;
 
 
-/**
- * Created by Igor on 13.04.2017.
- */
 public class ProjectController {
 
     private DataBaseManager dbManager;
@@ -356,7 +353,9 @@ public class ProjectController {
 
 // ************************************* GUILLAUME ********************************************
 
-    /**Identifies and prints out a list of hotels matching the hotel name inserted by user, by calling other methods.
+    /**
+     * Identifies and prints out a list of hotels matching the hotel name inserted by user.
+     *
      * @return a list of hotels matching the hotel name, inserted by the user.
      * @see ConsoleWorkerUtil#readNameFromConsole(String)
      * @see Hotel#getOutputHeader()
@@ -385,8 +384,11 @@ public class ProjectController {
                     "city and dates' options in the main menu");
         }
     }
-    /**Identifies and prints out a list of rooms available in a specific city during the period of time inserted by user, by calling other methods.
-     * @return a list of rooms available in a specific city during the period of time inserted by user;
+    /**
+     * Identifies and prints out a list of rooms available in a specific city
+     * during the period of time specified by user.
+     *
+     * @return a list of rooms available in a specific city during the period of time specified by user;
      * @see #searchRoomByCityDate(String, LocalDate, LocalDate)
      * @see ConsoleWorkerUtil#readNameFromConsole(String)
      * @see ConsoleWorkerUtil#getCheckinDate()
@@ -407,11 +409,15 @@ public class ProjectController {
         return results;
     }
 
-    /**Creates a list of reservations for a specific room and calls a <code>isBookedUpdate(bookings, checkin, checkout)</code> method.
+    /**
+     * Identifies if a particular <code>Room</code> is available during a period of time
+     * specified by the check-in and check-out dates.
+     *
      * @param room a particular booked <code>Room</code>
      * @param checkin a date of check-in
      * @param checkout a date of check-out
-     * @return Returns a <code>isBookedUpdate(bookings, checkin, checkout)</code> method
+     * @return <code>False</code> if required room is available
+     * during a period of time specified by the check-in and check-out dates.
      * @see Room#getBookings()
      */
     public boolean isBooked(Room room, LocalDate checkin, LocalDate checkout) {
@@ -421,11 +427,16 @@ public class ProjectController {
 
         return isBookedUpdate(bookings, checkin, checkout);
     }
-    /**Identifies if a particular <code>Room</code> is available during a period of time specified by the check-in and check-out dates.
+
+    /**
+     * Identifies if a particular <code>Room</code> is available during a period of time
+     * specified by the check-in and check-out dates.
+     *
      * @param bookings list of bookings
      * @param checkin a date of check-in
      * @param checkout a date of check-out
-     * @return Returns <code>False</code> if required room is available during a period of time specified by the check-in and check-out dates.
+     * @return <code>False</code> if required room is available
+     * during a period of time specified by the check-in and check-out dates.
      * @see Room#getBookings()
      */
     public boolean isBookedUpdate(List<Reservation> bookings, LocalDate checkin, LocalDate checkout) {
@@ -454,8 +465,13 @@ public class ProjectController {
 
         return isBooked;
     }
-    /**Identifies and prints out a list of rooms available in a specific city during the period of time inserted by user, by calling other methods.
+
+    /**
+     * Identifies and prints out a list of rooms available in a specific city
+     * during the period of time inserted by user, by calling other methods.
+     *
      * @return a list of rooms available in a specific city during the period of time inserted by user;
+     * @throws NullSearchResultsException - if search results are <ccode>null</ccode>
      * @see #searchRoomByCityDate(String, LocalDate, LocalDate)
      * @see ConsoleWorkerUtil#readNameFromConsole(String)
      * @see ConsoleWorkerUtil#getCheckinDate()
@@ -477,7 +493,12 @@ public class ProjectController {
 
         return results;
     }
-
+    /**
+     * Identifies a <code>hotel</code> by <code>hotelId</code>.
+     *
+     * @param hotelID unique identifier generated for each <code>hotel</code>
+     * @return <code>Hotel</code> found by <code>hotelId</code>
+     */
     public Hotel getHotelFromID(long hotelID) {
 
         Dao<Hotel> daoHotel = dbManager.getDaoHotel();
@@ -489,7 +510,12 @@ public class ProjectController {
 
         return myHotel;
     }
-
+    /**
+     * Identifies a <code>room</code> by <code>roomId</code>.
+     *
+     * @param roomID unique identifier generated for each <code>room</code>
+     * @return <code>Room</code> found by <code>roomId</code>
+     */
     public Room getRoomFromID(long roomID) {
 
         Dao<Room> daoRoom = dbManager.getDaoRoom();
@@ -501,8 +527,11 @@ public class ProjectController {
 
         return myRoom;
     }
-    /**Identifies and prints out a list of rooms available in a specific city during the period of time inserted by user.
-     * @return a list of rooms available in a specific city during the period of time inserted by user;
+    /**
+     * Identifies and prints out a list of rooms available in a specific city
+     * during the period of time specified by user.
+     *
+     * @return a list of rooms available in a specific city during the period of time specified by user;
      * @see #findRoomByCityDate()
      * @see #findHotelByCityDate()
      * @see ConsoleWorkerUtil#readNameFromConsole(String)
@@ -530,8 +559,12 @@ public class ProjectController {
 
         return rooms;
     }
-    /**Identifies and prints out a list of rooms available in a specific hotel during the period of time inserted by user, by calling other methods.
-     * @return a list of rooms available in a specific hotel during the period of time inserted by user;
+
+    /**
+     * Identifies and prints out a list of rooms available in a specific hotel
+     * during the period of time specified by user.
+     *
+     * @return a list of rooms available in a specific hotel during the period of time specified by user;
      * @see ConsoleWorkerUtil#readNameFromConsole(String)
      * @see ConsoleWorkerUtil#getCheckinDate()
      * @see ConsoleWorkerUtil#getCheckoutDate(LocalDate)

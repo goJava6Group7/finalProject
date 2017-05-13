@@ -2,9 +2,7 @@ package com.goJava6Group7.finalProject.exceptions.frontend;
 
 import com.goJava6Group7.finalProject.entities.Room;
 
-/**
- * Created by Igor on 13.04.2017.
- */
+
 public class FrontendException extends Exception {
 
     public FrontendException(String message) {

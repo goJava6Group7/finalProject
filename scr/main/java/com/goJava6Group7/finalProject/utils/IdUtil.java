@@ -11,9 +11,7 @@ import java.util.Comparator;
 
 import java.util.UUID;
 
-/**
- * Created by Igor on 13.04.2017.
- */
+
 public final class IdUtil {
     private static long userId;
     private static long roomId;
