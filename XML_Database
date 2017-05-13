@@ -7,6 +7,19 @@
             <price>1677</price>
             <roomClass>President</roomClass>
             <hotelID>5</hotelID>
+            <bookings>
+                <id>5</id>
+                <user>
+                    <id>4</id>
+                    <login>Ann</login>
+                    <password>Ann</password>
+                    <name>Ann</name>
+                    <role>GUEST</role>
+                </user>
+                <roomID>8</roomID>
+                <checkIn>2017-07-01</checkIn>
+                <checkOut>2017-07-07</checkOut>
+            </bookings>
         </room>
         <room>
             <id>9</id>
@@ -125,6 +138,13 @@
             <name>maryna</name>
             <role>ADMIN</role>
         </user>
+        <user>
+            <id>4</id>
+            <login>Ann</login>
+            <password>Ann</password>
+            <name>Ann</name>
+            <role>GUEST</role>
+        </user>
     </users>
     <hotels>
         <hotel>
@@ -183,6 +203,19 @@
                 <price>1677</price>
                 <roomClass>President</roomClass>
                 <hotelID>5</hotelID>
+                <bookings>
+                    <id>5</id>
+                    <user>
+                        <id>4</id>
+                        <login>Ann</login>
+                        <password>Ann</password>
+                        <name>Ann</name>
+                        <role>GUEST</role>
+                    </user>
+                    <roomID>8</roomID>
+                    <checkIn>2017-07-01</checkIn>
+                    <checkOut>2017-07-07</checkOut>
+                </bookings>
             </rooms>
         </hotel>
         <hotel>
@@ -270,6 +303,12 @@
             <city>Kyiv</city>
             <rating>4</rating>
         </hotel>
+        <hotel>
+            <id>9</id>
+            <name>Nasta</name>
+            <city>Odessa</city>
+            <rating>5</rating>
+        </hotel>
     </hotels>
     <reservations>
         <reservation>
@@ -323,6 +362,19 @@
             <roomID>12</roomID>
             <checkIn>2018-04-04</checkIn>
             <checkOut>2018-04-05</checkOut>
+        </reservation>
+        <reservation>
+            <id>5</id>
+            <user>
+                <id>4</id>
+                <login>Ann</login>
+                <password>Ann</password>
+                <name>Ann</name>
+                <role>GUEST</role>
+            </user>
+            <roomID>8</roomID>
+            <checkIn>2017-07-01</checkIn>
+            <checkOut>2017-07-07</checkOut>
         </reservation>
     </reservations>
 </XML_Database>

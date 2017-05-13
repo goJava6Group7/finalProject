@@ -18,6 +18,7 @@ import static com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil.*;
 /**
  * Created by Igor on 13.04.2017.
  */
+
 public class Menu {
     private ProjectController controller;
     private Session session;
@@ -29,6 +30,11 @@ public class Menu {
 
     boolean exit = false;
 
+    /**Prints out a header of the Booking Application and the Guest Main Menu while this application is active.
+     * @see #printHeader()
+     * @see #printGuestMainMenu()
+     * @see #performActionGuestMainMenu(int)
+     */
     public void runMenu() {
 
         printHeader();
@@ -38,7 +44,9 @@ public class Menu {
         }
 
     }
-
+    /**Prints out a header of the Booking Application.
+     * @see #runMenu()
+     */
     private void printHeader() {
         System.out.println("*******************************");
         System.out.println("|      Welcome to our         |");
@@ -48,6 +56,9 @@ public class Menu {
 
     // *********** USER MENU
 
+    /**Prints out a Guest Main Menu.
+     * @see #runMenu()
+     */
     private void printGuestMainMenu() {
         System.out.println("\nPlease make a selection");
         System.out.println("[1] Register");
@@ -57,7 +68,9 @@ public class Menu {
         System.out.println("[5] Admin menu");
         System.out.println("[6] Exit");
     }
-
+    /**Prints out a User Main Menu.
+     * @see #runMenu()
+     */
     private void printUserMainMenu() {
         System.out.println("\nPlease make a selection");
         System.out.println("[1] See / update your profile and bookings");
@@ -67,35 +80,54 @@ public class Menu {
         System.out.println("[5] Admin menu");
         System.out.println("[6] Exit");
     }
-
+    /**Prints out a User Menu for searching of the rooms.
+     * @see #runMenu()
+     * @see #printUserMainMenu()
+     */
     private void printUserRoomMenu() {
         System.out.println("\nPlease make a selection");
         System.out.println("[1] Search room by hotel and dates"); // for all
         System.out.println("[2] Search room by city and dates"); // for all
         System.out.println("[3] Go back to main menu");
     }
-
+    /**Prints out a User Menu, prompting the user to book one of the found rooms.
+     * @see #runMenu()
+     * @see #printUserRoomMenu()
+     */
     private void printUserRoomResultsMenu() {
         System.out.println("\nPlease make a selection");
         System.out.println("[1] Book a room"); // for admin / users
         System.out.println("[2] Go back to room search");
         System.out.println("[3] Go back to main menu");
     }
-
+    /**Prints out a User Menu for searching of the hotels.
+     * @see #runMenu()
+     * @see #printUserMainMenu()
+     */
     private void printUserHotelMenu() {
         System.out.println("\nPlease make a selection");
         System.out.println("[1] Search hotel by name");
         System.out.println("[2] Search hotel by city and dates");
         System.out.println("[3] Go back to main menu");
     }
-
+    /**Prints out a User Menu, prompting the user to book a room in one of the found hotels.
+     * @see #runMenu()
+     * @see #printUserHotelMenu()
+     */
     private void printUserHotelResultsMenu() {
         System.out.println("\nPlease make a selection");
         System.out.println("[1] Book a room"); // for admin / users
         System.out.println("[2] Go back to hotel search");
         System.out.println("[3] Go back to main menu");
     }
-
+    /**Processes the selection made by user in Guest Main Menu, calling the respective methods required to perform action selected by user. .
+     * @see ProjectController#createUser()
+     * @see ProjectController#login(Session)
+     * @see Session#isGuest()
+     * @see #printUserMainMenu()
+     * @see #performActionUserMainMenu(int)
+     * @see ProjectController#updateDB()
+     */
     private void performActionGuestMainMenu(int choice) {
         switch (choice) {
             case 1:
@@ -137,7 +169,17 @@ public class Menu {
                 //     System.out.println("An unknown error has occurred");
         }
     }
-
+    /**Processes the selection made by user in User Main Menu, calling the respective methods required to perform action selected by user. .
+     * @see #printUserBookingUpdateMenu()
+     * @see ProjectController#getUsersBookings(User)
+     * @see Session#getUser()
+     * @see ProjectController#logout(Session)
+     * @see #printUserRoomMenu()
+     * @see #printUserHotelMenu()
+     * @see #performActionUserRoomMenu(int)
+     * @see #performActionUserHotelMenu(int)
+     * @see ProjectController#updateDB()
+     */
     private void performActionUserMainMenu(int choice) {
         switch (choice) {
             case 1:
@@ -326,6 +368,8 @@ public class Menu {
         }
     }
 
+    /**Prints out a Login Menu, prompting the unregistered user to login or register before making a booking.
+     */
     private void printLoginMenu() {
         System.out.println("\nPlease make a selection");
         System.out.println("[1] Login");
@@ -365,6 +409,10 @@ public class Menu {
         }
     }
 
+    /**Checks if current user is a guest and if so, prompts this user to login by printing out a Login Menu.
+     * @see #printLoginMenu()
+     * @see #performActionPrintLoginMenu(int)
+     */
     private void checkLoginStatus() {
         if (session.isGuest()) {
             System.out.println("You need to login first");
