@@ -1,7 +1,6 @@
 package com.goJava6Group7.finalProject.controllers;
 
 import com.goJava6Group7.finalProject.data.dao.Dao;
-import com.goJava6Group7.finalProject.data.dao.impl.DaoRoom;
 import com.goJava6Group7.finalProject.data.dataBase.DataBaseManager;
 import com.goJava6Group7.finalProject.entities.*;
 import com.goJava6Group7.finalProject.exceptions.frontend.*;
@@ -33,14 +32,10 @@ public class ProjectController {
     // ************************* MARINA ********************************************************
 
     /**
-     * TODO что должна возвращать функция loginAndPasswordVerification???
-     * TODO Мне нужен User, чтобы использовать в функции adminLoginAndPasswordVerification(String login, String password)
-     * Kontar Maryna:
-     * The method checks the presence of the user with the appropriate login and password
-     *
-     * @param login
-     * @param password
-     * @return User if user with the appropriate login and password exist
+     * Checks the presence of the user with the appropriate login and password
+     * @param login of the user whose presence is to be tested
+     * @param password of the user whose presence is to be tested
+     * @return <tt>User</tt> if user with the appropriate login and password exist
      * and null otherwise
      */
     public User loginAndPasswordVerification(String login, String password) {
@@ -53,22 +48,17 @@ public class ProjectController {
     }
 
     /**
-     * TODO Добавлять ли отель с уже существующим именем, названием города и рейтингом?
-     * У него будет другое id и если equals по id, то это разные отели
-     * Kontar Maryna:
-     * The method adds the hotel to the database, if the hotel is not in the database
+     * Adds the hotel to the database, if the hotel isn't in the database
      *
-     * @param hotel
-     * @return the added hotel
-     * @throws HotelAlreadyExistsException
+     * @param hotel to be appended to database
+     * @return the added hotel if it isn't exist
+     * @throws HotelAlreadyExistsException if the <tt>hotel</tt> already exists in database
      */
     public Hotel addHotel(Hotel hotel) throws HotelAlreadyExistsException {
 
         Dao<Hotel> daoHotel = dbManager.getDaoHotel();
         List<Hotel> allHotels = daoHotel.getAll();
 
-        //TODO Надо проверять на наличие в БД, т.к. create(hotel) в DaoHotel не проверяет
-        //Т.к. теперь equals по id, то проверка видимо нужна по другим параметрам
         if (allHotels.stream().anyMatch(hotelAtDatabase -> hotelAtDatabase.equals(hotel))) {
             throw new HotelAlreadyExistsException("The " + hotel + "already exists in database "
                     + dbManager.getClass().getSimpleName());
@@ -77,11 +67,9 @@ public class ProjectController {
     }
 
     /**
-     * TODO Игорю на проверку
-     * Kontar Maryna:
-     * The method delete hotel and return true if the deletion was successful
+     * Deletes hotel and return true if the deletion was successful
      *
-     * @param hotel
+     * @param hotel to be deleted from database
      * @return true if the deletion was successful and false otherwise
      */
     public boolean deleteHotel(Hotel hotel) {
@@ -91,11 +79,13 @@ public class ProjectController {
     }
 
     /**
-     * Kontar Maryna:
+     * Updates the hotel with <code>newParametersOfHotel</code>
+     * (HotelParameters.NAME, HotelParameters.CITY, HotelParameters.RATING)
      *
-     * @param hotel
-     * @param newParametersOfHotel
-     * @return
+     * @param hotel to be updated
+     * @param newParametersOfHotel map of new parameters
+     *                             (HotelParameters.NAME, HotelParameters.CITY, HotelParameters.RATING) to update hotel
+     * @return updated hotel
      */
     public Hotel updateHotel(Hotel hotel, Map<HotelParameters, String> newParametersOfHotel) {
 
@@ -122,14 +112,11 @@ public class ProjectController {
     }
 
     /**
-     * TODO проверять есть ли комната в отеле? Могут быть одинаковые по всем параметрам (кроме id) комнаты в отеле.
-     * TODO Или проверять только по id? Или equals только по id
-     * Kontar Maryna:
-     * The method create room if room isn't in database
+     * Creates room if room isn't in database
      *
-     * @param room
-     * @return created room
-     * @throws RoomAlreadyExistsException
+     * @param room to be appended to database
+     * @return created room if it isn't exist
+     * @throws RoomAlreadyExistsException if room already exists in database
      */
     public Room createRoom(Room room) throws RoomAlreadyExistsException {
 
@@ -138,7 +125,6 @@ public class ProjectController {
 
         if (allRooms.stream()
                 .anyMatch(roomAtDatabase -> roomAtDatabase.equals(room))
-//                .anyMatch(roomAtDatabase -> roomAtDatabase.getId() == room.getId())
                 )
             throw new RoomAlreadyExistsException("The " + room + "already exists in database "
                     + dbManager.getClass().getSimpleName());
@@ -148,6 +134,15 @@ public class ProjectController {
         return daoRoom.create(room);
     }
 
+    /**
+     * Updates the room in the hotel after updating in list of all rooms with <code>newParametersOfRoom</code>
+     * (RoomParameters.ROOM_CLASS, RoomParameters.CAPACITY, RoomParameters.PRICE)
+     *
+     * @param room to be updated
+     * @param newParametersOfRoom map of new parameters
+     *                             (RoomParameters.ROOM_CLASS, RoomParameters.CAPACITY, RoomParameters.PRICE) to update the room
+     * @return updated room
+     */
     public Room updateRoom(Room room, Map<RoomParameters, String> newParametersOfRoom) {
 
         Dao<Room> daoRoom = dbManager.getDaoRoom();
@@ -169,10 +164,7 @@ public class ProjectController {
                     break;
             }
         }
-        //TODO один раз в коде выше вылетело RuntimeException и в комнате
-        // из списка комнат отеля изменения произошли, а просто в списке комнат - нет
-        // Это произошло из-за того, что я ловлю RuntimeException и вывожу сообщение после этого
-        //Что делать? Ловить и снова кидать, чтобі не произошла запись в БД?
+
         if (daoRoom.update(room) != null) {
             if (dbManager.getDaoHotel()
                     .updateRoomInHotel(getHotelFromID(room.getHotelID()), room) != null)
@@ -182,9 +174,7 @@ public class ProjectController {
     }
 
     /**
-     * TODO Игорю на проверку
-     * Kontar Maryna:
-     * The method delete room from hotel after deleting from list of all rooms
+     * Deletes room from hotel after deleting from list of all rooms
      *
      * @param room
      * @return true if the deletion of room was successful and false otherwise
@@ -197,18 +187,14 @@ public class ProjectController {
     }
 
     /**
-     * TODO Игорю на проверку
-     * TODO Эта функция написана мной, п.ч. изначально так поделили задания с Гийомом,
-     * TODO но потом мне надо было реализовывать админ меню, а функции остались
-     * Kontar Maryna:
-     * Method create account for user with name, login and password
+     * Create account for user with name, login and password
      * if there isn't account with this name and login.
      *
      * @param name
      * @param login
      * @param password
      * @return User if an account is created
-     * @throws AccountAlreadyExistException
+     * @throws AccountAlreadyExistException if account with these name or login already exists
      */
     public User createAccount(String name, String login, String password) throws AccountAlreadyExistException {
 
@@ -222,6 +208,15 @@ public class ProjectController {
         return daoUser.create(user);
     }
 
+    /**
+     * Updates the user in the reservation after updating in list of all reservations with <code>newParametersOfUser</code>
+     * (UserParameters.NAME, UserParameters.LOGIN, UserParameters.PASSWORD)
+     *
+     * @param user to be updated
+     * @param newParametersOfUser map of new parameters
+     *                            (UserParameters.NAME, UserParameters.LOGIN, UserParameters.PASSWORD) to update the user
+     * @return updated user
+     */
     public User updateUser(User user, Map<UserParameters, String> newParametersOfUser) {
 
         Dao<User> daoUser = dbManager.getDaoUser();
@@ -250,6 +245,12 @@ public class ProjectController {
         return updatedUser;
     }
 
+    /**
+     * Updates user in user reservation
+     * @param reservation whose user is updated
+     * @param user updated user
+     * @return reservation with updated user
+     */
     private Reservation updateReservationToUpdateUser(Reservation reservation, User user) {
 
         reservation.setUser(user);
@@ -265,11 +266,9 @@ public class ProjectController {
     }
 
     /**
-     * TODO Игорю на проверку
-     * Kontar Maryna:
-     * The method delete User
+     * Deletes user and all its reservations
      *
-     * @param user
+     * @param user to be deleted from database
      * @return true if the deletion was successful and false otherwise
      */
     public boolean deleteUser(User user) {
@@ -280,6 +279,12 @@ public class ProjectController {
         return daoUser.delete(user);
     }
 
+    /**
+     * Creates list of all user reservations
+     *
+     * @param user whose reservations need to find
+     * @return list of user reservations
+     */
     private List<Reservation> userReservations(User user) {
 
         Dao<Reservation> daoReservation = dbManager.getDaoReservation();
@@ -292,6 +297,12 @@ public class ProjectController {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Finds user by user login
+     *
+     * @param login to find user
+     * @return user if login exists or null otherwise
+     */
     public User findUserByLogin(String login) {
 
         List<User> allUsers = dbManager.getDaoUser().getAll();
@@ -304,50 +315,16 @@ public class ProjectController {
     }
 
     /**
-     * TODO Эта функция написана мной, п.ч. изначально так поделили задания с Гийомом,
-     * TODO но потом мне надо было реализовывать админ меню, а функции остались
-     * TODO Возможно надо написать функцию isFreeRoom(){return !isBooked}.
-     * TODO потому что отрицания воспринимаются мозгом намного медленнее
-     * Kontar Maryna:
-     *
-     * @param reserveOnUser
-     * @param room
-     * @param dataOfArrival
-     * @param dateOfDeparture
-     * @return Reservation if reservation is created
-     * @throws RoomIsReservedForTheseDatesException
-     */
-    /*public Reservation reserveRoom(User reserveOnUser, Room room, LocalDate dataOfArrival, LocalDate dateOfDeparture)
-            throws RoomIsReservedForTheseDatesException {
-        Dao<Reservation> daoReservation = dbManager.getDaoReservation();
-
-        if (room.getHotelID()
-                .getRooms()
-                .stream()
-                .noneMatch(roomAtHotel -> !isBooked(roomAtHotel, dataOfArrival, dateOfDeparture))) {
-            throw new RoomIsReservedForTheseDatesException("The room " + room + "is reserved for these dates: "
-                    + dataOfArrival + " - " + dateOfDeparture);
-        }
-        return daoReservation.create(new Reservation(reserveOnUser, room, dataOfArrival, dateOfDeparture));
-
-        //TODO Функция должна быть с входными параметрами.
-        //TODO Метод create сохранит этот reservation в БД и добавит в список бронирований данного user?
-        // Спросила у ребят из backend. Жду, пока они дойдут до этого
-    }*/
-
-    /**
-     * The method delete room reservation
+     * Deletes room reservation
      *
      * @param reservation
      * @return true if the deletion was successful and false otherwise
      */
     public boolean cancelRoomReservation(Reservation reservation) {
 
-        //TODO Проверять на наличие в БД НЕ НАДО (это сделано backend в функции delete(Reservation reservation) в DaoReservation)
         Dao<Reservation> daoReservation = dbManager.getDaoReservation();
 
         // update room with new booking list:
-
         Room myRoom = getRoomFromID(reservation.getRoomID());
         Hotel myHotel = getHotelFromID(myRoom.getHotelID());
 
@@ -361,10 +338,11 @@ public class ProjectController {
         } else return false;
     }
 
-
-    //TODO Нет проверки на null (isEmpty). Проверяю при вызове этого метода.
-    // Если поменяю сигнатуру на Hotel findHotelByHotelName(String hotelName)
-    // будет кидать NoSuchElementException("No value present") (.findFirst().get();)
+    /**
+     * Finds hotel by hotels name
+     * @param hotelName
+     * @return list of hotels
+     */
     public List<Hotel> findHotelByHotelName(String hotelName) {
 
         List<Hotel> allHotels = dbManager.getDaoHotel().getAll();

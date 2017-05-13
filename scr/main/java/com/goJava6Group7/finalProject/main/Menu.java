@@ -1,6 +1,7 @@
 package com.goJava6Group7.finalProject.main;
 
 import com.goJava6Group7.finalProject.controllers.ProjectController;
+import com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil;
 import com.goJava6Group7.finalProject.entities.*;
 import com.goJava6Group7.finalProject.exceptions.frontend.*;
 import com.goJava6Group7.finalProject.entities.Room.RoomParameters;
@@ -15,9 +16,6 @@ import static com.goJava6Group7.finalProject.entities.User.UserParameters.*;
 import static com.goJava6Group7.finalProject.entities.User.Role.*;
 import static com.goJava6Group7.finalProject.utils.ConsoleWorkerUtil.*;
 
-/**
- * Created by Igor on 13.04.2017.
- */
 
 public class Menu {
     private ProjectController controller;
@@ -30,7 +28,9 @@ public class Menu {
 
     boolean exit = false;
 
-    /**Prints out a header of the Booking Application and the Guest Main Menu while this application is active.
+    /**
+     * Run Booking Application.
+     *
      * @see #printHeader()
      * @see #printGuestMainMenu()
      * @see #performActionGuestMainMenu(int)
@@ -42,9 +42,11 @@ public class Menu {
             printGuestMainMenu();
             performActionGuestMainMenu(getMenuInput(1, 6));
         }
-
     }
-    /**Prints out a header of the Booking Application.
+
+    /**
+     * Prints out a header of the Booking Application.
+     *
      * @see #runMenu()
      */
     private void printHeader() {
@@ -54,9 +56,11 @@ public class Menu {
         System.out.println("*******************************");
     }
 
-    // *********** USER MENU
+    // ***************************** USER MENU ************************************
 
-    /**Prints out a Guest Main Menu.
+    /**
+     * Prints out a Guest Main Menu.
+     *
      * @see #runMenu()
      */
     private void printGuestMainMenu() {
@@ -68,7 +72,10 @@ public class Menu {
         System.out.println("[5] Admin menu");
         System.out.println("[6] Exit");
     }
-    /**Prints out a User Main Menu.
+
+    /**
+     * Prints out a User Main Menu.
+     *
      * @see #runMenu()
      */
     private void printUserMainMenu() {
@@ -80,7 +87,10 @@ public class Menu {
         System.out.println("[5] Admin menu");
         System.out.println("[6] Exit");
     }
-    /**Prints out a User Menu for searching of the rooms.
+
+    /**
+     * Prints out a User Menu for searching of the rooms.
+     *
      * @see #runMenu()
      * @see #printUserMainMenu()
      */
@@ -90,7 +100,10 @@ public class Menu {
         System.out.println("[2] Search room by city and dates"); // for all
         System.out.println("[3] Go back to main menu");
     }
-    /**Prints out a User Menu, prompting the user to book one of the found rooms.
+
+    /**
+     * Prints out a User Menu, prompting the user to book one of the found rooms.
+     *
      * @see #runMenu()
      * @see #printUserRoomMenu()
      */
@@ -100,7 +113,10 @@ public class Menu {
         System.out.println("[2] Go back to room search");
         System.out.println("[3] Go back to main menu");
     }
-    /**Prints out a User Menu for searching of the hotels.
+
+    /**
+     * Prints out a User Menu for searching of the hotels.
+     *
      * @see #runMenu()
      * @see #printUserMainMenu()
      */
@@ -110,7 +126,10 @@ public class Menu {
         System.out.println("[2] Search hotel by city and dates");
         System.out.println("[3] Go back to main menu");
     }
-    /**Prints out a User Menu, prompting the user to book a room in one of the found hotels.
+
+    /**
+     * Prints out a User Menu, prompting the user to book a room in one of the found hotels.
+     *
      * @see #runMenu()
      * @see #printUserHotelMenu()
      */
@@ -120,7 +139,11 @@ public class Menu {
         System.out.println("[2] Go back to hotel search");
         System.out.println("[3] Go back to main menu");
     }
-    /**Processes the selection made by user in Guest Main Menu, calling the respective methods required to perform action selected by user. .
+
+    /**
+     * Processes the selection made by user in Guest Main Menu,
+     * calling the respective methods required to perform action selected by user.
+     *
      * @see ProjectController#createUser()
      * @see ProjectController#login(Session)
      * @see Session#isGuest()
@@ -169,7 +192,10 @@ public class Menu {
                 //     System.out.println("An unknown error has occurred");
         }
     }
-    /**Processes the selection made by user in User Main Menu, calling the respective methods required to perform action selected by user. .
+
+    /**
+     * Processes the selection made by user in User Main Menu, calling the respective methods required to perform action selected by user. .
+     *
      * @see #printUserBookingUpdateMenu()
      * @see ProjectController#getUsersBookings(User)
      * @see Session#getUser()
@@ -239,16 +265,16 @@ public class Menu {
                 } catch (NullSearchResultsException | NullPointerException e) {
                     System.out.println("There is no room matching your criteria");
                 }
-                if (results == null ) {
+                if (results == null) {
                     if (!session.isGuest()) {
                         printUserMainMenu();
                         performActionUserMainMenu(getMenuInput(1, 6));
                         break;
                     } else break;
-                } else if(results.getRooms().size() == 0){
-                        printUserMainMenu();
-                        performActionUserMainMenu(getMenuInput(1, 6));
-                        break;
+                } else if (results.getRooms().size() == 0) {
+                    printUserMainMenu();
+                    performActionUserMainMenu(getMenuInput(1, 6));
+                    break;
                 } else {
                     printUserRoomResultsMenu();
                     performActionUserRoomResultsMenu(results, getMenuInput(1, 3));
@@ -267,14 +293,13 @@ public class Menu {
                         performActionUserMainMenu(getMenuInput(1, 6));
                         break;
                     } else break;
-                } else if ( results.getRooms().size() == 0){
+                } else if (results.getRooms().size() == 0) {
                     if (!session.isGuest()) {
                         printUserMainMenu();
                         performActionUserMainMenu(getMenuInput(1, 6));
                         break;
                     } else break;
-                }
-                else {
+                } else {
                     printUserRoomResultsMenu();
                     performActionUserRoomResultsMenu(results, getMenuInput(1, 3));
                     break;
@@ -327,7 +352,7 @@ public class Menu {
                 } catch (NullSearchResultsException | NullPointerException e) {
                     System.out.println("There is no hotel matching your criteria");
                 }
-                if (results == null | results.getRooms().size() == 0 ) {
+                if (results == null | results.getRooms().size() == 0) {
                     if (!session.isGuest()) {
                         printUserMainMenu();
                         performActionUserMainMenu(getMenuInput(1, 6));
@@ -368,7 +393,8 @@ public class Menu {
         }
     }
 
-    /**Prints out a Login Menu, prompting the unregistered user to login or register before making a booking.
+    /**
+     * Prints out a Login Menu, prompting the unregistered user to login or register before making a booking.
      */
     private void printLoginMenu() {
         System.out.println("\nPlease make a selection");
@@ -409,7 +435,9 @@ public class Menu {
         }
     }
 
-    /**Checks if current user is a guest and if so, prompts this user to login by printing out a Login Menu.
+    /**
+     * Checks if current user is a guest and if so, prompts this user to login by printing out a Login Menu.
+     *
      * @see #printLoginMenu()
      * @see #performActionPrintLoginMenu(int)
      */
@@ -423,11 +451,11 @@ public class Menu {
         }
     }
 
-    private void printUserBookingUpdateMenu(){
+    private void printUserBookingUpdateMenu() {
         System.out.println("Your user information:");
         System.out.println(User.getOutputHeader());
         System.out.println(session.getUser().getOutput());
-        if (!controller.getUsersBookings(session.getUser()).isEmpty()){
+        if (!controller.getUsersBookings(session.getUser()).isEmpty()) {
             System.out.println("Your bookings:");
             controller.printUserBookings(controller.createReservationMap(
                     controller.getUsersBookings(session.getUser())));
@@ -436,7 +464,7 @@ public class Menu {
             System.out.println("[2] Change the dates of a reservation");
             System.out.println("[3] Delete a reservation");
             System.out.println("[4] Go back to main menu");
-        } else{
+        } else {
             System.out.println("Please make a selection:");
             System.out.println("[1] Update your profile"); // for admin / users
             System.out.println("[2] Go back to main menu");
@@ -444,11 +472,11 @@ public class Menu {
 
     }
 
-    private void performActionsUserBookingUpdateMenu(int choice){
+    private void performActionsUserBookingUpdateMenu(int choice) {
 
-        if (!controller.getUsersBookings(session.getUser()).isEmpty()){
+        if (!controller.getUsersBookings(session.getUser()).isEmpty()) {
 
-            switch (choice){
+            switch (choice) {
                 case 1:
                     updateUser(session.getUser());
                     printUserMainMenu();
@@ -466,7 +494,7 @@ public class Menu {
                             controller.getUsersBookings(session.getUser())));
                     if (controller.cancelRoomReservation(controller.chooseBookingFromList(controller.createReservationMap(
                             controller.getUsersBookings(session.getUser())))))
-                        System.out.println("Your booking has been deleted succesfully");
+                        System.out.println("Your booking has been deleted successfully");
                     printUserMainMenu();
                     performActionUserMainMenu(getMenuInput(1, 6));
                     break;
@@ -476,7 +504,7 @@ public class Menu {
                     break;
             }
         } else {
-            switch (choice){
+            switch (choice) {
                 case 1:
                     updateUser(session.getUser());
                     printUserMainMenu();
@@ -491,45 +519,39 @@ public class Menu {
     }
 
 
-    //***************************************MARYNA*************************************************
+    // *********************************************************************************************
     // ************************************* ADMIN MENU ********************************************
     private boolean adminExit;
 
+    /**
+     * Run admin menu while <tt>adminExit</tt> is <tt>true</tt>.
+     * @see #printAdminMainMenu()
+     * @see #performActionAdminMainMenu(int choice)
+     */
     private void adminMenu() {
         adminExit = false;
         while (!adminExit) {
             printAdminMainMenu();
             performActionAdminMainMenu(readIntToMaxNum(6));
         }
-
-//        TODO Вынести это туда, где будет вызываться админ меню
-//        if (isAdmin()) {
-//            adminMenu();
-//        } else {
-//            System.out.println("You do not have administrator rights. Login as administrator.");
-//            printUserMainMenu();
-//            performActionUserMainMenu(readIntToMaxNum(6));
-//        }
     }
 
 
 //    *******************Admin verification*******************************************
 
     /**
-     * TODO Уточнить по проверке на админа!!! И о том, что должна возвращать функция loginAndPasswordVerification
-     * TODO Использую для проверки роли user. Если user - администратор, то устанавливаю для него новую сессию
-     * Не перенесла в controller, потому что надо вызывать assignmentSessionForAdmin(user) и работать с session
-     * Kontar Maryna:
-     * The method checks if login and password belongs to the admin
+     * Checks if login and password belongs to the admin.
      *
-     * @param login
-     * @param password
-     * @return true if login and password belongs to the admin
-     * and false if user with the appropriate login and password doesn't exist or user isn't admin
+     * @param login    of the <tt>User</tt> whose belongs to admin is to be tested
+     * @param password of the <tt>User</tt> whose belongs to admin is to be tested
+     * @return <tt>true</tt> if login and password belongs to the admin
+     * and false if <tt>User</tt> with the appropriate login and password doesn't exist or <tt>User</tt> isn't admin
+     * @see #assignmentSessionForAdmin(User)
+     * @see ProjectController#loginAndPasswordVerification(String, String)
      */
     private boolean adminLoginAndPasswordVerification(String login, String password) {
+
         User user = controller.loginAndPasswordVerification(login, password);
-        //TODO ПРОВЕРКА НА АДМИНА ПРАВИЛЬНАЯ???
         if (user != null && user.getRole().equals(ADMIN)) {
             assignmentSessionForAdmin(user);
             return true;
@@ -537,19 +559,24 @@ public class Menu {
         return false;
     }
 
+    /**
+     * Checks whether the current session is an admin session or a registered user is admin.
+     *
+     * @return <tt>true</tt> if current session is an admin session or a registered user is admin
+     * or false otherwise
+     * @see #adminLoginAndPasswordVerification(String, String)
+     * @see #performActionGuestMainMenu(int)
+     * @see #performActionUserMainMenu(int)
+     */
     private boolean isAdmin() {
         return session.isAdmin()
                 || adminLoginAndPasswordVerification(readLogin(), readPassword());
     }
 
     /**
-     * TODO Игорю на проверку. Использую для того, чтобы установить сессию для админа,
-     * TODO если при проверке логина, пароля и роли это оказался администратор
-     * Kontar Maryna:
-     * <p>
-     * The method assign session for admin
-     *
-     * @param admin
+     * Sets the session to admin
+     * @param admin is the <tt>User</tt> with admin rights
+     * @see #adminLoginAndPasswordVerification(String, String)
      */
     private void assignmentSessionForAdmin(User admin) {
         session = new Session(admin);
@@ -557,6 +584,11 @@ public class Menu {
 
 
     //****************************** Admin main menu *********************************
+
+    /**
+     * Prints out a Admin Menu.
+     * @see #adminMenu()
+     */
     private void printAdminMainMenu() {
         System.out.println("");
         System.out.println("\tADMIN MENU");
@@ -569,6 +601,19 @@ public class Menu {
         System.out.println("[6] Back to main menu");
     }
 
+    /**
+     * Processes the selection made by admin in Admin Menu,
+     * calling the respective methods required to perform action selected by admin.
+     * @param choice is number of the action selected by admin
+     * @see #adminMenu()
+     * @see #addHotel()
+     * @see #addRoom()
+     * @see #updateOrDeleteAHotel()
+     * @see #updateOrDeleteARoom()
+     * @see #updateOrDeleteUser()
+     * @see #printUserMainMenu()
+     * @see #performActionUserMainMenu(int)
+     */
     private void performActionAdminMainMenu(int choice) {
 
         switch (choice) {
@@ -594,14 +639,18 @@ public class Menu {
                 break;
             default://never happen
         }
-
     }
-    
+
 
     //********************************Add hotel***************************************
-    //TODO Определиться что считать одинаковыми отелями и где "ловить" одинаковый отель.
-    // Здесь или в controller.addHotel(hotel). Если здесь, я могу перенаправить в adminMenu().
-    // А если в controller.addHotel(hotel), то не понятно что делать с пойманым там исключением.
+
+    /**
+     * Adds <tt>Hotel</tt> with settings received from the administrator
+     * @see ConsoleWorkerUtil#readStringFromConsole()
+     * @see ConsoleWorkerUtil#readPositiveInt()
+     * @see Hotel
+     * @see ProjectController#addHotel(Hotel)
+     */
     private void addHotel() {
 
         System.out.println("Please enter the hotel name you want to add to database: ");
@@ -629,7 +678,17 @@ public class Menu {
 
     //********************************Add room***************************************
 
-    //TODO Слишком сложный выбор отеля, надо подумать над упрощением
+    /**
+     * Adds <tt>Room</tt> with settings received from the administrator
+     * @see #performActionAdminMainMenu(int)
+     * @see ConsoleWorkerUtil#readNameFromConsole(String)
+     * @see ConsoleWorkerUtil#readIntToMaxNum(int)
+     * @see ConsoleWorkerUtil#readPositiveInt()
+     * @see #chooseHotelFromListOfHotelsWithSameHotelName(String)
+     * @see #chooseRoomClass()
+     * @see Room
+     * @see ProjectController#createRoom(Room)
+     */
     private void addRoom() {
 
         Hotel hotel;
@@ -651,21 +710,16 @@ public class Menu {
         System.out.println("Please enter the price per room:");
         int price = readPositiveInt();
 
-//        System.out.println(hotel);
-
         Room room = new Room(numberOfPerson, price, roomClass, hotel.getId());
-        room.setHotelID(hotel.getId());//ПОКА НЕ ПРОВЕРЯЮ hotel НА null.hotel не должен быть равен null
-        // т.к. в chooseHotelFromListOfHotelsWithSameHotelName это не допускается, но при другой реализации может и быть равным null
+        room.setHotelID(hotel.getId());//ПОКА НЕ ПРОВЕРЯЮ hotel НА null. hotel не должен быть равен null
+        // т.к. в chooseHotelFromListOfHotelsWithSameHotelName это не допускается,
+        // но при другой реализации может и быть равным null
 
         try {
             if (controller.createRoom(room) == null)
                 throw new RuntimeException();
             System.out.println("Your room was successfully created: " + room);
-//            hotel.getRooms().forEach(System.out::println);
             System.out.println(hotel);
-//            System.out.println(Room.getOutputHeader());
-//            System.out.println(room.getOutput());
-//            System.out.println("Room hotel: " + room.getId());
         } catch (RoomAlreadyExistsException e) {
             System.out.println(e.getMessage());
         } catch (RuntimeException e) {
@@ -673,7 +727,20 @@ public class Menu {
         }
     }
 
-    //TODO Слишком длинное имя у функциию. Возвращать null, если нет отелей или кидать exception
+    /**
+     * Chooses <tt>Hotel</tt> from list Of hotels with same hotel name <tt>hotelName</tt>
+     * @param hotelName is the name of the hotel
+     * @return <tt>Hotel</tt> selected by admin if hotel with <tt>hotelName</tt> exists
+     * @throws NoOneHotelInDatabaseException if there isn't hotel with <tt>hotelName</tt> in database
+     * @see #addRoom()
+     * @see #updateOrDeleteAHotel()
+     * @see #updateOrDeleteARoom()
+     * @see ProjectController#findHotelByHotelName()
+     * @see #createEntityMap(List)
+     * @see Hotel#getOutputHeader()
+     * @see Hotel#getOutput()
+     * @see ConsoleWorkerUtil#readIntToMaxNum(int)
+     */
     private Hotel chooseHotelFromListOfHotelsWithSameHotelName(String hotelName) throws NoOneHotelInDatabaseException {
 
         List<Hotel> listOfHotels = controller.findHotelByHotelName(hotelName);
@@ -694,8 +761,16 @@ public class Menu {
         }
     }
 
-    //TODO написала метод, чтобы можно было выберать номер отеля/комнаты из списка найденных отелей/комнат
-    //Подумать как проше сделать
+    /**
+     * Creats map of entities from list of entities with keys - number from 1
+     * and values - elements of list entities
+     * @param listOfEntities
+     * @param <T> inherits <tt>Entity</tt>
+     * @return map of entities from list of entities with keys - number from 1
+     * and values - elements of list entities
+     * @see #chooseHotelFromListOfHotelsWithSameHotelName(String)
+     * @see #chooseRoomFromHotel(Hotel)
+     */
     private <T extends Entity> Map<Integer, T> createEntityMap(List<T> listOfEntities) {
 
         Map<Integer, T> mapOfEntities = new HashMap<>(listOfEntities.size());
@@ -709,9 +784,13 @@ public class Menu {
     }
 
     /**
-     * The method selects a class room from a list provided by the class of room menu
-     *
-     * @return RoomClass
+     * Selects the class of room from a list provided by the class of room menu
+     * @see #addRoom()
+     * @see #updateRoom(Room)
+     * @see #printClassOfRoomMenu()
+     * @see ConsoleWorkerUtil#readIntToMaxNum(int)
+     * @see RoomClass
+     * @return RoomClass selected by admin
      */
     private RoomClass chooseRoomClass() {
 
@@ -735,6 +814,10 @@ public class Menu {
         }
     }
 
+    /**
+     * Prints out a Class of Room Menu.
+     * @see #chooseRoomClass()
+     */
     private void printClassOfRoomMenu() {
         System.out.println("Please choose a class of room: ");
         System.out.println("[1] Standard");
@@ -747,6 +830,17 @@ public class Menu {
 
 //*********************** Update or delete a hotel *******************************
 
+    /**
+     * Updates or deletes the hotel by hotel name,
+     * according to the choice made by the administrator.
+     * @see #performActionAdminMainMenu(int)
+     * @see ConsoleWorkerUtil#readStringFromConsole()
+     * @see ConsoleWorkerUtil#readIntToMaxNum(int)
+     * @see #chooseHotelFromListOfHotelsWithSameHotelName(String)
+     * @see #printUpdateOrDeleteEntityMenu(String)
+     * @see #updateHotel(Hotel)
+     * @see #deleteHotel(Hotel)
+     */
     private void updateOrDeleteAHotel() {
 
         System.out.println("Please enter the name of the hotel you want to update or delete");
@@ -773,9 +867,15 @@ public class Menu {
             case 3:
                 return; //adminMenu
         }
-
     }
 
+    /**
+     * Prints out a Update or Delete Entity Menu prompting the admin to update or delete entity.
+     * @param entityName is name of entity
+     * @see #updateOrDeleteAHotel()
+     * @see #updateOrDeleteARoom()
+     * @see #updateOrDeleteUser()
+     */
     private void printUpdateOrDeleteEntityMenu(String entityName) {
         System.out.println("Please choose: ");
         System.out.println("[1] Update " + entityName);
@@ -783,6 +883,16 @@ public class Menu {
         System.out.println("[3] Back to admin menu");
     }
 
+    /**
+     * Update <tt>Hotel</tt> with settings received from the administrator
+     * @param hotel is Hotel to update
+     * @see #updateOrDeleteAHotel()
+     * @see Hotel
+     * @see ConsoleWorkerUtil#readStringFromConsole()
+     * @see ConsoleWorkerUtil#readIntFromConsole()
+     * @see #createHotelParametersMap(String, String, Integer)
+     * @see ProjectController#updateHotel(Hotel, Map)
+     */
     private void updateHotel(Hotel hotel) {
 
         System.out.println("Do you want to change hotel " + HotelParameters.NAME + " ?");
@@ -815,6 +925,19 @@ public class Menu {
         else System.out.println("HOTEL WASN'T UPDATE!!!");
     }
 
+
+    /**
+     * Creates map of hotel parameters with keys: HotelParameters.NAME, HotelParameters.CITY,
+     * HotelParameters.RATING and values: <tt>newHotelName</tt>, <tt>newHotelCity</tt>
+     * and <tt>newHotelRating</tt>
+     * @param newHotelName
+     * @param newHotelCity
+     * @param newHotelRating
+     * @return map of hotel parameters with keys: HotelParameters.NAME, HotelParameters.CITY,
+     * HotelParameters.RATING and values: <tt>newHotelName</tt>, <tt>newHotelCity</tt>
+     * and <tt>newHotelRating</tt>
+     * @see #updateHotel(Hotel)
+     */
     private Map<HotelParameters, String> createHotelParametersMap
             (String newHotelName, String newHotelCity, Integer newHotelRating) {
 
@@ -827,6 +950,13 @@ public class Menu {
         return newParametersOfHotel;
     }
 
+    /**
+     * Deletes the hotel if the administrator confirms the deletion
+     * @param hotel for deletion
+     * @see #updateOrDeleteAHotel()
+     * @see ConsoleWorkerUtil#printConfirmDeleteEntity(String)
+     * @see ProjectController#deleteHotel(Hotel)
+     */
     private void deleteHotel(Hotel hotel) {
 
         printConfirmDeleteEntity("hotel");
@@ -839,6 +969,18 @@ public class Menu {
 
 //*********************** Update or delete a room *******************************
 
+    /**
+     * Updates or deletes the room,
+     * according to the choice made by the administrator.
+     * @see #performActionAdminMainMenu(int)
+     * @see ConsoleWorkerUtil#readStringFromConsole()
+     * @see ConsoleWorkerUtil#readIntToMaxNum(int)
+     * @see #chooseHotelFromListOfHotelsWithSameHotelName(String)
+     * @see #chooseRoomFromHotel(Hotel)
+     * @see #printUpdateOrDeleteEntityMenu(String)
+     * @see #updateRoom(Room)
+     * @see #deleteRoom(Room)
+     */
     private void updateOrDeleteARoom() {
 
         System.out.println("Please enter the name of the hotel of the room you want to update or delete");
@@ -873,9 +1015,19 @@ public class Menu {
             case 3:
                 return; //adminMenu
         }
-
     }
 
+    /**
+     * Chooses <tt>Room</tt> from list Of rooms in <tt>hotel</tt>
+     * @param hotel is the hotel when we choose the room
+     * @return <tt>Room</tt> selected by admin if rooms are exist in the hotel
+     * @throws NoRoomsInHotelException if there aren't rooms in the hotel
+     * @see #updateOrDeleteARoom()
+     * @see #createEntityMap(List)
+     * @see Room#getOutputHeader()
+     * @see Room#getOutput()
+     * @see ConsoleWorkerUtil#readIntToMaxNum(int)
+     */
     private Room chooseRoomFromHotel(Hotel hotel) throws NoRoomsInHotelException {
 
         List<Room> listOfRooms = hotel.getRooms();
@@ -897,6 +1049,17 @@ public class Menu {
         }
     }
 
+    /**
+     * Update <tt>Room</tt> with settings received from the administrator
+     * @param room is Room to update
+     * @see #updateOrDeleteARoom()
+     * @see Room
+     * @see ConsoleWorkerUtil#confirm()
+     * @see ConsoleWorkerUtil#readIntFromConsole()
+     * @see #chooseRoomClass()
+     * @see #createRoomParametersMap(RoomClass, Integer, Integer)
+     * @see ProjectController#updateRoom(Room, Map)
+     */
     private void updateRoom(Room room) {
 
         System.out.println("Do you want to change room " + ROOM_CLASS + " ?");
@@ -929,19 +1092,38 @@ public class Menu {
         else System.out.println("Room WASN'T UPDATE!!!");
     }
 
+    /**
+     * Creates map of room parameters with keys: ROOM_CLASS, CAPACITY,
+     * PRICE and values: <tt>newRoomClass</tt>, <tt>newRoomCapacity</tt>
+     * and <tt>newRoomPrice</tt>
+     * @param newRoomClass
+     * @param newRoomCapacity
+     * @param newRoomPrice
+     * @return map of room parameters with keys: ROOM_CLASS, CAPACITY,
+     * PRICE and values: <tt>newRoomClass</tt>, <tt>newRoomCapacity</tt>
+     * and <tt>newRoomPrice</tt>
+     * @see #updateRoom(Room)
+     */
     private Map<RoomParameters, String> createRoomParametersMap
-            (RoomClass newRoomClass, Integer newRoomCapacity, Integer newHotelRating) {
+            (RoomClass newRoomClass, Integer newRoomCapacity, Integer newRoomPrice) {
 
         Map<RoomParameters, String> newRoomParametersMap = new HashMap<>();
 
         newRoomParametersMap.put(ROOM_CLASS, (newRoomClass == null) ? null : newRoomClass.toString());
         newRoomParametersMap.put(CAPACITY, (newRoomCapacity == null) ? null : String.valueOf(newRoomCapacity));
-        newRoomParametersMap.put(PRICE, (newHotelRating == null) ? null : String.valueOf(newHotelRating));
+        newRoomParametersMap.put(PRICE, (newRoomPrice == null) ? null : String.valueOf(newRoomPrice));
 
         return newRoomParametersMap;
     }
 
 
+    /**
+     * Deletes the room if the administrator confirms the deletion
+     * @param room for deletion
+     * @see #updateOrDeleteARoom()
+     * @see ConsoleWorkerUtil#printConfirmDeleteEntity(String)
+     * @see ProjectController#deleteRoom(Room)
+     */
     private void deleteRoom(Room room) {
 
         printConfirmDeleteEntity("room");
@@ -954,6 +1136,17 @@ public class Menu {
 
     //**************************** Update or delete user ***************************
 
+    /**
+     * Updates or deletes the user,
+     * according to the choice made by the administrator.
+     * @see #performActionAdminMainMenu(int)
+     * @see ProjectController#findUserByLogin(String)
+     * @see ConsoleWorkerUtil#readStringFromConsole()
+     * @see ConsoleWorkerUtil#readIntToMaxNum(int)
+     * @see #printUpdateOrDeleteEntityMenu(String)
+     * @see #updateUser(User)
+     * @see #deleteUser(User)
+     */
     private void updateOrDeleteUser() {
 
         System.out.println("Please enter the username(login) of the user you want to update or delete");
@@ -963,7 +1156,7 @@ public class Menu {
 
         if (user != null) {
 
-            if(user.getRole().equals(ADMIN)){
+            if (user.getRole().equals(ADMIN)) {
                 System.out.println("YOU CANNOT UPDATE OR DELETE ADMINS.");
                 return;
             }
@@ -987,11 +1180,22 @@ public class Menu {
         }
     }
 
+    /**
+     * Update <tt>User</tt> with settings received from the administrator
+     * @param user is User to update
+     * @see #updateOrDeleteUser()
+     * @see User
+     * @see ConsoleWorkerUtil#confirm()
+     * @see ConsoleWorkerUtil#readStringFromConsole()
+     * @see #createUserParametersMap(String, String, String)
+     * @see ProjectController#updateUser(User)
+     * @param user
+     */
     private void updateUser(User user) {
 
         //дополнительная проверка на случай, если эту функции используют
         // еще где-нибудь кроме updateOrDeleteUser()
-        if (user.getRole().equals(ADMIN)){
+        if (user.getRole().equals(ADMIN)) {
             System.out.println("YOU CANNOT UPDATE ADMINS.");
             return;
         }
@@ -1026,6 +1230,17 @@ public class Menu {
         else System.out.println("USER WASN'T UPDATE!!!");
     }
 
+    /**
+     * Creates map of user parameters with keys: UserParameters.NAME, LOGIN,
+     * PASSWORD and values: <tt>newUserName</tt>, <tt>newUserLogin</tt>
+     * and <tt>newUserPassword</tt>
+     * @param newUserName
+     * @param newUserLogin
+     * @param newUserPassword
+     * @return map of user parameters with keys: UserParameters.NAME, LOGIN,
+     * PASSWORD and values: <tt>newUserName</tt>, <tt>newUserLogin</tt>
+     * and <tt>newUserPassword</tt>
+     */
     private Map<UserParameters, String> createUserParametersMap
             (String newUserName, String newUserLogin, String newUserPassword) {
 
@@ -1038,11 +1253,18 @@ public class Menu {
         return newUserParameters;
     }
 
+    /**
+     * Deletes the user if the administrator confirms the deletion
+     * @param user for deletion
+     * @see #updateOrDeleteUser()
+     * @see ConsoleWorkerUtil#printConfirmDeleteEntity(String)
+     * @see ProjectController#deleteUser(User)
+     */
     private void deleteUser(User user) {
 
         //дополнительная проверка на случай, если эту функции используют
         // еще где-нибудь кроме updateOrDeleteUser()
-        if (user.getRole().equals(ADMIN)){
+        if (user.getRole().equals(ADMIN)) {
             System.out.println("YOU CANNOT DELETE ADMINS.");
             return;
         }

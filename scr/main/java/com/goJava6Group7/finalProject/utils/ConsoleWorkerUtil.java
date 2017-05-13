@@ -1,7 +1,5 @@
 package com.goJava6Group7.finalProject.utils;
 
-import com.goJava6Group7.finalProject.entities.Hotel;
-import com.goJava6Group7.finalProject.entities.Room;
 import com.goJava6Group7.finalProject.exceptions.frontend.CheckinDateException;
 import com.goJava6Group7.finalProject.exceptions.frontend.OutOfMenuRangeException;
 
@@ -10,7 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+
 
 /**
  * Created by Kontar Maryna on 26.04.2017.
@@ -19,13 +17,12 @@ public class ConsoleWorkerUtil {
 
     private ConsoleWorkerUtil() {
     }
-//*****************************MARYNA***************************************
+
+    // ************************************* MARYNA ********************************************
 
     /**
-     * Kontar Maryna:
-     * Method read integer from console
-     *
-     * @return int entered from the console
+     * Reads integer from console
+     * @return integer
      */
     public static int readIntFromConsole() {
 
@@ -46,12 +43,19 @@ public class ConsoleWorkerUtil {
 //        return number;
     }
 
+    /**
+     * Reads positive integer from console
+     * @return positive integer
+     */
     public static int readPositiveInt() {
         return readIntToMaxNum(Integer.MAX_VALUE);
     }
 
-    //TODO У Гийома есть такая функция getMenuInput (с другой сигнатурой),
-    // но я для себя переделала и использую не только для считывания номера пункта меню
+
+    /**
+     * Reads integer from 1 (inclusive) to <code>maxNumber</code> (inclusive) from console
+     * @return integer  from 1 (inclusive) to <code>maxNumber</code> (inclusive)
+     */
     public static int readIntToMaxNum(int maxNumber) {
         int readInt;
         while (true) {
@@ -64,10 +68,8 @@ public class ConsoleWorkerUtil {
     }
 
     /**
-     * Kontar Maryna:
-     * Method read String from console
-     *
-     * @return String entered from the console if String isn't empty
+     * Read String from console
+     * @return String if String isn't empty
      */
     public static String readStringFromConsole() {
 //        String str;
@@ -87,36 +89,38 @@ public class ConsoleWorkerUtil {
     }
 
     /**
-     * Kontar Maryna:
-     * Method prints exception's message about wrong read integer from console
-     *
-     * @param number
+     * Prints exception's message about wrong integer reading from console
+     * @param number wrong integer
      */
     public static void printReadIntFromConsoleException(int number) {
         System.out.println("You typed wrong number. " +
                 "And we want a number from 1 to " + number + ". Please, type again.");
     }
 
+    /**
+     * Prints exception's message about wrong integer reading from console
+     */
     public static void printReadIntFromConsoleException() {
         System.out.println("You typed wrong number. Please, type again.");
     }
 
+    /**
+     * Prints exception's message about wrong string reading from console
+     */
     public static void printReadStringFromConsoleException() {
         System.out.println("You typed something wrong. Please, type again.");
     }
 
-    public static void printConfirmChangeDB() {
-        System.out.println("Are you sure you want to change database? " +
-                "If you do, we will restart the system");
-    }
-
+    /**
+     * Prints a confirmation to delete an entity.
+     * @param entityName name of entity
+     */
     public static void printConfirmDeleteEntity(String entityName) {
         System.out.println("Are you sure you want delete this " + entityName + "?");
     }
 
     /**
-     * Kontar Maryna:
-     *
+     * Reads password
      * @return
      */
     public static String readPassword() {
@@ -125,8 +129,7 @@ public class ConsoleWorkerUtil {
     }
 
     /**
-     * Kontar Maryna:
-     *
+     * Reads login
      * @return
      */
     public static String readLogin() {
@@ -135,12 +138,8 @@ public class ConsoleWorkerUtil {
     }
 
     /**
-     * TODO
-     * Kontar Maryna:
-     * <p>
-     * The method confirm something
-     *
-     * @return true if type Y and false otherwise
+     * Confirms something
+     * @return true if type Y (confirmation) and false otherwise
      */
     public static boolean confirm() {
         System.out.println("Type Y if you agree, else press any key");
