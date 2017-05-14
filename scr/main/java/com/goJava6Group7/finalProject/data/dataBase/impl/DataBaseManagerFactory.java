@@ -10,9 +10,7 @@ import java.nio.file.Files;
 import java.util.Properties;
 
 @XmlJavaTypeAdapter(value = LocalDateAdapter.class)
-/**
- * Created by Igor on 14.04.2017.
- */
+
 public final class DataBaseManagerFactory {
     private static DataBaseManager dataBaseManager;
 

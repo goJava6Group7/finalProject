@@ -2,9 +2,7 @@ package com.goJava6Group7.finalProject.data.dao;
 
 import java.util.List;
 
-/**
- * Created by Igor on 13.04.2017.
- */
+
 public interface Dao<T> {
 
     T create(T entity);

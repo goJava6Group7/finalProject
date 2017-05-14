@@ -10,24 +10,11 @@ public class Main {
 
     public static void main(String[] args) {
 
-        // according to application.properties file we init DatabaseManager
+        //1. according to application.properties file we init DatabaseManager
         dataBaseManager = DataBaseManagerFactory.getInstance();
         // read file (in our case "XML_Database") and load to memory, after that we can work with DatabaseManager like with real database
         dataBaseManager.initDB();
 
-        // How we can add new rooms to hotel !!!!!
-        /*Hotel hotel = new Hotel("President","Kiev",4);
-        dataBaseManager.getDaoHotel().create(hotel);
-        Room r1 = new Room(1,100, RoomClass.Apartment);
-        Room r2 = new Room(2,200, RoomClass.Apartment);
-        Room r3 = new Room(3,400, RoomClass.President);
-        List<Room> list = new ArrayList<>();
-        list.add(r1);
-        list.add(r2);
-        list.add(r3);
-        dataBaseManager.getDaoHotel().get(hotel).setRooms(list); // add to hotel rooms
-*/
-        /// in frontEnd this method we can call like projectController.getDbManager.updateDatabase(); before that we need to add get to dbManager field
         dataBaseManager.updateDatabase();
 
         //2. On this step we already have right dataBaseManager and we can give it to controller

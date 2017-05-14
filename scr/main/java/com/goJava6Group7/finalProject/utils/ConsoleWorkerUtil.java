@@ -18,7 +18,7 @@ public class ConsoleWorkerUtil {
     private ConsoleWorkerUtil() {
     }
 
-    // ************************************* MARYNA ********************************************
+    // ************************************* Methods for admin menu  ********************************************
 
     /**
      * Reads integer from console
@@ -149,7 +149,7 @@ public class ConsoleWorkerUtil {
     }
 
 
-// ************************************* GUILLAUME ********************************************
+// ************************************* Methods for user menu  ********************************************
 
     /**
      * Reads <code>String</code> from console

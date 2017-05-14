@@ -9,9 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Created by Igor on 14.04.2017.
- */
+
 public class DaoHotel implements Dao<Hotel> {
     private List<Hotel> hotels;
 

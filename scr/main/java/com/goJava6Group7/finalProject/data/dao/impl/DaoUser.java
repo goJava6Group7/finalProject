@@ -1,16 +1,11 @@
 package com.goJava6Group7.finalProject.data.dao.impl;
 
 import com.goJava6Group7.finalProject.data.dao.Dao;
-import com.goJava6Group7.finalProject.data.dataBase.impl.DataBaseManagerFactory;
-import com.goJava6Group7.finalProject.entities.Room;
 import com.goJava6Group7.finalProject.entities.User;
 
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Created by Igor on 14.04.2017.
- */
 public class DaoUser implements Dao<User> {
     private List<User> users;
 

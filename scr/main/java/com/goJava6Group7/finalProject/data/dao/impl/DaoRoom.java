@@ -6,13 +6,9 @@ import com.goJava6Group7.finalProject.entities.Reservation;
 import com.goJava6Group7.finalProject.entities.Room;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Created by Igor on 14.04.2017.
- */
 public class DaoRoom implements Dao<Room> {
     private List<Room> rooms;
 

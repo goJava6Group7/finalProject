@@ -1,16 +1,12 @@
 package com.goJava6Group7.finalProject.data.dao.impl;
 
 import com.goJava6Group7.finalProject.data.dao.Dao;
-import com.goJava6Group7.finalProject.data.dataBase.impl.DataBaseManagerFactory;
 import com.goJava6Group7.finalProject.entities.Reservation;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Created by Igor on 14.04.2017.
- */
+
 public class DaoReservation implements Dao<Reservation> {
     private List<Reservation> reservations;
 

@@ -26,7 +26,7 @@ public class ProjectController {
         this.dbManager = dbManager;
     }
 
-    // ************************* MARINA ********************************************************
+    // ************************* Methods for admin menu  ********************************************************
 
     /**
      * Checks the presence of the user with the appropriate login and password
@@ -351,7 +351,7 @@ public class ProjectController {
     }
 
 
-// ************************************* GUILLAUME ********************************************
+// ************************************* Methods for user menu ********************************************
 
     /**
      * Identifies and prints out a list of hotels matching the hotel name inserted by user.
