@@ -151,7 +151,12 @@ public class ConsoleWorkerUtil {
 
 // ************************************* GUILLAUME ********************************************
 
-
+    /**
+     * Reads <code>String</code> from console
+     * @param wordDef specifies a type of data, that should be inserted by users
+     *                as a <code>String</code> to console
+     * @return text, inserted by the <code>User</code> as a <code>String</code>
+     */
     public static String readNameFromConsole(String wordDef) {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String text = "";
@@ -170,6 +175,14 @@ public class ConsoleWorkerUtil {
         return text;
     }
 
+    /**
+     * Checks that <code>Integers</code> inserted by <code>User</code>,
+     * used as selection numbers in various User Menus,
+     * are within the allowed range of selection for the respective User Menu.
+     *
+     * @return <code>Integer</code>, if inserted value is withing
+     * the allowed range for a specific User Menu
+     */
     public static int getMenuInput(int min, int max) {
         int choice = 0;
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -187,6 +200,10 @@ public class ConsoleWorkerUtil {
         return choice;
     }
 
+    /**
+     * Reads dates from console
+     * @return <code>Date</code>
+     */
     public static LocalDate readDateFromConsole() {
         LocalDate date1;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
@@ -203,6 +220,14 @@ public class ConsoleWorkerUtil {
         return date1;
     }
 
+    /**
+     * Processes the check-in date inserted by <code>User</code>.
+     * Prompts the <code>User</code> to enter the <code>Date</code> in correct format and
+     * according to the following logic: <code>Date</code> of check-in can not be in the past.
+     *
+     * @return check-in <code>Date</code>
+     * @see #readDateFromConsole()
+     */
     public static LocalDate getCheckinDate() {
         LocalDate checkin;
 
@@ -220,7 +245,16 @@ public class ConsoleWorkerUtil {
         return checkin;
     }
 
-
+    /**
+     * Processes the check-out date inserted by <code>User</code>.
+     * Prompts the <code>User</code> to enter the <code>Date</code> in correct format and
+     * according to the following logic: <code>Date</code> of check-out
+     * must be after the check-in <code>Date</code>, but not more than 30 days.
+     *
+     * @param checkin <code>Date</code> of check-in
+     * @return check-out <code>Date</code>
+     * @see #readDateFromConsole()
+     */
     public static LocalDate getCheckoutDate(LocalDate checkin) {
         LocalDate checkout;
         LocalDate maxcheckout;

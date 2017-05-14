@@ -384,6 +384,7 @@ public class ProjectController {
                     "city and dates' options in the main menu");
         }
     }
+
     /**
      * Identifies and prints out a list of rooms available in a specific city
      * during the period of time specified by user.
@@ -493,6 +494,7 @@ public class ProjectController {
 
         return results;
     }
+
     /**
      * Identifies a <code>hotel</code> by <code>hotelId</code>.
      *
@@ -510,6 +512,7 @@ public class ProjectController {
 
         return myHotel;
     }
+
     /**
      * Identifies a <code>room</code> by <code>roomId</code>.
      *
@@ -527,6 +530,7 @@ public class ProjectController {
 
         return myRoom;
     }
+
     /**
      * Identifies and prints out a list of rooms available in a specific city
      * during the period of time specified by user.
@@ -602,6 +606,15 @@ public class ProjectController {
 
     }
 
+    /**
+     *Prints out a list of hotels with rooms available from the <code>checkin</code>
+     *to <code>checkout</code> date, specified by <code>User</code>.
+     *
+     * @param rooms a list of rooms matching the selection criteria of the <code>User</code>
+     * @param checkin a date of check-in
+     * @param checkout a date of check-out
+     * @see #getHotelFromID(long)
+     */
     public void printRoomResults(List<Room> rooms, LocalDate checkin, LocalDate checkout) {
 
         // create map of rooms
@@ -648,6 +661,14 @@ public class ProjectController {
         });
     }
 
+    /**
+     * Enables a <code>User</code> to book one of the rooms,
+     * matching the selection criteria of the <code>User</code>.
+     * Adds information on made booking to the <code>DataBase</code> and <code>Reservation</code>
+     *
+     * @param results a list of <code>Rooms</code> matching the selection criteria of the <code>User</code>
+     * @param session identifies if the <code>User</code> has already logged in
+     */
     public void bookRoom(SearchResults results, Session session) {
         if (results == null || session == null) {
             System.out.println("Room booking error");
@@ -705,7 +726,17 @@ public class ProjectController {
         System.out.println("\nThank you for using our services to book your stay!");
     }
 
-    public Session login(Session session) {
+    /**
+     * Processes login credentials from the <code>User</code>
+     * and updates a <code>Session</code> respectively.
+     *
+     * @param session identifies if the <code>User</code> has logged in, or not
+     * @return updated <code>Session</code> information based on selection made by the <code>User</code>
+     * @see Session#setUser(User)
+     * @see Session#setAdmin(boolean)
+     * @see Session#isGuest()
+     */
+        public Session login(Session session) {
         String userName;
         String pass;
         User user;
@@ -732,7 +763,15 @@ public class ProjectController {
         return session;
     }
 
-
+    /**
+     * Changes a <code>Session</code> to <code>Guest</code>
+     *
+     * @param session identifies if the <code>User</code> has logged in, or not
+     * @return updated <code>Session</code> information
+     * @see Session#setUser(User)
+     * @see Session#setAdmin(boolean)
+     * @see Session#setGuest(boolean)
+     */
     public Session logout(Session session) {
         session.setUser(null);
         session.setGuest(true);
@@ -741,6 +780,13 @@ public class ProjectController {
         return session;
     }
 
+    /**
+     * Enables the <code>Guest</code> to register in an application,
+     * creates a new <code>User</code> and adds it into <code>dataBase</code>
+     *
+     * @return new <code>User</code>
+     * @see ConsoleWorkerUtil#readNameFromConsole(String)
+     */
     public User createUser() {
 
         User newUser;
@@ -795,6 +841,15 @@ public class ProjectController {
 
     }
 
+    /**
+     * Processes updated user information inserted by the <code>User</code>
+     * and saves it into <code>dataBase</code>
+     *
+     * @param user - registered <code>User</code>, which wants to update profile information;
+     * @return <code>User</code> with updated parameters
+     * @see ConsoleWorkerUtil#readNameFromConsole(String)
+     * @see Dao#update(Object)
+     */
     public User updateUser(User user) {
 
         String userName;
@@ -820,6 +875,12 @@ public class ProjectController {
         return user;
     }
 
+    /**
+     * Creates a list of <code>Reservations</code> per specific <code>User</code>.
+     *
+     * @param user identifies a specific <code>User</code> for creating the list of <code>Reservations</code>
+     * @return list of <code>Reservations</code> per specific <code>User</code>
+     */
     public List<Reservation> getUsersBookings(User user) {
 
         Dao<Reservation> daoRes = dbManager.getDaoReservation();
@@ -832,6 +893,13 @@ public class ProjectController {
         return myBookings;
     }
 
+    /**
+     * Creates a <code>Map</code> of <code>Reservations</code> from
+     * the list of <code>Reservations</code> per specific <code>User</code>.
+     *
+     * @param myBookings list of <code>Reservations</code> per specific <code>User</code>
+     * @return <code>Map</code> of <code>Reservations</code> per specific <code>User</code>
+     */
     public Map<Integer, Reservation> createReservationMap(List<Reservation> myBookings) {
 
         Map<Integer, Reservation> mapOfEntities = new HashMap<>(myBookings.size());
@@ -845,6 +913,11 @@ public class ProjectController {
         return mapOfEntities;
     }
 
+    /**
+     * Prints out a list of the user's <code>Reservations</code>.
+     *
+     * @param mapOfBookings contains a list of the user's <code>Reservations</code>
+     */
     public void printUserBookings(Map<Integer, Reservation> mapOfBookings) {
 
         System.out.println("\t" + Reservation.getOutputHeader() + "    Hotel Name" + "    City");
@@ -852,7 +925,13 @@ public class ProjectController {
 
     }
 
-    public void updateBooking(Map<Integer, Reservation> mapOfBookings) {
+    /**
+     * Updates information on a specific <code>Reservation</code>,
+     * selected by the <code>User</code>.
+     *
+     * @param mapOfBookings contains a list of the user's <code>Reservations</code>
+     */
+         public void updateBooking(Map<Integer, Reservation> mapOfBookings) {
 
         String yn;
         boolean ok = false;
@@ -937,6 +1016,15 @@ public class ProjectController {
         } else System.out.println("Unfortunately, the room is not available for your new dates");
     }
 
+    /**
+     * Identifies a name of the <code>Hotel</code> in which the <code>Room</code>
+     * was booked from the <code>Reservation</code>.
+     *
+     * @param booking contains detailed information on a specific <Code>Reservation</Code>
+     * @return Name of the <code>Hotel</code>  in which the <code>Room</code> was booked.
+     * @see #getHotelFromID(long)
+     * @see #getRoomFromID(long)
+     */
     public String getHotelNameFromBooking(Reservation booking) {
 
         Room myRoom = getRoomFromID(booking.getRoomID());
@@ -946,7 +1034,15 @@ public class ProjectController {
         return myHotel.getName();
     }
 
-
+    /**
+     * Identifies a name of the city in which the <code>Room</code>
+     * was booked from the <code>Reservation</code>
+     *
+     * @param booking contains detailed information on a specific reservation
+     * @return Name of the city in which the <code>Room</code> was booked
+     * @see #getHotelFromID(long)
+     * @see #getRoomFromID(long)
+     */
     public String getCityNameFromBooking(Reservation booking) {
 
         Room myRoom = getRoomFromID(booking.getRoomID());
@@ -956,6 +1052,13 @@ public class ProjectController {
         return myHotel.getCity();
     }
 
+    /**
+     * Processes the user's selection of the specific <code>Reservation</code>,
+     * the <code>User</code> wants to update.
+     *
+     * @param mapOfRes contains a list of the user's <code>Reservations</code>
+     * @return <code>Reservation</code>, which the <code>User</code> wants to update.
+     */
     public Reservation chooseBookingFromList(Map<Integer, Reservation> mapOfRes) {
 
         System.out.println("Please choose the number of the booking you want to change: ");
@@ -965,6 +1068,11 @@ public class ProjectController {
         return myBooking;
     }
 
+    /**
+     * Calls <code>DataBaseManager</code> method to update DataBase.
+     *
+     * @see DataBaseManager#updateDatabase()
+     */
     public void updateDB() {
         dbManager.updateDatabase();
     }
